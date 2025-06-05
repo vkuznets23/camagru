@@ -1,23 +1,49 @@
 'use client'
 
-import { getCsrfToken } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { signIn } from 'next-auth/react'
+import { useState } from 'react'
 
-export default function SignIn() {
-  const [csrfToken, setCsrfToken] = useState('')
+export default function SignInForm() {
+  const [login, setLogin] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  useEffect(() => {
-    getCsrfToken().then((token) => setCsrfToken(token || ''))
-  }, [])
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError('')
+
+    const res = await signIn('credentials', {
+      redirect: false,
+      login,
+      password,
+    })
+
+    if (res?.error) {
+      setError(res.error)
+    } else {
+      // успешный логин — редирект куда хочешь
+      window.location.href = '/'
+    }
+  }
 
   return (
-    <form method="post" action="/api/auth/signin/email">
-      <input name="csrfToken" type="hidden" value={csrfToken} />
-      <label>
-        Email address
-        <input type="email" id="email" name="email" required />
-      </label>
-      <button type="submit">Sign in / Register</button>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Email or Username"
+        value={login}
+        onChange={(e) => setLogin(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <button type="submit">Sign In</button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </form>
   )
 }

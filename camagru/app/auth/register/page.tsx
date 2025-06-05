@@ -1,16 +1,61 @@
 'use client'
 
 import { useState } from 'react'
+import zxcvbn from 'zxcvbn'
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordStrength, setPasswordStrength] = useState(0)
   const [message, setMessage] = useState('')
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
+
+  function checkPasswordStrength(pw: string) {
+    const result = zxcvbn(pw)
+    const score = result.score // 0 weak → 4 strong
+    return score
+  }
+
+  function validateForm() {
+    const newErrors: { [key: string]: string } = {}
+
+    if (!email) {
+      newErrors.email = 'Email is required'
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Invalid email format'
+    }
+
+    if (!username) {
+      newErrors.username = 'Username is required'
+    } else if (username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters'
+    }
+
+    if (!password) {
+      newErrors.password = 'Password is required'
+    } else if (password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters'
+    } else if (
+      !/[A-Z]/.test(password) ||
+      !/[0-9]/.test(password) ||
+      !/[!@#$%^&*]/.test(password)
+    ) {
+      newErrors.password = 'Password must include uppercase, number, and symbol'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const strengthLabels = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong']
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setMessage('')
+
+    const isValid = validateForm()
+    if (!isValid) return
 
     const res = await fetch('/api/auth/register', {
       method: 'POST',
@@ -26,6 +71,18 @@ export default function RegisterPage() {
     }
   }
 
+  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value
+    setPassword(value)
+    setPasswordStrength(checkPasswordStrength(value))
+  }
+
+  // DELTE
+  function getPasswordColor(score: number) {
+    if (score <= 1) return 'red'
+    if (score === 2) return 'orange'
+    return 'green'
+  }
   return (
     <>
       <p>signup to see photos and videos from your friends.</p>
@@ -38,8 +95,8 @@ export default function RegisterPage() {
             placeholder="email adress"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
+          {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
         </label>
         <br />
         <label htmlFor="username">
@@ -51,8 +108,10 @@ export default function RegisterPage() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
-            required
           />
+          {errors.username && (
+            <span style={{ color: 'red' }}>{errors.username}</span>
+          )}
         </label>
         <br />
         <label htmlFor="password">
@@ -62,12 +121,19 @@ export default function RegisterPage() {
             type="password"
             placeholder="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             autoComplete="current-password"
-            required
           />
+          {errors.password && (
+            <span style={{ color: 'red' }}>{errors.password}</span>
+          )}
         </label>
         <br />
+        {password && (
+          <p style={{ color: getPasswordColor(passwordStrength) }}>
+            Password strength: {strengthLabels[passwordStrength]}
+          </p>
+        )}
         <button type="submit">Register</button>
         <p>{message}</p>
       </form>

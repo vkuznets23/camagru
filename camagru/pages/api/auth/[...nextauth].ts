@@ -31,21 +31,27 @@ export default NextAuth({
       async authorize(credentials) {
         if (!credentials?.login || !credentials?.password) return null
 
-        // looking for user by email or username
         const user = await prisma.user.findFirst({
           where: {
             OR: [{ email: credentials.login }, { username: credentials.login }],
           },
         })
 
-        if (!user) return null
+        if (!user) {
+          throw new Error('User not found')
+        }
 
-        // check password
+        if (!user.emailVerified) {
+          throw new Error('Please verify your email before logging in')
+        }
+
         const isValid = await bcrypt.compare(
           credentials.password,
           user.password
         )
-        if (!isValid) return null
+        if (!isValid) {
+          throw new Error('Invalid password')
+        }
 
         return {
           id: user.id,
@@ -72,4 +78,7 @@ export default NextAuth({
     },
   },
   secret: process.env.AUTH_SECRET,
+  pages: {
+    signIn: '/auth/signin',
+  },
 })
