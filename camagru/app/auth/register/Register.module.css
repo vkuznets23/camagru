@@ -1,0 +1,123 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #fafafa;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.formBox {
+  background-color: white;
+  border: 1px solid #dbdbdb;
+  padding: 40px;
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heading {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #262626;
+}
+
+.label {
+  display: block;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  background: #fafafa;
+  font-size: 14px;
+  width: 100%;
+}
+
+.button {
+  background-color: #0095f6;
+  border: none;
+  padding: 8px;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggleButton {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #262626;
+  padding: 0;
+}
+
+.inputError {
+  border-color: red;
+  outline: none;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* password strength */
+.strengthBarContainer {
+  height: 4px;
+  width: 100%;
+  background-color: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 2px;
+  margin-bottom: 8px;
+}
+
+.strengthBarFill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.weak {
+  width: 20%;
+  background-color: red;
+}
+
+.fair {
+  width: 40%;
+  background-color: orange;
+}
+
+.medium {
+  width: 60%;
+  background-color: yellowgreen;
+}
+
+.good {
+  width: 80%;
+  background-color: #4caf50;
+}
+
+.strong {
+  width: 100%;
+  background-color: #2e7d32;
+}

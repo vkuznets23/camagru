@@ -17,6 +17,8 @@ export function validateUsername(
   if (username.length > 20) return 'Username must be max 20 characters'
   if (!/^[a-zA-Z0-9_-]+$/.test(username))
     return 'Username can only contain letters, numbers, underscores and dashes'
+  if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/.test(username))
+    return 'Username must contain at least 1 character'
   if (usernameAvailable === false) return 'Username is already taken'
   return null
 }

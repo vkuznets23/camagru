@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import styles from './Register.module.css'
 import { useRouter } from 'next/navigation'
+import { BiHide, BiShow } from 'react-icons/bi'
 import {
   validateEmail,
   validateUsername,
@@ -15,6 +17,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [passwordStrength, setPasswordStrength] = useState(0)
+  const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
@@ -25,13 +28,12 @@ export default function RegisterPage() {
 
   const router = useRouter()
 
+  // show hide button for pswrd
   function checkPasswordStrength(pw: string) {
     const result = zxcvbn(pw)
     const score = result.score // 0 weak → 4 strong
     return score
   }
-
-  const strengthLabels = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong']
 
   async function checkEmailAvailability(emailToCheck: string) {
     if (!emailToCheck) return
@@ -136,75 +138,148 @@ export default function RegisterPage() {
     setPassword(value)
     setPasswordStrength(checkPasswordStrength(value))
   }
+  const usernameDebounceTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  // DELTE
-  function getPasswordColor(score: number) {
-    if (score <= 1) return 'red'
-    if (score === 2) return 'orange'
-    return 'green'
+  function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value
+    setUsername(val)
+    setUsernameAvailable(null)
+
+    const usernameError = validateUsername(val.trim(), null)
+    setErrors((prev) => ({ ...prev, username: usernameError || '' }))
+
+    if (usernameDebounceTimeout.current) {
+      clearTimeout(usernameDebounceTimeout.current)
+    }
+
+    if (!usernameError && val.trim() !== '') {
+      usernameDebounceTimeout.current = setTimeout(() => {
+        checkUsernameAvailability(val.trim())
+      }, 500)
+    } else {
+      setUsernameAvailable(null)
+    }
   }
+
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value
+    setEmail(val)
+    setEmailAvailable(null)
+
+    const emailError = validateEmail(val.trim(), null)
+    setErrors((prev) => ({ ...prev, email: emailError || '' }))
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current)
+    }
+
+    if (!emailError && val.trim() !== '') {
+      debounceTimeout.current = setTimeout(() => {
+        checkEmailAvailability(val.trim().toLowerCase())
+      }, 500)
+    } else {
+      setEmailAvailable(null)
+    }
+  }
+
+  const isFormIncomplete =
+    !email || !username || !password || Object.keys(errors).length > 0
+
   return (
-    <>
-      <p>signup to see photos and videos from your friends.</p>
-      <form onSubmit={handleSubmit}>
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.formBox}>
+        <p className={styles.heading}>
+          Sign up to see photos and videos from your friends.
+        </p>
+
         <label htmlFor="email">
           <input
             id="email"
             data-testid="email"
             type="email"
-            placeholder="email address"
+            placeholder="Email address"
+            className={`${styles.input} ${
+              errors.email ? styles.inputError : ''
+            }`}
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value)
-              setEmailAvailable(null)
-            }}
+            onChange={handleEmailChange}
             onBlur={() => checkEmailAvailability(email.trim().toLowerCase())}
           />
-          {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
+          {errors.email && <span className={styles.error}>{errors.email}</span>}
         </label>
-        <br />
+
         <label htmlFor="username">
           <input
             id="username"
             data-testid="username"
             type="text"
-            placeholder="username"
+            placeholder="Username"
+            className={`${styles.input} ${
+              errors.username ? styles.inputError : ''
+            }`}
             value={username}
-            onChange={(e) => {
-              setUsername(e.target.value)
-              setUsernameAvailable(null)
-            }}
-            onBlur={() => checkUsernameAvailability(username.trim())}
+            onChange={handleUsernameChange}
             autoComplete="username"
           />
           {errors.username && (
-            <span style={{ color: 'red' }}>{errors.username}</span>
+            <span className={styles.error}>{errors.username}</span>
           )}
         </label>
-        <br />
-        <label htmlFor="password">
+
+        <label htmlFor="password" className={styles.label}>
           <input
             id="password"
             data-testid="password"
-            type="password"
-            placeholder="password"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Password"
+            className={`${styles.input} ${
+              errors.password ? styles.inputError : ''
+            }`}
             value={password}
             onChange={handlePasswordChange}
             autoComplete="current-password"
+            style={{ paddingRight: '50px' }}
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className={styles.toggleButton}
+          >
+            {showPassword ? <BiHide /> : <BiShow />}
+          </button>
           {errors.password && (
-            <span style={{ color: 'red' }}>{errors.password}</span>
+            <span className={styles.error}>{errors.password}</span>
           )}
         </label>
-        <br />
+
         {password && (
-          <p style={{ color: getPasswordColor(passwordStrength) }}>
-            Password strength: {strengthLabels[passwordStrength]}
-          </p>
+          <div className={styles.strengthBarContainer}>
+            <div
+              className={`${styles.strengthBarFill} ${
+                styles[
+                  ['weak', 'fair', 'medium', 'good', 'strong'][
+                    passwordStrength
+                  ] || 'weak'
+                ]
+              }`}
+            ></div>
+          </div>
         )}
-        <button type="submit">Register</button>
-        <p>{message}</p>
+
+        <button
+          type="submit"
+          className={styles.button}
+          disabled={isFormIncomplete}
+        >
+          Register
+        </button>
+
+        <p style={{ textAlign: 'center', color: 'red', marginTop: '10px' }}>
+          {message}
+        </p>
       </form>
-    </>
+    </div>
   )
 }
