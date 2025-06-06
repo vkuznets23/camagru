@@ -1,6 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import {
+  validateEmail,
+  validateUsername,
+  validatePassword,
+} from '@/utils/formValidations'
+import { checkAvailability, updateAvailabilityError } from '@/utils/api'
 import zxcvbn from 'zxcvbn'
 
 export default function RegisterPage() {
@@ -11,61 +18,114 @@ export default function RegisterPage() {
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
+  const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null)
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(
+    null
+  )
+
+  const router = useRouter()
+
   function checkPasswordStrength(pw: string) {
     const result = zxcvbn(pw)
     const score = result.score // 0 weak → 4 strong
     return score
   }
 
-  function validateForm() {
+  const strengthLabels = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong']
+
+  async function checkEmailAvailability(emailToCheck: string) {
+    if (!emailToCheck) return
+    const available = await checkAvailability(
+      'check-email',
+      'email',
+      emailToCheck
+    )
+    setEmailAvailable(available)
+    setErrors((prev) =>
+      updateAvailabilityError(
+        prev,
+        'email',
+        available,
+        'Email is already taken'
+      )
+    )
+  }
+
+  async function checkUsernameAvailability(usernameToCheck: string) {
+    if (!usernameToCheck) return
+    const available = await checkAvailability(
+      'check-username',
+      'username',
+      usernameToCheck
+    )
+    setUsernameAvailable(available)
+    setErrors((prev) =>
+      updateAvailabilityError(
+        prev,
+        'username',
+        available,
+        'Username is already taken'
+      )
+    )
+  }
+
+  function validateForm(
+    email: string,
+    username: string,
+    password: string,
+    emailAvailable: boolean | null,
+    usernameAvailable: boolean | null
+  ) {
     const newErrors: { [key: string]: string } = {}
 
-    if (!email) {
-      newErrors.email = 'Email is required'
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Invalid email format'
-    }
+    const emailError = validateEmail(email, emailAvailable)
+    if (emailError) newErrors.email = emailError
 
-    if (!username) {
-      newErrors.username = 'Username is required'
-    } else if (username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters'
-    }
+    const usernameError = validateUsername(username, usernameAvailable)
+    if (usernameError) newErrors.username = usernameError
 
-    if (!password) {
-      newErrors.password = 'Password is required'
-    } else if (password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters'
-    } else if (
-      !/[A-Z]/.test(password) ||
-      !/[0-9]/.test(password) ||
-      !/[!@#$%^&*]/.test(password)
-    ) {
-      newErrors.password = 'Password must include uppercase, number, and symbol'
-    }
+    const passwordError = validatePassword(password)
+    if (passwordError) newErrors.password = passwordError
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  const strengthLabels = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong']
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setMessage('')
 
-    const isValid = validateForm()
+    const trimmedEmail = email.trim().toLowerCase()
+    const trimmedUsername = username.trim()
+
+    const isValid = validateForm(
+      trimmedEmail,
+      trimmedUsername,
+      password,
+      emailAvailable,
+      usernameAvailable
+    )
     if (!isValid) return
 
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, username, password }),
+      body: JSON.stringify({
+        email: trimmedEmail,
+        username: trimmedUsername,
+        password,
+      }),
     })
 
     const data = await res.json()
     if (res.ok) {
-      setMessage('User registered! You can now sign in.')
+      setEmail('')
+      setUsername('')
+      setPassword('')
+      setPasswordStrength(0)
+      setErrors({})
+
+      router.push('/auth/signin')
     } else {
       setMessage(data.error || 'Something went wrong')
     }
@@ -92,9 +152,13 @@ export default function RegisterPage() {
             id="email"
             data-testid="email"
             type="email"
-            placeholder="email adress"
+            placeholder="email address"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value)
+              setEmailAvailable(null)
+            }}
+            onBlur={() => checkEmailAvailability(email.trim().toLowerCase())}
           />
           {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
         </label>
@@ -106,7 +170,11 @@ export default function RegisterPage() {
             type="text"
             placeholder="username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value)
+              setUsernameAvailable(null)
+            }}
+            onBlur={() => checkUsernameAvailability(username.trim())}
             autoComplete="username"
           />
           {errors.username && (

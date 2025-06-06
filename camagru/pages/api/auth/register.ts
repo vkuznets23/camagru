@@ -21,8 +21,28 @@ export default async function handler(
       return res.status(400).json({ error: 'Missing fields' })
     }
 
+    const trimmedEmail = email.trim().toLowerCase()
+    const trimmedUsername = username.trim()
+
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      return res.status(400).json({ error: 'Invalid email' })
+    }
+
     if (
+      !trimmedUsername ||
+      trimmedUsername.length < 3 ||
+      trimmedUsername.length > 20 ||
+      !/^[a-zA-Z0-9_-]+$/.test(trimmedUsername)
+    ) {
+      return res.status(400).json({ error: 'Invalid username' })
+    }
+
+    if (
+      !password ||
       password.length < 8 ||
+      password.length > 128 ||
+      /\s/.test(password) ||
+      !/[a-z]/.test(password) ||
       !/[A-Z]/.test(password) ||
       !/[0-9]/.test(password) ||
       !/[!@#$%^&*]/.test(password)
@@ -32,14 +52,16 @@ export default async function handler(
 
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [{ email }, { username }],
+        OR: [{ email: trimmedEmail }, { username: trimmedUsername }],
       },
     })
 
     if (existingUser) {
       const suggestions = []
       for (let i = 0; i < 5; i++) {
-        const suggested = `${username}${Math.floor(Math.random() * 1000)}`
+        const suggested = `${trimmedUsername}${Math.floor(
+          Math.random() * 1000
+        )}`
         const userExists = await prisma.user.findUnique({
           where: { username: suggested },
         })
@@ -54,8 +76,8 @@ export default async function handler(
 
     const user = await prisma.user.create({
       data: {
-        email,
-        username,
+        email: trimmedEmail,
+        username: trimmedUsername,
         password: hashedPassword,
         emailVerified: null,
       },
@@ -87,10 +109,10 @@ export default async function handler(
 
     await transporter.sendMail({
       from: process.env.EMAIL_FROM,
-      to: email,
+      to: trimmedEmail,
       subject: 'Verify your email',
       html: `
-        <p>Hello, ${username}!</p>
+        <p>Hello, ${trimmedUsername}!</p>
         <p>Please verify your email via this link:</p>
         <a href="${verificationUrl}">${verificationUrl}</a>
         <p>You can do it within 24 hours.</p>
