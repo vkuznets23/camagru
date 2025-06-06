@@ -3,13 +3,14 @@
 import { useRef, useState } from 'react'
 import styles from './Register.module.css'
 import { useRouter } from 'next/navigation'
-import { BiHide, BiShow } from 'react-icons/bi'
+import ShowHideToggle from '@/components/ShowHideToggle'
 import {
   validateEmail,
   validateUsername,
   validatePassword,
 } from '@/utils/formValidations'
 import { checkAvailability, updateAvailabilityError } from '@/utils/api'
+import Image from 'next/image'
 import zxcvbn from 'zxcvbn'
 
 export default function RegisterPage() {
@@ -127,7 +128,7 @@ export default function RegisterPage() {
       setPasswordStrength(0)
       setErrors({})
 
-      router.push('/auth/signin')
+      router.push('/auth/notification')
     } else {
       setMessage(data.error || 'Something went wrong')
     }
@@ -190,6 +191,13 @@ export default function RegisterPage() {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.formBox}>
+        <Image
+          src="/camagru_logo.png"
+          alt="camagru logo"
+          className={styles.logoSignup}
+          width={260}
+          height={60}
+        />
         <p className={styles.heading}>
           Sign up to see photos and videos from your friends.
         </p>
@@ -242,13 +250,11 @@ export default function RegisterPage() {
             autoComplete="current-password"
             style={{ paddingRight: '50px' }}
           />
-          <button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
+          <ShowHideToggle
+            show={showPassword}
+            onToggle={() => setShowPassword((prev) => !prev)}
             className={styles.toggleButton}
-          >
-            {showPassword ? <BiHide /> : <BiShow />}
-          </button>
+          />
           {errors.password && (
             <span className={styles.error}>{errors.password}</span>
           )}
@@ -273,7 +279,7 @@ export default function RegisterPage() {
           className={styles.button}
           disabled={isFormIncomplete}
         >
-          Register
+          Sign Up
         </button>
 
         <p style={{ textAlign: 'center', color: 'red', marginTop: '10px' }}>

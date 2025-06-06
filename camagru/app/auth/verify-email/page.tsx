@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import styles from './Verify-email.module.css'
 import { useSearchParams } from 'next/navigation'
 
 export default function VerifyEmail() {
@@ -39,26 +40,29 @@ export default function VerifyEmail() {
     verifyEmail()
   }, [token])
 
-  if (status === 'loading') {
-    return <p>Verifying your email, please wait...</p>
-  }
-
-  if (status === 'success') {
-    return (
-      <div>
-        <h1>Email verified successfully!</h1>
-        <p>
-          You can now <a href="/auth/signin">sign in</a>.
-        </p>
-      </div>
-    )
-  }
-
   return (
-    <div>
-      <h1>Verification failed</h1>
-      <p>{errorMessage}</p>
-      <p>Please try again or contact support.</p>
+    <div className={styles.bg}>
+      <div className={styles.container}>
+        {status === 'loading' && <p>Verifying your email, please wait...</p>}
+
+        {status === 'success' && (
+          <>
+            <h2> Email verified successfully!</h2>
+            <p>
+              You can now <a href="/auth/signin">sign in</a>.
+            </p>
+          </>
+        )}
+
+        {status === 'error' && (
+          <>
+            <h2>Verification failed</h2>
+            <p>
+              {errorMessage} <br /> Please try again or contact support.
+            </p>
+          </>
+        )}
+      </div>
     </div>
   )
 }
