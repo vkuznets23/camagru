@@ -87,24 +87,26 @@ export default function SignInForm() {
         {errors.login && <p className={styles.error}>{errors.login}</p>}
 
         <label htmlFor="password" className={styles.label}>
-          <input
-            id="password"
-            test-dataid="password-signin"
-            className={`${styles.input} ${
-              errors.password ? styles.inputError : ''
-            }`}
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            style={{ paddingRight: '50px' }}
-          />
-          <ShowHideToggle
-            show={showPassword}
-            onToggle={() => setShowPassword((prev) => !prev)}
-            className={styles.toggleButton}
-          />
+          <div className={styles.passwordWrapper}>
+            <input
+              id="password"
+              test-dataid="password-signin"
+              className={`${styles.input} ${
+                errors.password ? styles.inputError : ''
+              }`}
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              style={{ paddingRight: '50px' }}
+            />
+            <ShowHideToggle
+              show={showPassword}
+              onToggle={() => setShowPassword((prev) => !prev)}
+              className={styles.toggleButton}
+            />
+          </div>
         </label>
         {errors.password && <p className={styles.error}>{errors.password}</p>}
         <button

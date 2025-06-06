@@ -138,6 +138,9 @@ export default function RegisterPage() {
     const value = e.target.value
     setPassword(value)
     setPasswordStrength(checkPasswordStrength(value))
+
+    const passwordError = validatePassword(value)
+    setErrors((prev) => ({ ...prev, password: passwordError || '' }))
   }
   const usernameDebounceTimeout = useRef<NodeJS.Timeout | null>(null)
 
@@ -237,24 +240,26 @@ export default function RegisterPage() {
         </label>
 
         <label htmlFor="password" className={styles.label}>
-          <input
-            id="password"
-            data-testid="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            className={`${styles.input} ${
-              errors.password ? styles.inputError : ''
-            }`}
-            value={password}
-            onChange={handlePasswordChange}
-            autoComplete="current-password"
-            style={{ paddingRight: '50px' }}
-          />
-          <ShowHideToggle
-            show={showPassword}
-            onToggle={() => setShowPassword((prev) => !prev)}
-            className={styles.toggleButton}
-          />
+          <div className={styles.passwordWrapper}>
+            <input
+              id="password"
+              data-testid="password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              className={`${styles.input} ${
+                errors.password ? styles.inputError : ''
+              }`}
+              value={password}
+              onChange={handlePasswordChange}
+              autoComplete="current-password"
+              style={{ paddingRight: '50px' }}
+            />
+            <ShowHideToggle
+              show={showPassword}
+              onToggle={() => setShowPassword((prev) => !prev)}
+              className={styles.toggleButton}
+            />
+          </div>
           {errors.password && (
             <span className={styles.error}>{errors.password}</span>
           )}
