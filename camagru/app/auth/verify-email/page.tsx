@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import styles from './Verify-email.module.css'
+import styles from '@/styles/Verify-email.module.css'
 import { useSearchParams } from 'next/navigation'
 
 export default function VerifyEmail() {

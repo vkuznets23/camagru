@@ -17,6 +17,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   emailVerificationTokens EmailVerificationToken[]
+  resetToken       String?
+  resetTokenExpiry DateTime?
 }
 
 model Account {

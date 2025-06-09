@@ -1,3 +1,5 @@
+import zxcvbn from 'zxcvbn'
+
 export function validateEmail(
   email: string,
   emailAvailable: boolean | null
@@ -15,10 +17,8 @@ export function validateUsername(
   if (!username) return 'Username is required'
   if (username.length < 3) return 'Username must be at least 3 characters'
   if (username.length > 20) return 'Username must be max 20 characters'
-  if (!/^[a-zA-Z0-9_-]+$/.test(username))
-    return 'Username can only contain letters, numbers, underscores and dashes'
   if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/.test(username))
-    return 'Username must contain at least 1 character'
+    return 'Username must be 3-20 characters and contain at least one letter'
   if (usernameAvailable === false) return 'Username is already taken'
   return null
 }
@@ -35,4 +35,8 @@ export function validatePassword(password: string): string | null {
   )
     return 'Password must include uppercase, lowercase, number, and symbol'
   return null
+}
+
+export function checkPasswordStrength(pw: string) {
+  return zxcvbn(pw).score
 }
