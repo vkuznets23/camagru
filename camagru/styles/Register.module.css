@@ -19,12 +19,8 @@
   gap: 10px;
 }
 
-.logoSignup {
+.logo {
   margin-bottom: 10px;
-}
-
-.logoSignin {
-  margin-bottom: 40px;
 }
 
 .heading {
@@ -155,5 +151,17 @@ button:disabled {
 }
 
 .extraContainer a:hover {
+  text-decoration: underline;
+}
+
+.forgotPassword {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 14;
+  color: #0095f6;
+  text-decoration: none;
+}
+
+.forgotPassword:hover {
   text-decoration: underline;
 }

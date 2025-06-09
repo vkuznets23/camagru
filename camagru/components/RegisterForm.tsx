@@ -8,10 +8,11 @@ import {
   validateEmail,
   validateUsername,
   validatePassword,
+  checkPasswordStrength,
 } from '@/utils/formValidations'
 import { checkAvailability, updateAvailabilityError } from '@/utils/api'
 import Logo from '@/components/Logo'
-import zxcvbn from 'zxcvbn'
+import PasswordStrengthBar from './PasswordStrengthBar'
 
 export default function RegisterForm() {
   const [email, setEmail] = useState('')
@@ -30,10 +31,6 @@ export default function RegisterForm() {
   const router = useRouter()
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null)
   const usernameDebounceTimeout = useRef<NodeJS.Timeout | null>(null)
-
-  function checkPasswordStrength(pw: string) {
-    return zxcvbn(pw).score
-  }
 
   async function checkEmailAvailability(emailToCheck: string) {
     if (!emailToCheck) return
@@ -199,10 +196,7 @@ export default function RegisterForm() {
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.formBox}>
-        <Logo className={styles.logoSignup} />
-        <p className={styles.heading}>
-          Sign up to see photos and videos from your friends.
-        </p>
+        <Logo className={styles.logo} text="Sign up" />
 
         <label htmlFor="email">
           <input
@@ -264,19 +258,7 @@ export default function RegisterForm() {
           )}
         </label>
 
-        {password && (
-          <div className={styles.strengthBarContainer}>
-            <div
-              className={`${styles.strengthBarFill} ${
-                styles[
-                  ['weak', 'fair', 'medium', 'good', 'strong'][
-                    passwordStrength
-                  ] || 'weak'
-                ]
-              }`}
-            ></div>
-          </div>
-        )}
+        {password && <PasswordStrengthBar strength={passwordStrength} />}
 
         <button
           type="submit"

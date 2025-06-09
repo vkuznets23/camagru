@@ -54,7 +54,7 @@ export default function SignInForm() {
         setErrors({ auth: res.error })
       }
     } else {
-      window.location.href = '/'
+      window.location.href = '/user'
     }
   }
 
@@ -63,7 +63,7 @@ export default function SignInForm() {
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.formBox}>
-        <Logo className={styles.logoSignin} />
+        <Logo className={styles.logo} text="Sign in" />
 
         <label htmlFor="login">
           <input
@@ -105,6 +105,7 @@ export default function SignInForm() {
           </div>
         </label>
         {errors.password && <p className={styles.error}>{errors.password}</p>}
+        {errors.auth && <p className={styles.error}>{errors.auth}</p>}
         <button
           type="submit"
           className={styles.button}
@@ -112,12 +113,9 @@ export default function SignInForm() {
         >
           Sign In
         </button>
-        {errors.auth && (
-          <p className={styles.error} style={{ marginTop: '8px' }}>
-            {errors.auth}
-          </p>
-        )}
-        <a href=""> Forgotten your password?</a>
+        <a className={styles.forgotPassword} href="/auth/forgot-password">
+          Forgotten your password?
+        </a>
       </form>
       <div className={styles.extraContainer}>
         <p>

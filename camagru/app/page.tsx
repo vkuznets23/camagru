@@ -10,8 +10,8 @@ export default function Home() {
           <Image
             src="/instagram.png"
             alt="instagram"
-            width={590}
-            height={420}
+            width={600}
+            height={430}
             style={{ maxWidth: '100%', height: 'auto' }}
           />
         </div>

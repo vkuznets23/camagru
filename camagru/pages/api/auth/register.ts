@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { randomBytes } from 'crypto'
 import nodemailer from 'nodemailer'
@@ -8,8 +7,7 @@ import {
   validatePassword,
   validateUsername,
 } from '@/utils/formValidations'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/utils/prisma'
 
 export default async function handler(
   req: NextApiRequest,

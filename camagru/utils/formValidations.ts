@@ -1,3 +1,5 @@
+import zxcvbn from 'zxcvbn'
+
 export function validateEmail(
   email: string,
   emailAvailable: boolean | null
@@ -33,4 +35,8 @@ export function validatePassword(password: string): string | null {
   )
     return 'Password must include uppercase, lowercase, number, and symbol'
   return null
+}
+
+export function checkPasswordStrength(pw: string) {
+  return zxcvbn(pw).score
 }
