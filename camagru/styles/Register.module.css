@@ -11,7 +11,7 @@
 .formBox {
   background-color: white;
   border: 1px solid #dbdbdb;
-  padding: 40px;
+  padding: 40 40 20 40;
   width: 100%;
   max-width: 350px;
   display: flex;
@@ -36,7 +36,6 @@
 
 .label {
   display: block;
-  margin-bottom: 1rem;
   position: relative;
 }
 
@@ -59,7 +58,6 @@
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 button:disabled {
@@ -104,7 +102,7 @@ button:disabled {
   border-radius: 4px;
   overflow: hidden;
   margin-top: 2px;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 
 .strengthBarFill {
@@ -135,4 +133,27 @@ button:disabled {
 .strong {
   width: 100%;
   background-color: #2e7d32;
+}
+
+.extraContainer {
+  background-color: white;
+  border: 1px solid #dbdbdb;
+  padding: 20px;
+  width: 100%;
+  max-width: 350px;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.extraContainer a {
+  font-weight: bold;
+  text-transform: capitalize;
+  color: #0095f6;
+  text-decoration: none;
+}
+
+.extraContainer a:hover {
+  text-decoration: underline;
 }

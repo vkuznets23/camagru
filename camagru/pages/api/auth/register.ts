@@ -3,6 +3,11 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { randomBytes } from 'crypto'
 import nodemailer from 'nodemailer'
+import {
+  validateEmail,
+  validatePassword,
+  validateUsername,
+} from '@/utils/formValidations'
 
 const prisma = new PrismaClient()
 
@@ -24,30 +29,19 @@ export default async function handler(
     const trimmedEmail = email.trim().toLowerCase()
     const trimmedUsername = username.trim()
 
-    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      return res.status(400).json({ error: 'Invalid email' })
+    const emailError = validateEmail(trimmedEmail, null)
+    if (emailError) {
+      return res.status(400).json({ error: emailError })
     }
 
-    if (
-      !trimmedUsername ||
-      trimmedUsername.length < 3 ||
-      trimmedUsername.length > 20 ||
-      !/^[a-zA-Z0-9_-]+$/.test(trimmedUsername)
-    ) {
-      return res.status(400).json({ error: 'Invalid username' })
+    const usernameError = validateUsername(trimmedUsername, null)
+    if (usernameError) {
+      return res.status(400).json({ error: usernameError })
     }
 
-    if (
-      !password ||
-      password.length < 8 ||
-      password.length > 128 ||
-      /\s/.test(password) ||
-      !/[a-z]/.test(password) ||
-      !/[A-Z]/.test(password) ||
-      !/[0-9]/.test(password) ||
-      !/[!@#$%^&*]/.test(password)
-    ) {
-      return res.status(400).json({ error: 'Password too weak' })
+    const passwordError = validatePassword(password)
+    if (passwordError) {
+      return res.status(400).json({ error: passwordError })
     }
 
     const existingUser = await prisma.user.findFirst({

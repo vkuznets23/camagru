@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../verify-email/Verify-email.module.css'
+import styles from '@/styles/Verify-email.module.css'
 import Link from 'next/link'
 
 export default function CheckEmail() {
