@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/utils/prisma'
 import bcrypt from 'bcryptjs'
@@ -18,7 +18,7 @@ declare module 'next-auth' {
   }
 }
 
-export default NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -79,4 +79,6 @@ export default NextAuth({
   pages: {
     signIn: '/auth/signin',
   },
-})
+}
+
+export default NextAuth(authOptions)

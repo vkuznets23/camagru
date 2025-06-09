@@ -1,6 +1,6 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
+import { signIn, getSession } from 'next-auth/react'
 import ShowHideToggle from '@/components/ShowHideToggle'
 import { useRef, useState } from 'react'
 import Logo from '@/components/Logo'
@@ -54,7 +54,13 @@ export default function SignInForm() {
         setErrors({ auth: res.error })
       }
     } else {
-      window.location.href = '/user'
+      const session = await getSession()
+      const userId = session?.user?.id
+      if (userId) {
+        window.location.href = `/user/${userId}`
+      } else {
+        window.location.href = '/'
+      }
     }
   }
 
