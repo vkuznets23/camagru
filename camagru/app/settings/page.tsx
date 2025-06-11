@@ -8,7 +8,7 @@ import Image from 'next/image'
 import React from 'react'
 
 export default function SettingsPage() {
-  const { data: session, status } = useSession()
+  const { data: session, status, update } = useSession()
   const router = useRouter()
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
@@ -19,13 +19,15 @@ export default function SettingsPage() {
     if (status === 'unauthenticated') {
       router.push('/auth/signin')
     }
+  }, [status, router])
 
+  useEffect(() => {
     if (session?.user) {
       setName(session.user.name || '')
       setBio(session.user.bio || '')
       setImage(session.user.image || '')
     }
-  }, [router, session, status])
+  }, [session?.user])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,8 +40,12 @@ export default function SettingsPage() {
     })
 
     if (res.ok) {
+      const data = await res.json()
+      setName(data?.user?.name ?? '')
+      setBio(data?.user?.bio ?? '')
+      setImage(data?.user?.image ?? '')
+      await update()
       router.refresh()
-      alert('Profile updated!')
     } else {
       alert('Failed to update.')
     }

@@ -23,6 +23,7 @@ export default function Navbar() {
 
   const userId = session?.user?.id
   console.log(session)
+
   return (
     <nav className={styles.navbar}>
       <Logo />
