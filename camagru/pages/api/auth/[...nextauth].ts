@@ -86,13 +86,18 @@ export const authOptions: AuthOptions = {
       return token
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-        session.user.username = token.username as string
-        session.user.email = token.email as string
-        session.user.name = token.name as string | null
-        session.user.bio = token.bio as string | null
-        session.user.image = token.image as string | null
+      if (token?.id) {
+        const userFromDb = await prisma.user.findUnique({
+          where: { id: token.id as string },
+        })
+        if (userFromDb && session.user) {
+          session.user.id = userFromDb.id
+          session.user.username = userFromDb.username
+          session.user.email = userFromDb.email
+          session.user.name = userFromDb.name
+          session.user.bio = userFromDb.bio
+          session.user.image = userFromDb.image
+        }
       }
       return session
     },

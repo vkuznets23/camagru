@@ -1,43 +1,48 @@
-import { prisma } from '@/utils/prisma'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/pages/api/auth/[...nextauth]'
-import { notFound, redirect } from 'next/navigation'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import styles from '@/styles/Profile.module.css'
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: { id: string }
-}) {
-  const session = await getServerSession(authOptions)
-  if (!session) {
-    redirect('/auth/signin')
-  }
+// take it from different part
+type User = {
+  id: string
+  name: string
+  username: string
+  bio?: string
+  image?: string
+}
 
-  const user = await prisma.user.findUnique({
-    where: { id: params.id },
-  })
+export default function UserProfilePage() {
+  const params = useParams()
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id
+  const [user, setUser] = useState<User | null>(null)
 
-  if (!user) {
-    notFound()
-  }
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch(`/api/user/${id}`)
+      const data = await res.json()
+      setUser(data)
+    }
+    if (id) fetchUser()
+  }, [id])
 
-  console.log(user)
+  if (!user) return <div>Loading...</div>
 
   return (
     <div className={styles.profileContainer}>
       <Image
         src={user.image || '/default_avatar.png'}
-        alt={user.username}
-        width={150}
-        height={150}
+        width={100}
+        height={100}
+        alt="avatar"
         className={styles.avatar}
       />
       <div className={styles.profileInfo}>
-        <h2>{user.username} </h2>
-        {user.name && <p>{user.name}</p>}
-        {user.bio && <p>{user.bio}</p>}
+        <h2>{user.username}</h2>
+        <p>{user.name}</p>
+        <p>{user.bio}</p>
       </div>
     </div>
   )

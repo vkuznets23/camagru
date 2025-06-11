@@ -21,6 +21,7 @@ export default function SettingsPage() {
     }
   }, [status, router])
 
+  console.log(session?.user)
   useEffect(() => {
     if (session?.user) {
       setName(session.user.name || '')

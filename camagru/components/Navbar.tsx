@@ -8,6 +8,7 @@ import Image from 'next/image'
 import TextInput from './TextInput'
 import styles from '@/styles/Navbar.module.css'
 import { useSession } from 'next-auth/react'
+import SignoutButton from './SignoutButton'
 
 export default function Navbar() {
   const { data: session } = useSession()
@@ -43,6 +44,7 @@ export default function Navbar() {
         <Link href="/settings" className={styles.navBtn}>
           Settings
         </Link>
+        <SignoutButton />
         {userId && (
           <Link href={`/user/${userId}`} className={styles.avatarLink}>
             <Image
