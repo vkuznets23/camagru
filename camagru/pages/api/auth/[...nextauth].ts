@@ -3,19 +3,29 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/utils/prisma'
 import bcrypt from 'bcryptjs'
 
+type MyUser = {
+  id: string
+  username: string
+  email: string
+  name?: string | null
+  image?: string | null
+  bio?: string | null
+}
+
 declare module 'next-auth' {
   interface Session {
     user: {
       id: string
+      username: string
+      email: string
       name?: string | null
-      email?: string | null
       image?: string | null
+      bio?: string | null
     }
   }
 
-  interface User {
-    id: string
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface User extends MyUser {}
 }
 
 export const authOptions: AuthOptions = {
@@ -26,7 +36,7 @@ export const authOptions: AuthOptions = {
         login: { label: 'Email or Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<MyUser | null> {
         if (!credentials?.login || !credentials?.password) return null
 
         const user = await prisma.user.findFirst({
@@ -53,10 +63,12 @@ export const authOptions: AuthOptions = {
 
         return {
           id: user.id,
-          name: user.username,
+          username: user.username,
+          name: user.name,
           email: user.email,
           image: user.image,
-        }
+          bio: user.bio,
+        } as MyUser
       },
     }),
   ],
@@ -65,12 +77,22 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
+        token.username = user.username
+        token.email = user.email
+        token.name = user.name as string | null
+        token.image = user.image as string | null
+        token.bio = user.bio as string | null
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
+        session.user.username = token.username as string
+        session.user.email = token.email as string
+        session.user.name = token.name as string | null
+        session.user.bio = token.bio as string | null
+        session.user.image = token.image as string | null
       }
       return session
     },

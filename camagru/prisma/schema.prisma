@@ -12,32 +12,27 @@ model User {
   username      String    @unique
   email         String    @unique
   password      String
-  emailVerified DateTime?
   image         String?
-  accounts      Account[]
-  sessions      Session[]
-  emailVerificationTokens EmailVerificationToken[]
-  resetToken       String?
-  resetTokenExpiry DateTime?
-}
+  bio           String?
+  name          String?   //name u show
+  createdAt     DateTime?   @default(now())
+  updatedAt     DateTime?   @updatedAt
 
-model Account {
-  id                 String   @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
 
-  user User @relation(fields: [userId], references: [id])
+  // dependancies
+  // posts         Post[]
+  // stories       Story[]
+  // followers     Follower[]  @relation("UserFollowers", references: [id])
+  // following     Follower[]  @relation("UserFollowing", references: [id])
 
-  @@unique([provider, providerAccountId])
+  // for passwords/email
+  emailVerified     DateTime?
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+
+  // next-auth
+  sessions                  Session[]
+  emailVerificationTokens   EmailVerificationToken[]
 }
 
 model Session {

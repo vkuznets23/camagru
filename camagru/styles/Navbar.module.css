@@ -1,0 +1,60 @@
+.navbar {
+  max-width: 935px;
+  margin: 0 auto;
+  height: 60px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.searchForm {
+  flex: 1;
+  max-width: 300px;
+  margin: 0 20px;
+}
+
+.searchForm input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.navBtn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #333;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.navBtn:hover {
+  background: #f0f0f0;
+}
+
+.avatarLink {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  border: 1px solid #e1e1e1;
+  border-radius: 50%;
+  object-fit: cover;
+}

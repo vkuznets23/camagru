@@ -17,9 +17,7 @@ export default function Logo({
         height={60}
         className={className}
       />
-      <p className={styles.heading}>
-        {text} to see photos and videos from your friends
-      </p>
+      <p className={styles.heading}>{text}</p>
     </>
   )
 }
