@@ -17,8 +17,8 @@ export function validateUsername(
   if (!username) return 'Username is required'
   if (username.length < 3) return 'Username must be at least 3 characters'
   if (username.length > 20) return 'Username must be max 20 characters'
-  if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/.test(username))
-    return 'Username must be 3-20 characters and contain at least one letter'
+  if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9_.-]{3,20}$/.test(username))
+    return 'Username must be 3–20 characters, include a letter, and use only letters, numbers, ., _, or -'
   if (usernameAvailable === false) return 'Username is already taken'
   return null
 }

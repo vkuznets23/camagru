@@ -8,7 +8,9 @@ import {
   validatePassword,
 } from '@/utils/formValidations'
 import PasswordStrengthBar from '@/components/PasswordStrengthBar'
-import ShowHideToggle from '@/components/ShowHideToggle'
+import Button from '@/components/Button'
+import PasswordInput from '@/components/PasswordInput'
+import SuccessMessage from '@/components/SuccessMessage'
 
 export default function ResetPassword() {
   const searchParams = useSearchParams()
@@ -16,7 +18,6 @@ export default function ResetPassword() {
 
   const [password, setPassword] = useState('')
   const [passwordStrength, setPasswordStrength] = useState(0)
-  const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
@@ -58,34 +59,19 @@ export default function ResetPassword() {
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.formBox}>
         <h2>Set a new password</h2>
-        <label htmlFor="password" className={styles.label}>
-          <div className={styles.passwordWrapper}>
-            <input
-              id="password"
-              name="new-password"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="New password"
-              value={password}
-              onChange={handlePasswordChange}
-              className={`${styles.input} ${error ? styles.inputError : ''} `}
-              autoComplete="new-password"
-              style={{ paddingRight: '50px' }}
-            />
-            <ShowHideToggle
-              show={showPassword}
-              onToggle={() => setShowPassword((prev) => !prev)}
-              className={styles.toggleButton}
-            />
-          </div>
-          {error && <p className={styles.error}>{error}</p>}
-        </label>
-
+        <PasswordInput
+          id="password"
+          testdataid="password"
+          placeholder="New password"
+          className={styles.input}
+          value={password}
+          onChange={handlePasswordChange}
+          autoComplete="new-password"
+          error={error}
+        />
         {password && <PasswordStrengthBar strength={passwordStrength} />}
-
-        <button type="submit" className={styles.button}>
-          Update Password
-        </button>
-        {message && <p style={{ color: 'green' }}>{message}</p>}
+        <Button text="Update Password" />
+        <SuccessMessage message={message} />
       </form>
     </div>
   )
