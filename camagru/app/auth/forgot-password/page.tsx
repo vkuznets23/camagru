@@ -42,14 +42,18 @@ export default function ForgotPasswordPage() {
         <TextInput
           id="email"
           type="email"
-          testdataid="forgot-email"
+          data-testid="forgot-email"
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           error={error}
           className={styles.input}
         />
-        <Button text="Send Reset Link" />
+        <Button
+          id="reset-button"
+          testid="reset-button"
+          text="Send Reset Link"
+        />
         {message && <p style={{ color: 'green' }}>{message}</p>}
       </form>
     </div>

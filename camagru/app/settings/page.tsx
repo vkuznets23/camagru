@@ -118,7 +118,12 @@ export default function SettingsPage() {
             className={styles.avatarPreview}
           />
         )}
-        <Button text={loading ? 'Saving...' : 'Save'} disabled={loading} />
+        <Button
+          id="saving-button"
+          testid="saving-button"
+          text={loading ? 'Saving...' : 'Save'}
+          disabled={loading}
+        />
       </form>
     </div>
   )

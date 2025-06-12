@@ -205,7 +205,7 @@ export default function RegisterForm() {
         </div>
         <TextInput
           id="email"
-          testdataid="email"
+          data-testid="email"
           type="email"
           placeholder="Email address"
           className={styles.input}
@@ -215,7 +215,7 @@ export default function RegisterForm() {
         />
         <TextInput
           id="username"
-          testdataid="username"
+          data-testid="username"
           placeholder="Username"
           className={styles.input}
           value={username}
@@ -225,7 +225,7 @@ export default function RegisterForm() {
         />
         <PasswordInput
           id="password"
-          testdataid="password"
+          data-testid="password"
           placeholder="Password"
           className={styles.input}
           value={password}
@@ -234,7 +234,12 @@ export default function RegisterForm() {
           error={errors.password}
         />
         {password && <PasswordStrengthBar strength={passwordStrength} />}
-        <Button text="Sign Up" disabled={isFormIncomplete} />
+        <Button
+          id="register-button"
+          testid="register-button"
+          text="Sign Up"
+          disabled={isFormIncomplete}
+        />
         <p style={{ textAlign: 'center', color: 'red', marginTop: '10px' }}>
           {message}
         </p>

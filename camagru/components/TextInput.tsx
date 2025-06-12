@@ -2,7 +2,7 @@ import styles from '@/styles/Register.module.css'
 
 type TextInputProps = {
   id: string
-  testdataid: string
+  'data-testid': string
   type?: string
   placeholder?: string
   value: string
@@ -14,7 +14,7 @@ type TextInputProps = {
 
 export default function TextInput({
   id,
-  testdataid,
+  'data-testid': testdataid,
   type = 'text',
   placeholder,
   value,
@@ -35,7 +35,11 @@ export default function TextInput({
         className={`${className} ${error ? styles.inputError : ''}`}
         autoComplete={autoComplete}
       />
-      {error && <span className={styles.error}>{error}</span>}
+      {error && (
+        <span data-testid={`${id}-error`} className={styles.error}>
+          {error}
+        </span>
+      )}
     </label>
   )
 }

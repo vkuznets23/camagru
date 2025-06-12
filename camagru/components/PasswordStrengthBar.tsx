@@ -13,7 +13,10 @@ export default function PasswordStrengthBar({
 
   return (
     <div className={styles.strengthBarContainer}>
-      <div className={`${styles.strengthBarFill} ${styles[label]}`}></div>
+      <div
+        data-testid="strength-bar"
+        className={`${styles.strengthBarFill} ${styles[label]}`}
+      ></div>
     </div>
   )
 }

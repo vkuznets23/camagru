@@ -80,7 +80,7 @@ export default function SignInForm() {
 
         <TextInput
           id="login"
-          testdataid="login-signin"
+          data-testid="login-signin"
           placeholder="Email or Username"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
@@ -114,7 +114,12 @@ export default function SignInForm() {
         </label>
         {errors.password && <p className={styles.error}>{errors.password}</p>}
         {errors.auth && <p className={styles.error}>{errors.auth}</p>}
-        <Button text="Sign Ip" disabled={isFormIncomplete} />
+        <Button
+          id="signin-button"
+          testid="signin-button"
+          text="Sign In"
+          disabled={isFormIncomplete}
+        />
 
         <a className={styles.forgotPassword} href="/auth/forgot-password">
           Forgotten your password?
