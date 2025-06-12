@@ -1,10 +1,12 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
+import { signIn, getSession } from 'next-auth/react'
 import ShowHideToggle from '@/components/ShowHideToggle'
 import { useRef, useState } from 'react'
 import Logo from '@/components/Logo'
 import styles from '@/styles/Register.module.css'
+import Button from './Button'
+import TextInput from './TextInput'
 
 export default function SignInForm() {
   const [login, setLogin] = useState('')
@@ -54,7 +56,13 @@ export default function SignInForm() {
         setErrors({ auth: res.error })
       }
     } else {
-      window.location.href = '/user'
+      const session = await getSession()
+      const userId = session?.user?.id
+      if (userId) {
+        window.location.href = `/user/${userId}`
+      } else {
+        window.location.href = '/'
+      }
     }
   }
 
@@ -63,23 +71,23 @@ export default function SignInForm() {
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.formBox}>
-        <Logo className={styles.logo} text="Sign in" />
-
-        <label htmlFor="login">
-          <input
-            id="login"
-            test-dataid="login-signin"
-            className={`${styles.input} ${
-              errors.login ? styles.inputError : ''
-            }`}
-            type="text"
-            placeholder="Email or Username"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
-            autoComplete="username"
+        <div className={styles.logoContainer}>
+          <Logo
+            className={styles.logo}
+            text="Sign in to see photos and videos from your friends"
           />
-        </label>
-        {errors.login && <p className={styles.error}>{errors.login}</p>}
+        </div>
+
+        <TextInput
+          id="login"
+          testdataid="login-signin"
+          placeholder="Email or Username"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+          error={errors.login}
+          className={styles.input}
+          autoComplete="username"
+        />
 
         <label htmlFor="password" className={styles.label}>
           <div className={styles.passwordWrapper}>
@@ -106,13 +114,8 @@ export default function SignInForm() {
         </label>
         {errors.password && <p className={styles.error}>{errors.password}</p>}
         {errors.auth && <p className={styles.error}>{errors.auth}</p>}
-        <button
-          type="submit"
-          className={styles.button}
-          disabled={isFormIncomplete}
-        >
-          Sign In
-        </button>
+        <Button text="Sign Ip" disabled={isFormIncomplete} />
+
         <a className={styles.forgotPassword} href="/auth/forgot-password">
           Forgotten your password?
         </a>

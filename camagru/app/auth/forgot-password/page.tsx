@@ -1,5 +1,7 @@
 'use client'
 
+import Button from '@/components/Button'
+import TextInput from '@/components/TextInput'
 import styles from '@/styles/Register.module.css'
 import { useState } from 'react'
 
@@ -37,18 +39,18 @@ export default function ForgotPasswordPage() {
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.formBox}>
         <h2>Reset your password</h2>
-        <input
+        <TextInput
+          id="email"
           type="email"
+          testdataid="forgot-email"
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={error}
           className={styles.input}
         />
-        <button type="submit" className={styles.button}>
-          Send Reset Link
-        </button>
+        <Button text="Send Reset Link" />
         {message && <p style={{ color: 'green' }}>{message}</p>}
-        {error && <p className={styles.error}>{error}</p>}
       </form>
     </div>
   )

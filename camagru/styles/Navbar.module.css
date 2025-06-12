@@ -1,0 +1,94 @@
+.navbar {
+  max-width: 935px;
+  margin: 0 auto;
+  height: 60px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.searchForm {
+  flex: 1;
+  max-width: 300px;
+  margin: 0 20px;
+}
+
+.searchForm input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  border: 1px solid #e1e1e1;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.menuContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  min-width: 160px;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.toggleBtn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.navBtn {
+  display: block;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.navBtn:hover {
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

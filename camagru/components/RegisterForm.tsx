@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react'
 import styles from '@/styles/Register.module.css'
 import { useRouter } from 'next/navigation'
-import ShowHideToggle from '@/components/ShowHideToggle'
 import {
   validateEmail,
   validateUsername,
@@ -13,13 +12,15 @@ import {
 import { checkAvailability, updateAvailabilityError } from '@/utils/api'
 import Logo from '@/components/Logo'
 import PasswordStrengthBar from './PasswordStrengthBar'
+import Button from './Button'
+import TextInput from './TextInput'
+import PasswordInput from './PasswordInput'
 
 export default function RegisterForm() {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [passwordStrength, setPasswordStrength] = useState(0)
-  const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
@@ -196,78 +197,44 @@ export default function RegisterForm() {
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.formBox}>
-        <Logo className={styles.logo} text="Sign up" />
-
-        <label htmlFor="email">
-          <input
-            id="email"
-            data-testid="email"
-            type="email"
-            placeholder="Email address"
-            className={`${styles.input} ${
-              errors.email ? styles.inputError : ''
-            } `}
-            value={email}
-            onChange={handleEmailChange}
+        <div className={styles.logoContainer}>
+          <Logo
+            className={styles.logo}
+            text="Sign up to see photos and videos from your friends"
           />
-          {errors.email && <span className={styles.error}>{errors.email}</span>}
-        </label>
-
-        <label htmlFor="username">
-          <input
-            id="username"
-            data-testid="username"
-            type="text"
-            placeholder="Username"
-            className={`${styles.input} ${
-              errors.username ? styles.inputError : ''
-            } `}
-            value={username}
-            onChange={handleUsernameChange}
-            autoComplete="username"
-          />
-          {errors.username && (
-            <span className={styles.error}>{errors.username}</span>
-          )}
-        </label>
-
-        <label htmlFor="password" className={styles.label}>
-          <div className={styles.passwordWrapper}>
-            <input
-              id="password"
-              name="new-password"
-              data-testid="password"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-              className={`${styles.input} ${
-                errors.password ? styles.inputError : ''
-              } `}
-              value={password}
-              onChange={handlePasswordChange}
-              autoComplete="new-password"
-              style={{ paddingRight: '50px' }}
-            />
-            <ShowHideToggle
-              show={showPassword}
-              onToggle={() => setShowPassword((prev) => !prev)}
-              className={styles.toggleButton}
-            />
-          </div>
-          {errors.password && (
-            <span className={styles.error}>{errors.password}</span>
-          )}
-        </label>
-
+        </div>
+        <TextInput
+          id="email"
+          testdataid="email"
+          type="email"
+          placeholder="Email address"
+          className={styles.input}
+          value={email}
+          onChange={handleEmailChange}
+          error={errors.email}
+        />
+        <TextInput
+          id="username"
+          testdataid="username"
+          placeholder="Username"
+          className={styles.input}
+          value={username}
+          onChange={handleUsernameChange}
+          autoComplete="username"
+          error={errors.username}
+        />
+        <PasswordInput
+          id="password"
+          testdataid="password"
+          placeholder="Password"
+          className={styles.input}
+          value={password}
+          onChange={handlePasswordChange}
+          autoComplete="new-password"
+          error={errors.password}
+        />
         {password && <PasswordStrengthBar strength={passwordStrength} />}
-
-        <button
-          type="submit"
-          className={styles.button}
-          disabled={isFormIncomplete}
-        >
-          Sign Up
-        </button>
-
+        <Button text="Sign Up" disabled={isFormIncomplete} />
         <p style={{ textAlign: 'center', color: 'red', marginTop: '10px' }}>
           {message}
         </p>

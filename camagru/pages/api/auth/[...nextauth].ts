@@ -1,24 +1,34 @@
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/utils/prisma'
 import bcrypt from 'bcryptjs'
+
+type MyUser = {
+  id: string
+  username: string
+  email: string
+  name?: string | null
+  image?: string | null
+  bio?: string | null
+}
 
 declare module 'next-auth' {
   interface Session {
     user: {
       id: string
+      username: string
+      email: string
       name?: string | null
-      email?: string | null
       image?: string | null
+      bio?: string | null
     }
   }
 
-  interface User {
-    id: string
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface User extends MyUser {}
 }
 
-export default NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -26,7 +36,7 @@ export default NextAuth({
         login: { label: 'Email or Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<MyUser | null> {
         if (!credentials?.login || !credentials?.password) return null
 
         const user = await prisma.user.findFirst({
@@ -53,10 +63,12 @@ export default NextAuth({
 
         return {
           id: user.id,
-          name: user.username,
+          username: user.username,
+          name: user.name,
           email: user.email,
           image: user.image,
-        }
+          bio: user.bio,
+        } as MyUser
       },
     }),
   ],
@@ -65,12 +77,27 @@ export default NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
+        token.username = user.username
+        token.email = user.email
+        token.name = user.name as string | null
+        token.image = user.image as string | null
+        token.bio = user.bio as string | null
       }
       return token
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
+      if (token?.id) {
+        const userFromDb = await prisma.user.findUnique({
+          where: { id: token.id as string },
+        })
+        if (userFromDb && session.user) {
+          session.user.id = userFromDb.id
+          session.user.username = userFromDb.username
+          session.user.email = userFromDb.email
+          session.user.name = userFromDb.name
+          session.user.bio = userFromDb.bio
+          session.user.image = userFromDb.image
+        }
       }
       return session
     },
@@ -79,4 +106,6 @@ export default NextAuth({
   pages: {
     signIn: '/auth/signin',
   },
-})
+}
+
+export default NextAuth(authOptions)
