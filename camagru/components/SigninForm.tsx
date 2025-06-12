@@ -1,17 +1,16 @@
 'use client'
 
 import { signIn, getSession } from 'next-auth/react'
-import ShowHideToggle from '@/components/ShowHideToggle'
 import { useRef, useState } from 'react'
 import Logo from '@/components/Logo'
 import styles from '@/styles/Register.module.css'
 import Button from './Button'
 import TextInput from './TextInput'
+import PasswordInput from './PasswordInput'
 
 export default function SignInForm() {
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
   const loginRef = useRef<HTMLInputElement>(null)
@@ -59,9 +58,9 @@ export default function SignInForm() {
       const session = await getSession()
       const userId = session?.user?.id
       if (userId) {
-        window.location.href = `/user/${userId}`
+        window.location.assign(`/user/${userId}`)
       } else {
-        window.location.href = '/'
+        window.location.assign('/')
       }
     }
   }
@@ -91,28 +90,18 @@ export default function SignInForm() {
 
         <label htmlFor="password" className={styles.label}>
           <div className={styles.passwordWrapper}>
-            <input
+            <PasswordInput
               id="password"
-              name="current-password"
-              test-dataid="password-signin"
-              className={`${styles.input} ${
-                errors.password ? styles.inputError : ''
-              }`}
-              type={showPassword ? 'text' : 'password'}
+              data-testid="password-signin"
+              className={styles.input}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              style={{ paddingRight: '50px' }}
-            />
-            <ShowHideToggle
-              show={showPassword}
-              onToggle={() => setShowPassword((prev) => !prev)}
-              className={styles.toggleButton}
+              error={errors.password}
             />
           </div>
         </label>
-        {errors.password && <p className={styles.error}>{errors.password}</p>}
         {errors.auth && <p className={styles.error}>{errors.auth}</p>}
         <Button
           id="signin-button"

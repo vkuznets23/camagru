@@ -14,6 +14,7 @@ export default function NavbarWrapper() {
     '/auth/reset-password',
     '/auth/verify-email',
     '/auth/verify-request',
+    '/',
   ]
   if (pathName == null) return null
   const shouldHideNavbar = hideNavbar.includes(pathName)

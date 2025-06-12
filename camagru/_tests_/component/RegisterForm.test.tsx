@@ -35,6 +35,8 @@ describe('RegisterForm', () => {
   it('renders inputs and buttons', () => {
     render(<RegisterForm />)
 
+    expect(screen.queryByTestId('navbar')).not.toBeInTheDocument()
+
     expect(screen.getByTestId('email')).toBeInTheDocument()
     expect(screen.getByTestId('password')).toBeInTheDocument()
     expect(screen.getByTestId('username')).toBeInTheDocument()
