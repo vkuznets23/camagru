@@ -41,12 +41,12 @@ export default function Navbar() {
   const userId = session?.user?.id
 
   return (
-    <nav className={styles.navbar}>
+    <nav id="navbar" data-testid="navbar" className={styles.navbar}>
       <Logo className={styles.logo} />
       <form onSubmit={handleSearch} className={styles.searchForm}>
         <TextInput
           id="search"
-          testdataid="search"
+          data-testid="search"
           placeholder="Search accounts..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}

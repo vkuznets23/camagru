@@ -4,7 +4,7 @@ import styles from '@/styles/Register.module.css'
 
 type PasswordInputProps = {
   id: string
-  testdataid: string
+  'data-testid': string
   placeholder?: string
   value: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -15,7 +15,7 @@ type PasswordInputProps = {
 
 export default function PasswordInput({
   id,
-  testdataid,
+  'data-testid': testdataid,
   placeholder,
   value,
   onChange,
@@ -44,7 +44,11 @@ export default function PasswordInput({
           className={styles.toggleButton}
         />
       </div>
-      {error && <span className={styles.error}>{error}</span>}
+      {error && (
+        <span data-testid={`${id}-error`} className={styles.error}>
+          {error}
+        </span>
+      )}
     </label>
   )
 }

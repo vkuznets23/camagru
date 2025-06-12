@@ -16,6 +16,7 @@ export default function ShowHideToggle({
   return (
     <button
       type="button"
+      data-testid="toggle-btn"
       onClick={onToggle}
       className={className}
       aria-label={show ? 'Hide password' : 'Show password'}

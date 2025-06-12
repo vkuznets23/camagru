@@ -61,7 +61,7 @@ export default function ResetPassword() {
         <h2>Set a new password</h2>
         <PasswordInput
           id="password"
-          testdataid="password"
+          data-testid="password"
           placeholder="New password"
           className={styles.input}
           value={password}
@@ -70,7 +70,11 @@ export default function ResetPassword() {
           error={error}
         />
         {password && <PasswordStrengthBar strength={passwordStrength} />}
-        <Button text="Update Password" />
+        <Button
+          id="update-psw-button"
+          testid="update-psw-button"
+          text="Update Password"
+        />
         <SuccessMessage message={message} />
       </form>
     </div>
