@@ -197,10 +197,12 @@ export default function RegisterForm() {
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.formBox}>
-        <Logo
-          className={styles.logo}
-          text="Sign up to see photos and videos from your friends"
-        />
+        <div className={styles.logoContainer}>
+          <Logo
+            className={styles.logo}
+            text="Sign up to see photos and videos from your friends"
+          />
+        </div>
         <TextInput
           id="email"
           testdataid="email"

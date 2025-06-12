@@ -71,10 +71,12 @@ export default function SignInForm() {
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.formBox}>
-        <Logo
-          className={styles.logo}
-          text="Sign in to see photos and videos from your friends"
-        />
+        <div className={styles.logoContainer}>
+          <Logo
+            className={styles.logo}
+            text="Sign in to see photos and videos from your friends"
+          />
+        </div>
 
         <TextInput
           id="login"

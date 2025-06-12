@@ -28,7 +28,7 @@ export default function UserProfilePage() {
     if (id) fetchUser()
   }, [id])
 
-  if (!user) return <div>Loading...</div>
+  if (!user) return <div className={styles.profileContainer}>Loading...</div>
 
   return (
     <div className={styles.profileContainer}>

@@ -19,6 +19,8 @@ export default async function handler(
 
   const { name, bio, image } = req.body
 
+  console.log('Received data:', { name, bio, image, userId: session.user.id })
+
   try {
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },

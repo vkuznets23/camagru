@@ -13,9 +13,10 @@ export default function Logo({
       <Image
         src="/camagru_logo.png"
         alt="camagru logo"
-        width={260}
+        width={180}
         height={60}
         className={className}
+        priority
       />
       <p className={styles.heading}>{text}</p>
     </>

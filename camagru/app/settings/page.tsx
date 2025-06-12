@@ -4,8 +4,12 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-
+import styles from '@/styles/Settings.module.css'
 import React from 'react'
+import Button from '@/components/Button'
+
+const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOADPRESET
 
 export default function SettingsPage() {
   const { data: session, status, update } = useSession()
@@ -13,6 +17,7 @@ export default function SettingsPage() {
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
   const [image, setImage] = useState('')
+  const [uploading, setUploading] = useState(false)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -21,7 +26,6 @@ export default function SettingsPage() {
     }
   }, [status, router])
 
-  console.log(session?.user)
   useEffect(() => {
     if (session?.user) {
       setName(session.user.name || '')
@@ -54,8 +58,41 @@ export default function SettingsPage() {
     setLoading(false)
   }
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', `${uploadPreset}`)
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      )
+
+      const data = await res.json()
+      if (data.secure_url) {
+        setImage(data.secure_url)
+      }
+    } catch (err) {
+      console.error('Upload failed', err)
+      alert('Upload failed')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  if (loading) return <div>Loading</div>
+
   return (
-    <div>
+    <div className={styles.profileSettingsContainer}>
       <h1>Profile Settings</h1>
       <form onSubmit={handleSubmit}>
         <label>
@@ -69,21 +106,19 @@ export default function SettingsPage() {
         </label>
         <br />
         <label>
-          Avatar URL:
-          <input value={image} onChange={(e) => setImage(e.target.value)} />
+          <input type="file" accept="image/*" onChange={handleFileChange} />
         </label>
+        {uploading && <div>uploading</div>}
         {image && (
           <Image
             src={image}
             alt="Avatar Preview"
             width={80}
             height={80}
-            style={{ borderRadius: '50%' }}
+            className={styles.avatarPreview}
           />
         )}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Save'}
-        </button>
+        <Button text={loading ? 'Saving...' : 'Save'} disabled={loading} />
       </form>
     </div>
   )
