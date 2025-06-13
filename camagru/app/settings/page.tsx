@@ -1,14 +1,14 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import styles from '@/styles/Settings.module.css'
 import React from 'react'
 import Button from '@/components/Button'
 import Modal from '@/components/Modal'
-import CameraCapture, { CameraCaptureRef } from '@/components/CameraCapture'
+import CameraCapture from '@/components/CameraCapture'
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
 const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOADPRESET
@@ -22,12 +22,7 @@ export default function SettingsPage() {
   const [uploading, setUploading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
-
-  const cameraRef = useRef<CameraCaptureRef | null>(null)
-  const handleCloseCamera = () => {
-    cameraRef.current?.stopCamera()
-    setShowCamera(false)
-  }
+  const [cameraStopping, setCameraStopping] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -103,6 +98,12 @@ export default function SettingsPage() {
     }
   }
 
+  const handleStopCamera = () => {
+    setCameraStopping(true)
+    setShowCamera(false)
+    setTimeout(() => setCameraStopping(false), 5000)
+  }
+
   if (loading) return <div>Loading</div>
 
   return (
@@ -122,15 +123,14 @@ export default function SettingsPage() {
         <label>
           <input type="file" accept="image/*" onChange={handleFileChange} />
         </label>
-        {!showCamera && (
-          <button type="button" onClick={() => setShowCamera(true)}>
-            take a picture
-          </button>
-        )}
-
-        <Modal isOpen={showCamera} onClose={handleCloseCamera}>
-          <CameraCapture ref={cameraRef} onCapture={uploadImage} />
+        <button type="button" onClick={() => setShowCamera(true)}>
+          take a picture
+        </button>
+        {cameraStopping && <p>camera stoppping...</p>}
+        <Modal isOpen={showCamera} onClose={handleStopCamera}>
+          <CameraCapture onCapture={uploadImage} />
         </Modal>
+
         {uploading && <div>uploading</div>}
         {image && (
           <Image

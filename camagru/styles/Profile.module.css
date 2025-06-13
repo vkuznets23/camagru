@@ -7,6 +7,22 @@
   align-items: flex-start;
 }
 
+.profileContainer h2 {
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.profileContainer h3 {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.profileContainer p {
+  font-size: 14px;
+  font-weight: normal;
+}
+
 .avatar {
   width: 120px;
   height: 120px;
@@ -31,4 +47,19 @@
   margin: 8px 0;
   font-size: 16px;
   color: #333;
+}
+
+.button {
+  background-color: #0095f6;
+  border: none;
+  padding: 8px 15px;
+  color: white;
+  font-weight: normal;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.usernamePanel {
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
