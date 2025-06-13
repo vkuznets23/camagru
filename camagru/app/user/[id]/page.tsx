@@ -41,8 +41,11 @@ export default function UserProfilePage() {
     return (
       <div className={styles.profileContainer}>
         <div className={styles.skeletonAvatar} />
-        <div className={styles.skeletonText} />
-        <div className={styles.skeletonTextShort} />
+        <div className={styles.profileInfo}>
+          <div className={styles.skeletonTextShort} />
+          <div className={styles.skeletonText} />
+          <div className={styles.skeletonText} />
+        </div>
       </div>
     )
 
@@ -62,7 +65,7 @@ export default function UserProfilePage() {
         <div className={styles.usernamePanel}>
           <h2>{user.username}</h2>
           {isMyProfile ? (
-            <Link href="/settings" className={styles.navBtn}>
+            <Link href="/edit-user" className={styles.navBtn}>
               <MdOutlineEdit />
             </Link>
           ) : (
