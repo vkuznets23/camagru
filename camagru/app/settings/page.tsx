@@ -7,6 +7,7 @@ import Image from 'next/image'
 import styles from '@/styles/Settings.module.css'
 import React from 'react'
 import Button from '@/components/Button'
+import Modal from '@/components/Modal'
 import CameraCapture, { CameraCaptureRef } from '@/components/CameraCapture'
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
@@ -126,14 +127,10 @@ export default function SettingsPage() {
             take a picture
           </button>
         )}
-        {showCamera && (
-          <div>
-            <CameraCapture ref={cameraRef} onCapture={uploadImage} />
-            <button type="button" onClick={handleCloseCamera}>
-              close camera
-            </button>
-          </div>
-        )}
+
+        <Modal isOpen={showCamera} onClose={handleCloseCamera}>
+          <CameraCapture ref={cameraRef} onCapture={uploadImage} />
+        </Modal>
         {uploading && <div>uploading</div>}
         {image && (
           <Image
