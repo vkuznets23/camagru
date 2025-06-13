@@ -73,7 +73,7 @@ export default function UserProfilePage() {
           )}
         </div>
         <h3>{user.name}</h3>
-        <p>{user.bio}</p>
+        <p className={styles.bio}>{user.bio}</p>
       </div>
     </div>
   )

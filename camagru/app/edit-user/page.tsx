@@ -117,6 +117,14 @@ export default function SettingsPage() {
     setShowCamera(false)
   }
 
+  useEffect(() => {
+    const textarea = document.querySelector('textarea')
+    if (textarea) {
+      textarea.style.height = 'auto'
+      textarea.style.height = textarea.scrollHeight + 'px'
+    }
+  }, [bio])
+
   if (loading)
     return (
       <div className={styles.profileContainer}>
@@ -150,10 +158,30 @@ export default function SettingsPage() {
             </button>
           </div>
           <div className={styles.profileInfo}>
-            <input value={name} onChange={(e) => setName(e.target.value)} />
-            {errors.name && <p className={styles.error}>{errors.name}</p>}
-            <textarea value={bio} onChange={(e) => setBio(e.target.value)} />
-            {errors.bio && <p className={styles.error}>{errors.bio}</p>}
+            <input
+              maxLength={30}
+              className={`${styles.input} ${
+                errors.name ? styles.inputError : ''
+              }`}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <div className={styles.errorContainer}>
+              {errors.name && <p className={styles.error}>{errors.name}</p>}
+              <div className={styles.charCount}>{name.length}/30</div>
+            </div>
+            <textarea
+              maxLength={150}
+              className={`${styles.textarea} ${
+                errors.bio ? styles.inputError : ''
+              }`}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+            />
+            <div className={styles.errorContainer}>
+              {errors.bio && <p className={styles.error}>{errors.bio}</p>}
+              <div className={styles.charCount}>{bio.length}/150</div>
+            </div>
           </div>
         </div>
         <Modal isOpen={showCamera} onClose={handleStopCamera}>

@@ -45,6 +45,10 @@
   object-fit: cover;
 }
 
+.bio {
+  white-space: pre-line;
+}
+
 .profileInfo {
   flex: 1;
   display: flex;
@@ -58,13 +62,7 @@
   font-size: 24px;
 }
 
-.profileInfo p {
-  margin: 8px 0;
-  font-size: 16px;
-  color: #333;
-}
-
-.profileInfo input {
+.input {
   padding: 0.75rem 1rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
@@ -73,7 +71,7 @@
   resize: vertical;
   transition: border-color 0.3s;
 }
-.profileInfo textarea {
+.textarea {
   padding: 0.75rem 1rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
@@ -92,6 +90,29 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.inputError {
+  border-color: red;
+  outline: none;
+}
+
+.errorContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
 .usernamePanel {
   display: flex;
   gap: 15px;
@@ -137,9 +158,15 @@
   }
 }
 
-/* edit profile */
-
 .imageContainer {
   display: flex;
   flex-direction: column;
+}
+
+.charCount {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  margin-left: auto;
+  text-align: right;
 }
