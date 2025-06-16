@@ -1,10 +1,5 @@
 import { test, expect } from '@playwright/test'
 
-test.beforeEach(async ({ request }) => {
-  const res = await request.post('http://localhost:3001/api/test/reset')
-  expect(res.status()).toBe(200)
-})
-
 test('all registration flow', async ({ page }) => {
   await page.goto('/auth/register')
 
