@@ -8,6 +8,7 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/camagru/$1',
   },
+  testPathIgnorePatterns: ['<rootDir>/_tests_/e2e/'],
 }
 
 export default createJestConfig(customJestConfig)
