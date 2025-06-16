@@ -17,12 +17,9 @@ jest.mock('next/navigation', () => ({
 // toggle button behavior
 // errors with bad inputs (weak password / invalid email / invalid username)
 // sign up button disabled when form is empty / activ ewhen all fields are filled
-
-// debounce
-// check that redirect happends
 // user is taken / email is taken
 
-describe('RegisterForm', () => {
+describe('Basic RegisterForm tests', () => {
   beforeEach(() => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -201,6 +198,93 @@ describe('RegisterForm', () => {
           'Username must be 3–20 characters, include a letter, and use only letters, numbers, ., _, or -'
         )
       })
+    })
+  })
+
+  describe('taken email/user tests', () => {
+    beforeEach(() => {
+      jest.resetAllMocks()
+    })
+
+    it('shows error when email is already taken', async () => {
+      const mockFetch = jest.fn((url) => {
+        if (url.includes('check-email')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ available: false }),
+          } as unknown as Response)
+        }
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ available: true }),
+        } as unknown as Response)
+      })
+      global.fetch = mockFetch
+      render(<RegisterForm />)
+
+      const emailInput = screen.getByTestId('email')
+      const usernameInput = screen.getByTestId('username')
+      const passwordInput = screen.getByTestId('password')
+      const submitButton = screen.getByTestId('register-button')
+
+      await userEvent.type(emailInput, 'existing@example.com')
+      await userEvent.type(usernameInput, 'validusername')
+      await userEvent.type(passwordInput, 'ValidPass123!')
+
+      await waitFor(() => {
+        expect(mockFetch).toHaveBeenCalledWith(
+          expect.stringContaining('existing%40example.com')
+        )
+      })
+
+      await waitFor(() => {
+        expect(screen.getByTestId('email-error')).toBeInTheDocument()
+        expect(screen.getByTestId('email-error')).toHaveTextContent(
+          'Email is already taken'
+        )
+      })
+
+      expect(submitButton).toBeDisabled()
+    })
+    it('shows error when user is already taken', async () => {
+      const mockFetch = jest.fn((url) => {
+        if (url.includes('check-username')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ available: false }),
+          } as unknown as Response)
+        }
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ available: true }),
+        } as unknown as Response)
+      })
+      global.fetch = mockFetch
+      render(<RegisterForm />)
+
+      const emailInput = screen.getByTestId('email')
+      const usernameInput = screen.getByTestId('username')
+      const passwordInput = screen.getByTestId('password')
+      const submitButton = screen.getByTestId('register-button')
+
+      await userEvent.type(emailInput, 'validemail@example.com')
+      await userEvent.type(usernameInput, 'existinguser')
+      await userEvent.type(passwordInput, 'ValidPass123!')
+
+      await waitFor(() => {
+        expect(mockFetch).toHaveBeenCalledWith(
+          expect.stringContaining('existinguser')
+        )
+      })
+
+      await waitFor(() => {
+        expect(screen.getByTestId('username-error')).toBeInTheDocument()
+        expect(screen.getByTestId('username-error')).toHaveTextContent(
+          'Username is already taken'
+        )
+      })
+
+      expect(submitButton).toBeDisabled()
     })
   })
 })
