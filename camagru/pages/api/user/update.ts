@@ -17,11 +17,22 @@ export default async function handler(
     return res.status(401).json({ message: 'Unauthorized' })
   }
 
-  const { name, bio, image } = req.body
+  const { name, bio, image, action } = req.body
 
   console.log('Received data:', { name, bio, image, userId: session.user.id })
 
   try {
+    if (action === 'delete-avatar') {
+      const updatedUser = await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          image: null,
+        },
+      })
+      return res
+        .status(200)
+        .json({ message: 'Avatar deleted', user: updatedUser })
+    }
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
       data: {

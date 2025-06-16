@@ -23,6 +23,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
+  const [showPhotoOption, setShowPhotoOptions] = useState(false)
 
   const formValidation = (name: string, bio: string) => {
     const newErrors: { [key: string]: string } = {}
@@ -117,6 +118,26 @@ export default function SettingsPage() {
     setShowCamera(false)
   }
 
+  const handleDeleteAvatar = async () => {
+    try {
+      const res = await fetch('/api/user/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete-avatar' }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        console.log('Avatar deleted:', data)
+        setImage('')
+      } else {
+        console.error('Failed to delete avatar')
+      }
+    } catch (err) {
+      console.error('Error deleting avatar', err)
+    }
+  }
+
   useEffect(() => {
     const textarea = document.querySelector('textarea')
     if (textarea) {
@@ -142,20 +163,53 @@ export default function SettingsPage() {
       <div className={styles.pageContainer}>
         <div className={styles.profileContainerEdit}>
           <div className={styles.imageContainer}>
-            {image && (
-              <Image
-                src={image}
-                alt="Avatar Preview"
-                width={80}
-                height={80}
-                className={styles.avatar}
-              />
-            )}
+            <Image
+              src={image || '/default_avatar.png'}
+              alt="Avatar Preview"
+              width={80}
+              height={80}
+              className={styles.avatar}
+            />
             {uploading && <div>uploading</div>}
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            <button type="button" onClick={() => setShowCamera(true)}>
-              take a picture
-            </button>
+            <div className={styles.photoOptionsWrapper}>
+              <button
+                type="button"
+                className={styles.secondBtn}
+                onClick={() => setShowPhotoOptions(!showPhotoOption)}
+              >
+                {showPhotoOption ? 'Close' : 'Edit photo'}
+              </button>
+              {showPhotoOption && (
+                <div className={styles.editBtnsContainer}>
+                  <label className={styles.option}>
+                    Upload from gallery
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className={styles.hiddenInput}
+                    />
+                  </label>
+                  <button
+                    className={styles.option}
+                    type="button"
+                    onClick={() => {
+                      setShowCamera(true)
+                      setShowPhotoOptions(false)
+                    }}
+                  >
+                    take a picture
+                  </button>
+                  <button
+                    className={styles.option}
+                    type="button"
+                    onClick={handleDeleteAvatar}
+                  >
+                    remove photo
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           <div className={styles.profileInfo}>
             <input
