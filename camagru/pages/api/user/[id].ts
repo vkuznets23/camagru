@@ -19,6 +19,21 @@ export default async function handler(
         name: true,
         bio: true,
         image: true,
+        _count: {
+          select: {
+            posts: true,
+            followers: true,
+            following: true,
+          },
+        },
+        posts: {
+          select: {
+            id: true,
+            content: true,
+            image: true,
+            createdAt: true,
+          },
+        },
       },
     })
 

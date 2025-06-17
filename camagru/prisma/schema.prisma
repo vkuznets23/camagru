@@ -20,10 +20,9 @@ model User {
 
 
   // dependancies
-  // posts         Post[]
-  // stories       Story[]
-  // followers     Follower[]  @relation("UserFollowers", references: [id])
-  // following     Follower[]  @relation("UserFollowing", references: [id])
+  posts         Post[]
+  followers Follower[] @relation("UserFollowers")
+  following Follower[] @relation("UserFollowing")
 
   // for passwords/email
   emailVerified     DateTime?
@@ -34,6 +33,28 @@ model User {
   sessions                  Session[]
   emailVerificationTokens   EmailVerificationToken[]
 }
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  image     String?
+  userId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Follower {
+  id          String @id @default(cuid())
+  followerId  String
+  followingId String
+
+  follower User @relation("UserFollowing", fields: [followerId], references: [id])
+  following User @relation("UserFollowers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+
 
 model Session {
   id           String   @id @default(cuid())

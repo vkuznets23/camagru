@@ -7,9 +7,6 @@ jest.mock('next-auth/react', () => ({
   signIn: jest.fn(),
 }))
 
-// fail login
-// check that nav bar is not on the screen
-
 describe('SigninForm', () => {
   it('render inputs and buttons', () => {
     render(<SignInForm />)
