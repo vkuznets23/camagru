@@ -11,14 +11,6 @@ jest.mock('next/navigation', () => ({
   }),
 }))
 
-//tests:
-// form rendering (username / email / password fields appear)
-// passwrodStrengthBar appears
-// toggle button behavior
-// errors with bad inputs (weak password / invalid email / invalid username)
-// sign up button disabled when form is empty / activ ewhen all fields are filled
-// user is taken / email is taken
-
 describe('Basic RegisterForm tests', () => {
   beforeEach(() => {
     global.fetch = jest.fn(() =>
