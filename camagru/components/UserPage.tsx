@@ -8,6 +8,7 @@ import styles from '@/styles/Profile.module.css'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { type User } from '@/types/user'
+import UserPosts from './Posts'
 
 export default function UserProfile() {
   const params = useParams()
@@ -87,27 +88,7 @@ export default function UserProfile() {
           <p className={styles.bio}>{user.bio}</p>
         </div>
       </div>
-      <div className={styles.posts}>
-        <h3>Posts</h3>
-        <div className={styles.postsContainer}>
-          {user.posts.length === 0 ? (
-            <p>No posts yet.</p>
-          ) : (
-            user.posts.map((post) => (
-              <div key={post.id}>
-                {post.image && (
-                  <Image
-                    width={270}
-                    height={270}
-                    src={post.image}
-                    alt="Post image"
-                  />
-                )}
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+      <UserPosts posts={user.posts} />
     </div>
   )
 }
