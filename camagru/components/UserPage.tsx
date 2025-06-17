@@ -44,70 +44,69 @@ export default function UserProfile() {
   const isMyProfile = session?.user?.id === user.id
 
   return (
-    <div className={styles.profileContainer}>
-      <Image
-        src={user.image || '/default_avatar.png'}
-        width={100}
-        height={100}
-        alt="avatar"
-        className={styles.avatar}
-        priority
-        onError={(e) => (e.currentTarget.src = '/default_avatar.png')}
-      />
-      <div className={styles.profileInfo}>
-        <div className={styles.usernamePanel}>
-          <h2>{user.username}</h2>
-          {isMyProfile ? (
-            <Link
-              data-testid="edit-user"
-              href="/edit-user"
-              className={styles.navBtn}
-            >
-              <MdOutlineEdit />
-            </Link>
+    <div className={styles.userContainer}>
+      <div className={styles.profileContainer}>
+        <Image
+          src={user.image || '/default_avatar.png'}
+          width={100}
+          height={100}
+          alt="avatar"
+          className={styles.avatar}
+          priority
+          onError={(e) => (e.currentTarget.src = '/default_avatar.png')}
+        />
+        <div className={styles.profileInfo}>
+          <div className={styles.usernamePanel}>
+            <h2>{user.username}</h2>
+            {isMyProfile ? (
+              <Link
+                data-testid="edit-user"
+                href="/edit-user"
+                className={styles.navBtn}
+              >
+                <MdOutlineEdit />
+              </Link>
+            ) : (
+              <button data-testid="follow-user" className={styles.button}>
+                follow
+              </button>
+            )}
+          </div>
+          <div className={styles.followersContainer}>
+            <div>
+              <strong>{user._count.posts} </strong> posts
+            </div>
+            <div>
+              <strong>{user._count.followers}</strong> followers
+            </div>
+            <div>
+              <strong>{user._count.following}</strong> following
+            </div>
+          </div>
+          <h3>{user.name}</h3>
+          <p className={styles.bio}>{user.bio}</p>
+        </div>
+      </div>
+      <div className={styles.posts}>
+        <h3>Posts</h3>
+        <div className={styles.postsContainer}>
+          {user.posts.length === 0 ? (
+            <p>No posts yet.</p>
           ) : (
-            <button data-testid="follow-user" className={styles.button}>
-              follow
-            </button>
+            user.posts.map((post) => (
+              <div key={post.id}>
+                {post.image && (
+                  <Image
+                    width={270}
+                    height={270}
+                    src={post.image}
+                    alt="Post image"
+                  />
+                )}
+              </div>
+            ))
           )}
         </div>
-        <div className={styles.followersContainer}>
-          <div>
-            <strong>{user._count.posts} </strong> posts
-          </div>
-          <div>
-            <strong>{user._count.followers}</strong> followers
-          </div>
-          <div>
-            <strong>{user._count.following}</strong> following
-          </div>
-        </div>
-        <h3>{user.name}</h3>
-        <p className={styles.bio}>{user.bio}</p>
-      </div>
-      <div>
-        <h3>Posts</h3>
-        {user.posts.length === 0 ? (
-          <p>No posts yet.</p>
-        ) : (
-          user.posts.map((post) => (
-            <div
-              key={post.id}
-              style={{ borderBottom: '1px solid #ddd', padding: '0.5rem 0' }}
-            >
-              <p>{post.content}</p>
-              {post.image && (
-                <Image
-                  width={200}
-                  height={200}
-                  src={post.image}
-                  alt="Post image"
-                  style={{ maxWidth: '100%', borderRadius: 8 }}
-                />
-              )}
-            </div>
-          ))
-        )}
       </div>
     </div>
   )

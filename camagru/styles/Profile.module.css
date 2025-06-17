@@ -1,8 +1,9 @@
 .profileContainer {
   max-width: 935px;
-  margin: 0 auto;
+  width: 935px;
+  margin: auto;
   display: flex;
-  gap: 40px;
+  gap: 140px;
   padding: 20px 45px 45px 45px;
   align-items: flex-start;
 }
@@ -243,4 +244,24 @@
     gap: 1rem;
     font-size: 0.9rem;
   }
+}
+
+.userContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.posts {
+  max-width: 935px;
+  width: 935px;
+  margin: auto;
+  display: flex;
+  padding: 20px 45px 45px 45px;
+  flex-direction: column;
+}
+.postsContainer {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  display: flex;
+  gap: 15px;
 }
