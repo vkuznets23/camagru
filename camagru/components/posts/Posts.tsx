@@ -2,13 +2,7 @@
 
 import PostCard from './PostCard'
 import styles from '@/styles/Profile.module.css'
-
-type Post = {
-  id: string
-  image: string
-  content: string
-  createdAt: string
-}
+import { type Post } from '@/types/post'
 
 interface UserPostsProps {
   posts: Post[]

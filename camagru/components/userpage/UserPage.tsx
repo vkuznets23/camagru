@@ -6,9 +6,9 @@ import { useSession } from 'next-auth/react'
 import { type User } from '@/types/user'
 import styles from '@/styles/Profile.module.css'
 import Image from 'next/image'
-import UserPosts from '../posts/Posts'
 import UserSkeleton from './UserSkeleton'
 import UsernamePanel from './UsernamePanel'
+import UserContentTabs from '../posts/UserContentTabs'
 
 export default function UserProfile() {
   const params = useParams()
@@ -57,7 +57,7 @@ export default function UserProfile() {
         />
         <UsernamePanel user={user} isMyProfile={isMyProfile} />
       </div>
-      <UserPosts posts={user.posts} />
+      <UserContentTabs posts={user.posts} />
     </div>
   )
 }
