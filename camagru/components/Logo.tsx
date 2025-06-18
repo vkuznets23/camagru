@@ -12,7 +12,7 @@ export default function Logo({
   className,
   text,
   width = 180,
-  height = 54,
+  height = 60,
 }: LogoProps) {
   return (
     <>

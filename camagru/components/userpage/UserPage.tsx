@@ -55,9 +55,7 @@ export default function UserProfile() {
           priority
           onError={(e) => (e.currentTarget.src = '/default_avatar.png')}
         />
-        <div className={styles.profileInfo}>
-          <UsernamePanel user={user} isMyProfile={isMyProfile} />
-        </div>
+        <UsernamePanel user={user} isMyProfile={isMyProfile} />
       </div>
       <UserPosts posts={user.posts} />
     </div>

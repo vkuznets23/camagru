@@ -1,4 +1,4 @@
-import SignInForm from '@/components/SigninForm'
+import SignInForm from '@/components/registration/SigninForm'
 import styles from './page.module.css'
 import Image from 'next/image'
 

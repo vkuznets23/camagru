@@ -3,12 +3,14 @@
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import styles from '@/styles/Profile.module.css'
-import React from 'react'
 import Button from '@/components/Button'
 import Modal from '@/components/Modal'
 import CameraCapture from '@/components/CameraCapture'
+import AvatarUploader from '@/components/edituser/AvatarUploader'
+import NameInput from '@/components/edituser/NameInput'
+import BioInput from '@/components/edituser/BioInput'
+import SkeletonLoading from '@/components/edituser/SkeletonLoading'
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
 const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOADPRESET
@@ -23,8 +25,8 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [showPhotoOption, setShowPhotoOptions] = useState(false)
 
+  // utils?
   const formValidation = (name: string, bio: string) => {
     const newErrors: { [key: string]: string } = {}
     if (name.length > 30 || name.length < 2) {
@@ -71,7 +73,6 @@ export default function SettingsPage() {
       setBio(data?.user?.bio ?? '')
       setImage(data?.user?.image ?? '')
       await update()
-      //   router.refresh()
       router.push(`/user/${session?.user?.id}`)
     } else {
       alert('Failed to update.')
@@ -107,13 +108,6 @@ export default function SettingsPage() {
     }
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      uploadImage(file)
-    }
-  }
-
   const handleStopCamera = () => {
     setShowCamera(false)
   }
@@ -146,96 +140,34 @@ export default function SettingsPage() {
     }
   }, [bio])
 
-  if (loading)
-    return (
-      <div className={styles.profileContainer}>
-        <div className={styles.skeletonAvatar} />
-        <div className={styles.profileInfo}>
-          <div className={styles.skeletonTextShort} />
-          <div className={styles.skeletonText} />
-          <div className={styles.skeletonText} />
-        </div>
-      </div>
-    )
+  if (loading) return <SkeletonLoading />
 
   return (
     <form onSubmit={handleSubmit}>
       <div className={styles.pageContainer}>
         <div className={styles.profileContainerEdit}>
-          <div className={styles.imageContainer}>
-            <Image
-              src={image || '/default_avatar.png'}
-              alt="Avatar Preview"
-              width={80}
-              height={80}
-              className={styles.avatar}
-            />
-            {uploading && <div>uploading</div>}
-            <div className={styles.photoOptionsWrapper}>
-              <button
-                type="button"
-                className={styles.secondBtn}
-                onClick={() => setShowPhotoOptions(!showPhotoOption)}
-              >
-                {showPhotoOption ? 'Close' : 'Edit photo'}
-              </button>
-              {showPhotoOption && (
-                <div className={styles.editBtnsContainer}>
-                  <label className={styles.option}>
-                    Upload from gallery
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className={styles.hiddenInput}
-                    />
-                  </label>
-                  <button
-                    className={styles.option}
-                    type="button"
-                    onClick={() => {
-                      setShowCamera(true)
-                      setShowPhotoOptions(false)
-                    }}
-                  >
-                    take a picture
-                  </button>
-                  <button
-                    className={styles.option}
-                    type="button"
-                    onClick={handleDeleteAvatar}
-                  >
-                    remove photo
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className={styles.profileInfo}>
-            <input
-              maxLength={30}
-              className={`${styles.input} ${
-                errors.name ? styles.inputError : ''
-              }`}
-              value={name}
+          <AvatarUploader
+            image={image}
+            setImage={setImage}
+            onOpenCamera={() => setShowCamera(true)}
+            onDelete={handleDeleteAvatar}
+            uploading={uploading}
+            onFileChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) uploadImage(file)
+            }}
+          />
+          <div className={styles.profileBio}>
+            <NameInput
+              name={name}
               onChange={(e) => setName(e.target.value)}
+              error={errors.name}
             />
-            <div className={styles.errorContainer}>
-              {errors.name && <p className={styles.error}>{errors.name}</p>}
-              <div className={styles.charCount}>{name.length}/30</div>
-            </div>
-            <textarea
-              maxLength={150}
-              className={`${styles.textarea} ${
-                errors.bio ? styles.inputError : ''
-              }`}
-              value={bio}
+            <BioInput
+              bio={bio}
               onChange={(e) => setBio(e.target.value)}
+              error={errors.bio}
             />
-            <div className={styles.errorContainer}>
-              {errors.bio && <p className={styles.error}>{errors.bio}</p>}
-              <div className={styles.charCount}>{bio.length}/150</div>
-            </div>
           </div>
         </div>
         <Modal isOpen={showCamera} onClose={handleStopCamera}>

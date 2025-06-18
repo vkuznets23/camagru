@@ -22,15 +22,21 @@ export default function UserPosts({ posts }: UserPostsProps) {
   return (
     <div className={styles.posts}>
       <div className={styles.postsContainer}>
-        {posts.map((post) => (
-          <PostCard
-            key={post.id}
-            id={post.id}
-            image={post.image}
-            content={post.content}
-            createdAt={post.createdAt}
-          />
-        ))}
+        {posts
+          .slice()
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
+          .map((post) => (
+            <PostCard
+              key={post.id}
+              id={post.id}
+              image={post.image}
+              content={post.content}
+              createdAt={post.createdAt}
+            />
+          ))}
       </div>
     </div>
   )

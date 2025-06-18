@@ -36,8 +36,8 @@ model User {
 
 model Post {
   id        String   @id @default(cuid())
-  content   String
-  image     String?
+  content   String?
+  image     String
   userId    String
   createdAt DateTime @default(now())
 
