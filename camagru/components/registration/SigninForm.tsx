@@ -4,9 +4,9 @@ import { signIn, getSession } from 'next-auth/react'
 import { useRef, useState } from 'react'
 import Logo from '@/components/Logo'
 import styles from '@/styles/Register.module.css'
-import Button from './Button'
-import TextInput from './TextInput'
-import PasswordInput from './PasswordInput'
+import Button from '@/components/Button'
+import TextInput from '@/components/TextInput'
+import PasswordInput from '@/components/PasswordInput'
 
 export default function SignInForm() {
   const [login, setLogin] = useState('')

@@ -1,6 +1,6 @@
 'use client'
 
-import AddPost from '@/components/AddPost'
+import AddPost from '@/components/posts/AddPost'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 

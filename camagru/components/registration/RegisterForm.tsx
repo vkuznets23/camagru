@@ -11,10 +11,10 @@ import {
 } from '@/utils/formValidations'
 import { checkAvailability, updateAvailabilityError } from '@/utils/api'
 import Logo from '@/components/Logo'
-import PasswordStrengthBar from './PasswordStrengthBar'
-import Button from './Button'
-import TextInput from './TextInput'
-import PasswordInput from './PasswordInput'
+import PasswordStrengthBar from '../PasswordStrengthBar'
+import Button from '../Button'
+import TextInput from '../TextInput'
+import PasswordInput from '../PasswordInput'
 
 export default function RegisterForm() {
   const [email, setEmail] = useState('')

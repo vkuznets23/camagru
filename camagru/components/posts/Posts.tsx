@@ -1,6 +1,6 @@
 'use client'
 
-import PostCard from '@/components/PostCard'
+import PostCard from './PostCard'
 import styles from '@/styles/Profile.module.css'
 
 type Post = {
@@ -10,7 +10,11 @@ type Post = {
   createdAt: string
 }
 
-export default function UserPosts({ posts }: { posts: Post[] }) {
+interface UserPostsProps {
+  posts: Post[]
+}
+
+export default function UserPosts({ posts }: UserPostsProps) {
   if (posts.length === 0) {
     return <p>No posts yet.</p>
   }
