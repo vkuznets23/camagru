@@ -1,0 +1,36 @@
+'use client'
+
+import Image from 'next/image'
+import styles from '@/styles/CommentList.module.css'
+import { type Comment } from '@/types/comment'
+
+type CommentListProps = {
+  comments: Comment[]
+}
+
+export default function CommentList({ comments }: CommentListProps) {
+  return (
+    <div className={styles.commentsSection}>
+      {comments.map((comment) => (
+        <div key={comment.id} className={styles.commentBlock}>
+          <div className={styles.commentHeader}>
+            <Image
+              className={styles.commentAvatar}
+              src={comment.user.image || '/default_avatar.png'}
+              alt="user avatar"
+              width={32}
+              height={32}
+            />
+            <div className={styles.commentMeta}>
+              <p className={styles.commentUsername}>{comment.user.username}</p>
+              <small className={styles.commentDate}>
+                {new Date(comment.createdAt).toLocaleString()}
+              </small>
+            </div>
+          </div>
+          <p className={styles.commentContent}>{comment.content}</p>
+        </div>
+      ))}
+    </div>
+  )
+}

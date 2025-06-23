@@ -2,8 +2,9 @@
 
 import Image from 'next/image'
 import styles from '@/styles/PostModal.module.css'
-import { type Comment } from '@/types/commet'
-import { useState } from 'react'
+import { type Comment } from '@/types/comment'
+import CommentForm from './AddCommentForm'
+import CommentList from './CommentsList'
 
 type PostModalProps = {
   image: string
@@ -14,6 +15,7 @@ type PostModalProps = {
   avatar?: string
   comments: Comment[]
   postId: string
+  onCommentAdded: (comment: Comment) => void
 }
 
 export default function PostModal({
@@ -25,36 +27,8 @@ export default function PostModal({
   avatar,
   comments,
   postId,
+  onCommentAdded,
 }: PostModalProps) {
-  const [newComment, setNewComment] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [commentsList, setCommentsList] = useState<Comment[]>(comments)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newComment.trim()) return
-
-    setIsSubmitting(true)
-
-    try {
-      const res = await fetch('/api/comments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: newComment, postId }),
-      })
-
-      if (!res.ok) throw new Error('Failed to post comment')
-
-      const addedComment = await res.json()
-      setCommentsList([addedComment, ...commentsList])
-      setNewComment('')
-    } catch (err) {
-      console.error('Failed to post comment', err)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -69,39 +43,27 @@ export default function PostModal({
         </div>
         <div className={styles.contentWrapper}>
           <div className={styles.info}>
-            <div className={styles.usernamePanel}>
-              <Image
-                className={styles.avatar}
-                src={avatar || '/default_avatar.png'}
-                alt="avatar"
-                width={100}
-                height={100}
-              />
-              <p className={styles.username}>{username}</p>
-            </div>
-            <p>{content}</p>
-            <small>{new Date(createdAt).toLocaleString()}</small>
-            {commentsList.map((comment) => (
-              <div key={comment.id}>
-                <p>
-                  <strong>{comment.user.username}</strong>: {comment.content}
-                </p>
-                <small>{new Date(comment.createdAt).toLocaleString()}</small>
+            <div className={styles.infodivider}>
+              <div className={styles.usernamePanel}>
+                <Image
+                  className={styles.avatar}
+                  src={avatar || '/default_avatar.png'}
+                  alt="avatar"
+                  width={32}
+                  height={32}
+                />
+                <div className={styles.postMeta}>
+                  <p className={styles.username}>{username}</p>
+                  <small className={styles.postDate}>
+                    {new Date(createdAt).toLocaleString()}
+                  </small>
+                </div>
               </div>
-            ))}
-            <form onSubmit={handleSubmit} className={styles.commentForm}>
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Write a comment..."
-                rows={2}
-                required
-              />
-              <button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Posting...' : 'Post'}
-              </button>
-            </form>
+              <p className={styles.postContent}>{content}</p>
+            </div>
+            <CommentList comments={comments} />
           </div>
+          <CommentForm postId={postId} onCommentAdded={onCommentAdded} />
         </div>
         <button onClick={onClose} className={styles.closeBtn}>
           ×

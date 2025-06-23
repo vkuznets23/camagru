@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import PostModal from './PostModal'
-import { type Comment } from '@/types/commet'
+import { type Comment } from '@/types/comment'
 
 type PostCardProps = {
   id: string
@@ -13,6 +13,7 @@ type PostCardProps = {
   content: string
   createdAt: string
   comments: Comment[]
+  onCommentAdded: (postId: string, comment: Comment) => void
 }
 
 export default function PostCard({
@@ -23,6 +24,7 @@ export default function PostCard({
   username,
   avatar,
   comments,
+  onCommentAdded,
 }: PostCardProps) {
   const [open, setOpen] = useState(false)
 
@@ -55,6 +57,7 @@ export default function PostCard({
           avatar={avatar}
           comments={comments}
           postId={id}
+          onCommentAdded={(newComment) => onCommentAdded(id, newComment)}
         />
       )}
     </>
