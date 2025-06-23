@@ -29,6 +29,9 @@ export default function UserPosts({ posts }: UserPostsProps) {
               image={post.image}
               content={post.content}
               createdAt={post.createdAt}
+              username={post.user.username}
+              avatar={post.user.image}
+              comments={post.comments}
             />
           ))}
       </div>

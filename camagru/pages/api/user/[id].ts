@@ -32,6 +32,21 @@ export default async function handler(
             content: true,
             image: true,
             createdAt: true,
+            user: {
+              select: {
+                username: true,
+                name: true,
+                image: true,
+              },
+            },
+            comments: {
+              orderBy: { createdAt: 'desc' },
+              include: {
+                user: {
+                  select: { username: true, image: true },
+                },
+              },
+            },
           },
         },
       },

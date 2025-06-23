@@ -3,15 +3,27 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import PostModal from './PostModal'
+import { type Comment } from '@/types/commet'
 
 type PostCardProps = {
   id: string
   image: string
+  username?: string
+  avatar?: string
   content: string
   createdAt: string
+  comments: Comment[]
 }
 
-export default function PostCard({ image, content, createdAt }: PostCardProps) {
+export default function PostCard({
+  id,
+  image,
+  content,
+  createdAt,
+  username,
+  avatar,
+  comments,
+}: PostCardProps) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -39,6 +51,10 @@ export default function PostCard({ image, content, createdAt }: PostCardProps) {
           content={content}
           createdAt={createdAt}
           onClose={() => setOpen(false)}
+          username={username}
+          avatar={avatar}
+          comments={comments}
+          postId={id}
         />
       )}
     </>
