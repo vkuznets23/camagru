@@ -66,6 +66,7 @@ export default function PostModal({
               <p className={styles.postContent}>{content}</p>
               <div className={styles.postAction}>
                 <button onClick={() => onPostDeleted(postId)}>delete</button>
+                <button>edit</button>
               </div>
             </div>
             <CommentList
