@@ -13,6 +13,13 @@ export default function CommentList({
   comments,
   onCommentDeleted,
 }: CommentListProps) {
+  if (comments.length == 0)
+    return (
+      <div className={styles.noCommentsWrapper}>
+        <h4>No comments yet</h4>
+        <p>Start the conversation</p>
+      </div>
+    )
   return (
     <div className={styles.commentsSection}>
       {comments.map((comment) => (
@@ -31,6 +38,11 @@ export default function CommentList({
                 {new Date(comment.createdAt).toLocaleString()}
               </small>
             </div>
+          </div>
+          <p className={styles.commentContent}>{comment.content}</p>
+          <div className={styles.actionsWrapper}>
+            <button className={styles.actionButton}>Reply</button>
+            <button className={styles.actionButton}>See translation</button>
             <button
               className={styles.deleteButton}
               onClick={() => {
@@ -41,7 +53,6 @@ export default function CommentList({
               Delete
             </button>
           </div>
-          <p className={styles.commentContent}>{comment.content}</p>
         </div>
       ))}
     </div>

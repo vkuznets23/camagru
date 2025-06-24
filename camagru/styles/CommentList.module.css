@@ -44,3 +44,49 @@
   margin: 10px 0;
   font-size: 16px;
 }
+
+.actionsWrapper {
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
+  gap: 10px;
+}
+
+.actionButton {
+  background-color: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+.actionButton:hover {
+  color: #0070f3;
+}
+
+.deleteButton {
+  background-color: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  color: #d9363e;
+}
+
+.noCommentsWrapper h4 {
+  font-size: 18px;
+}
+.noCommentsWrapper p {
+  font-size: 14px;
+  color: #888;
+}
+
+.noCommentsWrapper {
+  display: flex;
+  margin-top: 20px;
+  gap: 5px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

@@ -3,7 +3,7 @@
 import PostCard from './PostCard'
 import styles from '@/styles/Profile.module.css'
 import { type Post } from '@/types/post'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface UserPostsProps {
   posts: Post[]
@@ -11,10 +11,6 @@ interface UserPostsProps {
 
 export default function UserPosts({ posts }: UserPostsProps) {
   const [postsList, setPostsList] = useState<Post[]>(posts)
-
-  useEffect(() => {
-    console.log('postsList changed:', postsList)
-  }, [postsList])
 
   const handleCommentDeleted = async (postId: string, commentId: string) => {
     try {
