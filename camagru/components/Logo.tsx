@@ -1,20 +1,26 @@
 import Image from 'next/image'
 import styles from '@/styles/Register.module.css'
 
+interface LogoProps {
+  className?: string
+  text?: string
+  width?: number
+  height?: number
+}
+
 export default function Logo({
   className,
   text,
-}: {
-  className?: string
-  text?: string
-}) {
+  width = 180,
+  height = 60,
+}: LogoProps) {
   return (
     <>
       <Image
         src="/camagru_logo.png"
         alt="camagru logo"
-        width={180}
-        height={60}
+        width={width}
+        height={height}
         className={className}
         priority
       />

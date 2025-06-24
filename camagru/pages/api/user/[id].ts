@@ -32,6 +32,21 @@ export default async function handler(
             content: true,
             image: true,
             createdAt: true,
+            user: {
+              select: {
+                username: true,
+                name: true,
+                image: true,
+              },
+            },
+            comments: {
+              orderBy: { createdAt: 'desc' },
+              include: {
+                user: {
+                  select: { username: true, image: true },
+                },
+              },
+            },
           },
         },
       },
@@ -39,7 +54,15 @@ export default async function handler(
 
     if (!user) return res.status(404).json({ error: 'User not found' })
 
-    return res.status(200).json(user)
+    const sanitizedPosts = (user.posts ?? []).map((post) => ({
+      ...post,
+      comments: Array.isArray(post.comments) ? post.comments : [],
+    }))
+
+    return res.status(200).json({
+      ...user,
+      posts: sanitizedPosts,
+    })
   } catch (err) {
     console.error(err)
     return res.status(500).json({ error: 'Server error' })

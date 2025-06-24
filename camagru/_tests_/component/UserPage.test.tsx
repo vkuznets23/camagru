@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import UserProfile from '@/components/UserPage'
+import UserProfile from '@/components/userpage/UserPage'
 import { useSession } from 'next-auth/react'
 import { useParams } from 'next/navigation'
 

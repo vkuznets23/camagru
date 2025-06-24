@@ -1,0 +1,71 @@
+.commentForm {
+  display: flex;
+  gap: 8px;
+  position: relative;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.inputWrapper {
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.inputWrapper textarea {
+  width: 100%;
+  resize: none;
+  padding: 10px 40px 10px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-family: inherit;
+  outline: none;
+  transition: border 0.2s ease;
+
+  min-height: 36px;
+  line-height: 1.4;
+}
+
+.inputWrapper textarea:focus {
+  border-color: #0070f3;
+  background-color: #fff;
+}
+
+.inputWrapper button {
+  position: absolute;
+  right: 5px;
+  bottom: 10px;
+
+  padding: 6px 12px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.inputWrapper button:hover:not(:disabled) {
+  background-color: #0059c1;
+}
+
+.inputWrapper button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 2px;
+}

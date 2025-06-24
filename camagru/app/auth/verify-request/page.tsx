@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import VerifyRequest from '@/components/VerifyRequest'
+import VerifyRequest from '@/components/registration/VerifyRequest'
 
 export default function VerifyRequestPage() {
   return (

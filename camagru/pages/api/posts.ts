@@ -9,15 +9,19 @@ export default async function handler(
 
   const { content, image, userId } = req.body
 
-  if (!content || !userId) {
-    return res.status(400).json({ error: 'Missing content or userId' })
+  if (!userId) {
+    return res.status(400).json({ error: 'Missing userId' })
+  }
+
+  if (!image) {
+    return res.status(400).json({ error: 'Missing image' })
   }
 
   try {
     const post = await prisma.post.create({
       data: {
-        content,
-        image: image || null,
+        content: content?.trim() || null,
+        image: image,
         userId,
       },
     })

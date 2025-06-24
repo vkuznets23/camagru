@@ -1,15 +1,16 @@
-.profileContainer {
+/* ===== Layout Containers ===== */
+.profileContainer,
+.posts {
   max-width: 935px;
-  margin: 0 auto;
+  width: 935px;
+  margin: auto;
   display: flex;
-  gap: 40px;
   padding: 20px 45px 45px 45px;
-  align-items: flex-start;
 }
 
-.profileContainerEdit {
-  display: flex;
-  gap: 40px;
+.profileContainer {
+  gap: 100px;
+  align-items: flex-start;
 }
 
 .pageContainer {
@@ -21,9 +22,88 @@
   padding: 20px 45px 45px 45px;
 }
 
+.profileContainerEdit {
+  width: 845px;
+  max-width: 845px;
+  display: flex;
+  gap: 40px;
+}
+
+.photoOptionsWrapper {
+  flex-direction: column;
+  align-items: center;
+}
+
+.profileInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+}
+
+.profileBio {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.imageContainer {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+}
+
+.postsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.userContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.followersContainer {
+  display: flex;
+  justify-content: left;
+  gap: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.usernamePanel {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+@media (max-width: 600px) {
+  .followersContainer {
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+.followersContainer strong {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ===== Typography ===== */
 .profileContainer h2 {
   font-size: 20px;
   font-weight: normal;
+}
+
+.profileInfo h2 {
+  margin: 0;
+  font-size: 24px;
 }
 
 .profileContainer h3 {
@@ -37,64 +117,27 @@
   font-weight: normal;
 }
 
-.avatar {
-  width: 120px;
-  height: 120px;
-  border: 2px solid #e1e1e1;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
 .bio {
   white-space: pre-line;
 }
 
-.profileInfo {
-  flex: 1;
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.profileInfo h2 {
-  margin: 0;
-  font-size: 24px;
-}
-
-.input {
-  padding: 0.75rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  font-size: 16px;
-  width: 100%;
-  resize: vertical;
-  transition: border-color 0.3s;
-}
-
+/* ===== Form Fields ===== */
+.input,
 .textarea {
   padding: 0.75rem 1rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
-  font-size: 14px;
   width: 100%;
-  resize: vertical;
   transition: border-color 0.3s;
 }
 
-.button {
-  background-color: #0095f6;
-  border: none;
-  padding: 8px 15px;
-  color: white;
-  font-weight: normal;
-  border-radius: 4px;
-  cursor: pointer;
+.input {
+  font-size: 16px;
 }
 
-.button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.textarea {
+  font-size: 14px;
+  resize: vertical;
 }
 
 .inputError {
@@ -114,19 +157,21 @@
   margin-top: 2px;
 }
 
-.usernamePanel {
-  display: flex;
-  gap: 15px;
-  align-items: center;
+.charCount {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  margin-left: auto;
+  text-align: right;
 }
 
-.skeletonAvatar {
-  width: 100px;
-  height: 100px;
+/* ===== Avatar & Photo Options ===== */
+.avatar {
+  width: 120px;
+  height: 120px;
+  border: 2px solid #e1e1e1;
   border-radius: 50%;
-  background-color: #ccc;
-  animation: pulse 1.5s infinite ease-in-out;
-  margin-bottom: 1rem;
+  object-fit: cover;
 }
 
 .secondBtn {
@@ -144,42 +189,22 @@
   opacity: 0.7;
 }
 
-.skeletonText {
-  width: 60%;
-  height: 20px;
-  background-color: #ccc;
-  animation: pulse 1.5s infinite ease-in-out;
-  border-radius: 4px;
-  margin: 0.5rem;
+.photoOptionsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 120px;
+  width: 100%;
+  gap: 6px;
 }
 
-.skeletonTextShort {
-  width: 20%;
-  height: 20px;
-  background-color: #ccc;
-  animation: pulse 1.5s infinite ease-in-out;
-  border-radius: 4px;
-  margin: 0.5rem;
-}
-
-@keyframes pulse {
-  0% {
-    background-color: #ddd;
-  }
-  50% {
-    background-color: #eee;
-  }
-  100% {
-    background-color: #ddd;
-  }
-}
-
-.charCount {
-  font-size: 12px;
-  color: #666;
-  margin-top: 4px;
-  margin-left: auto;
-  text-align: right;
+.editBtnsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 6px;
 }
 
 .option {
@@ -198,49 +223,67 @@
   display: none;
 }
 
-.imageContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  width: 200px;
+/* ===== Buttons ===== */
+.button {
+  background-color: #0095f6;
+  border: none;
+  padding: 8px 15px;
+  color: white;
+  font-weight: normal;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.editBtnsContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-  width: 100%;
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.photoOptionsWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 120px;
-  width: 100%;
-  gap: 6px;
+/* ===== Skeletons ===== */
+.skeletonAvatar,
+.skeletonText,
+.skeletonTextShort,
+.skeletonPost {
+  animation: pulse 1.5s infinite ease-in-out;
+  background-color: #ccc;
+  border-radius: 4px;
 }
 
-.followersContainer {
-  display: flex;
-  justify-content: left;
-  gap: 2rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-align: center;
+.skeletonAvatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
 }
 
-.followersContainer strong {
-  font-size: 1rem;
-  font-weight: 600;
+.skeletonText {
+  width: 60%;
+  height: 20px;
+  margin: 0.5rem;
 }
-@media (max-width: 600px) {
-  .followersContainer {
-    gap: 1rem;
-    font-size: 0.9rem;
+
+.skeletonTextShort {
+  width: 20%;
+  height: 20px;
+  margin: 0.5rem;
+}
+
+.skeletonPost {
+  width: 270px;
+  height: 270px;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+}
+
+/* ===== Animations ===== */
+@keyframes pulse {
+  0% {
+    background-color: #ddd;
+  }
+  50% {
+    background-color: #eee;
+  }
+  100% {
+    background-color: #ddd;
   }
 }
