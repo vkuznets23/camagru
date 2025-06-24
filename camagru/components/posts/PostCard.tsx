@@ -15,6 +15,7 @@ type PostCardProps = {
   comments: Comment[]
   onCommentAdded: (postId: string, comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
+  onPostDeleted: (postId: string) => void
 }
 
 export default function PostCard({
@@ -27,6 +28,7 @@ export default function PostCard({
   comments,
   onCommentAdded,
   onCommentDeleted,
+  onPostDeleted,
 }: PostCardProps) {
   const [open, setOpen] = useState(false)
 
@@ -63,6 +65,7 @@ export default function PostCard({
             onCommentAdded(id, newComment)
           }
           onCommentDeleted={onCommentDeleted}
+          onPostDeleted={onPostDeleted}
         />
       )}
     </>

@@ -12,6 +12,22 @@ interface UserPostsProps {
 export default function UserPosts({ posts }: UserPostsProps) {
   const [postsList, setPostsList] = useState<Post[]>(posts)
 
+  const handlePostDeleted = async (postId: string) => {
+    try {
+      const res = await fetch(`/api/posts?postId=${postId}`, {
+        method: 'DELETE',
+      })
+      if (!res.ok) {
+        throw new Error('Failed to delete post')
+      }
+      setPostsList((prevPosts) =>
+        prevPosts.filter((post) => post.id !== postId)
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const handleCommentDeleted = async (postId: string, commentId: string) => {
     try {
       const res = await fetch(`/api/comments/by-id/${commentId}`, {
@@ -74,6 +90,7 @@ export default function UserPosts({ posts }: UserPostsProps) {
               onCommentDeleted={(commentId) =>
                 handleCommentDeleted(post.id, commentId)
               }
+              onPostDeleted={() => handlePostDeleted(post.id)}
             />
           ))}
       </div>
