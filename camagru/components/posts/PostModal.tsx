@@ -16,6 +16,7 @@ type PostModalProps = {
   comments: Comment[]
   postId: string
   onCommentAdded: (comment: Comment) => void
+  onCommentDeleted: (commentId: string) => void
 }
 
 export default function PostModal({
@@ -28,6 +29,7 @@ export default function PostModal({
   comments,
   postId,
   onCommentAdded,
+  onCommentDeleted,
 }: PostModalProps) {
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -61,9 +63,16 @@ export default function PostModal({
               </div>
               <p className={styles.postContent}>{content}</p>
             </div>
-            <CommentList comments={comments} />
+            <CommentList
+              comments={comments}
+              onCommentDeleted={onCommentDeleted}
+            />
           </div>
-          <CommentForm postId={postId} onCommentAdded={onCommentAdded} />
+          <CommentForm
+            postId={postId}
+            onCommentAdded={onCommentAdded}
+            userAvatar={avatar}
+          />
         </div>
         <button onClick={onClose} className={styles.closeBtn}>
           ×

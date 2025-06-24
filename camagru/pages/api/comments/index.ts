@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]'
 
+const MAX_COMMENT_LENGTH = 2200
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -19,6 +21,12 @@ export default async function handler(
 
   if (!content || !postId) {
     return res.status(400).json({ error: 'Missing content or postId' })
+  }
+
+  if (content.trim().length > MAX_COMMENT_LENGTH) {
+    return res.status(400).json({
+      error: `Comment too long (max ${MAX_COMMENT_LENGTH} characters)`,
+    })
   }
 
   try {

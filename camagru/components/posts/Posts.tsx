@@ -3,7 +3,7 @@
 import PostCard from './PostCard'
 import styles from '@/styles/Profile.module.css'
 import { type Post } from '@/types/post'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface UserPostsProps {
   posts: Post[]
@@ -11,6 +11,37 @@ interface UserPostsProps {
 
 export default function UserPosts({ posts }: UserPostsProps) {
   const [postsList, setPostsList] = useState<Post[]>(posts)
+
+  useEffect(() => {
+    console.log('postsList changed:', postsList)
+  }, [postsList])
+
+  const handleCommentDeleted = async (postId: string, commentId: string) => {
+    try {
+      const res = await fetch(`/api/comments/by-id/${commentId}`, {
+        method: 'DELETE',
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to delete comment')
+      }
+
+      setPostsList((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                comments: post.comments
+                  ? post.comments.filter((c) => c.id !== commentId)
+                  : [],
+              }
+            : post
+        )
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   if (postsList.length === 0) {
     return <p>No posts yet.</p>
@@ -44,6 +75,9 @@ export default function UserPosts({ posts }: UserPostsProps) {
                   )
                 )
               }}
+              onCommentDeleted={(commentId) =>
+                handleCommentDeleted(post.id, commentId)
+              }
             />
           ))}
       </div>

@@ -1,20 +1,11 @@
+import { type Comment } from '@/types/comment'
+import { type User } from '@/types/user'
+
 export type Post = {
   id: string
   image: string
   content: string
   createdAt: string
-  user: {
-    username: string
-    name?: string
-    image?: string
-  }
-  comments: {
-    id: string
-    content: string
-    createdAt: string
-    user: {
-      username: string
-      image?: string
-    }
-  }[]
+  user: User
+  comments: Comment[]
 }

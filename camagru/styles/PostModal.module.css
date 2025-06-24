@@ -42,7 +42,6 @@
 .contentWrapper {
   flex: 1;
   padding: 1rem;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -73,7 +72,6 @@
 }
 
 .infodivider {
-  padding-bottom: 10px;
   border-bottom: 1 solid #dbdbdb;
 }
 

@@ -6,9 +6,13 @@ import { type Comment } from '@/types/comment'
 
 type CommentListProps = {
   comments: Comment[]
+  onCommentDeleted: (commentId: string) => void
 }
 
-export default function CommentList({ comments }: CommentListProps) {
+export default function CommentList({
+  comments,
+  onCommentDeleted,
+}: CommentListProps) {
   return (
     <div className={styles.commentsSection}>
       {comments.map((comment) => (
@@ -27,6 +31,15 @@ export default function CommentList({ comments }: CommentListProps) {
                 {new Date(comment.createdAt).toLocaleString()}
               </small>
             </div>
+            <button
+              className={styles.deleteButton}
+              onClick={() => {
+                console.log('Delete clicked:', comment.id)
+                onCommentDeleted(comment.id)
+              }}
+            >
+              Delete
+            </button>
           </div>
           <p className={styles.commentContent}>{comment.content}</p>
         </div>

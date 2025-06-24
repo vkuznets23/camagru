@@ -29,6 +29,7 @@ export default function UserProfile() {
           return
         }
         const data = await res.json()
+
         setUser(data)
       } finally {
         setLoading(false)
