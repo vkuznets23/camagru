@@ -13,9 +13,11 @@ type PostCardProps = {
   content: string
   createdAt: string
   comments: Comment[]
+  isLiked?: boolean
   onCommentAdded: (postId: string, comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
   onPostDeleted: (postId: string) => void
+  onToggleLike: (postId: string) => void
 }
 
 export default function PostCard({
@@ -26,9 +28,11 @@ export default function PostCard({
   username,
   avatar,
   comments,
+  isLiked,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
+  onToggleLike,
 }: PostCardProps) {
   const [open, setOpen] = useState(false)
 
@@ -66,6 +70,8 @@ export default function PostCard({
           }
           onCommentDeleted={onCommentDeleted}
           onPostDeleted={onPostDeleted}
+          isLiked={isLiked}
+          onToggleLike={onToggleLike}
         />
       )}
     </>

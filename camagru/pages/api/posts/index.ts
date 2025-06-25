@@ -6,6 +6,33 @@ export default async function handler(
   res: NextApiResponse
 ) {
   switch (req.method) {
+    case 'GET': {
+      const userId = req.query.userId as string | undefined
+
+      try {
+        const posts = await prisma.post.findMany({
+          include: {
+            user: true,
+            comments: true,
+            likedBy: userId
+              ? {
+                  where: { id: userId },
+                }
+              : false,
+          },
+        })
+
+        const postsWithLikeFlag = posts.map((post) => ({
+          ...post,
+          likedByCurrentUser: userId ? post.likedBy.length > 0 : false,
+        }))
+
+        return res.status(200).json(postsWithLikeFlag)
+      } catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: 'Failed to fetch posts' })
+      }
+    }
     case 'POST': {
       const { content, image, userId } = req.body
       if (!userId) {
@@ -66,7 +93,7 @@ export default async function handler(
       }
     }
     default:
-      res.setHeader('Allow', ['POST', 'DELETE', 'PATCH', 'PUT'])
+      res.setHeader('Allow', ['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
       return res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }

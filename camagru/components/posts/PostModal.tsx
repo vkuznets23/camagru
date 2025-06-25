@@ -15,9 +15,11 @@ type PostModalProps = {
   avatar?: string
   comments: Comment[]
   postId: string
+  isLiked?: boolean
   onCommentAdded: (comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
   onPostDeleted: (postId: string) => void
+  onToggleLike: (postId: string) => void
 }
 
 export default function PostModal({
@@ -29,9 +31,11 @@ export default function PostModal({
   avatar,
   comments,
   postId,
+  isLiked,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
+  onToggleLike,
 }: PostModalProps) {
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -67,6 +71,9 @@ export default function PostModal({
               <div className={styles.postAction}>
                 <button onClick={() => onPostDeleted(postId)}>delete</button>
                 <button>edit</button>
+                <button onClick={() => onToggleLike(postId)}>
+                  {isLiked ? '❤️ Unlike' : '♡ Like'}
+                </button>
               </div>
             </div>
             <CommentList

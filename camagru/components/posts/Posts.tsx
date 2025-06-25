@@ -4,6 +4,7 @@ import PostCard from './PostCard'
 import styles from '@/styles/Profile.module.css'
 import { type Post } from '@/types/post'
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 interface UserPostsProps {
   posts: Post[]
@@ -11,6 +12,38 @@ interface UserPostsProps {
 
 export default function UserPosts({ posts }: UserPostsProps) {
   const [postsList, setPostsList] = useState<Post[]>(posts)
+
+  const { data: session } = useSession()
+  const userID = session?.user?.id
+
+  const handleToggleLike = async (postId: string) => {
+    if (!userID) return
+
+    try {
+      const res = await fetch('/api/posts/like', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId, userId: userID }),
+      })
+
+      if (res.ok) {
+        setPostsList((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  likedByCurrentUser: !post.likedByCurrentUser,
+                }
+              : post
+          )
+        )
+      } else {
+        console.error('Failed to toggle like')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const handlePostDeleted = async (postId: string) => {
     try {
@@ -55,6 +88,8 @@ export default function UserPosts({ posts }: UserPostsProps) {
     }
   }
 
+  if (!userID) return <p>Loading user...</p>
+
   if (postsList.length === 0) {
     return <p>No posts yet.</p>
   }
@@ -91,6 +126,8 @@ export default function UserPosts({ posts }: UserPostsProps) {
                 handleCommentDeleted(post.id, commentId)
               }
               onPostDeleted={() => handlePostDeleted(post.id)}
+              isLiked={post.likedByCurrentUser}
+              onToggleLike={() => handleToggleLike(post.id)}
             />
           ))}
       </div>
