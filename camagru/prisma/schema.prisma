@@ -17,7 +17,7 @@ model User {
   name          String?   //name u show
   createdAt     DateTime?   @default(now())
   updatedAt     DateTime?   @updatedAt
-  likedPosts Post[] @relation("Likes")
+  likedPosts  Like[]
 
 
   // dependancies
@@ -45,7 +45,19 @@ model Post {
 
   user User @relation(fields: [userId], references: [id])
   comments  Comment[]
-  likedBy   User[]   @relation("Likes") 
+  likedBy   Like[]
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
 }
 
 model Comment {

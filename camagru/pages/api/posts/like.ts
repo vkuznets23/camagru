@@ -1,5 +1,7 @@
 import { prisma } from '@/utils/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '../auth/[...nextauth]'
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,10 +12,17 @@ export default async function handler(
     return res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 
-  const { postId, userId } = req.body
+  const session = await getServerSession(req, res, authOptions)
+  const userId = session?.user?.id
 
-  if (!postId || !userId) {
-    return res.status(400).json({ error: 'Missing postId or userId' })
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
+  const { postId } = req.body
+
+  if (!postId) {
+    return res.status(400).json({ error: 'Missing postId' })
   }
 
   try {
@@ -26,19 +35,42 @@ export default async function handler(
       return res.status(404).json({ error: 'Post not found' })
     }
 
-    const isLiked = post.likedBy.some((user) => user.id === userId)
+    const existingLike = post.likedBy.find((like) => like.userId === userId)
 
-    const updatedPost = await prisma.post.update({
+    if (existingLike) {
+      await prisma.like.delete({
+        where: { id: existingLike.id },
+      })
+    } else {
+      await prisma.like.create({
+        data: {
+          userId,
+          postId,
+        },
+      })
+    }
+
+    const updatedPost = await prisma.post.findUnique({
       where: { id: postId },
-      data: {
-        likedBy: isLiked
-          ? { disconnect: { id: userId } }
-          : { connect: { id: userId } },
+      include: {
+        likedBy: true,
+        user: true,
+        comments: true,
       },
-      include: { likedBy: true },
     })
 
-    return res.status(200).json(updatedPost)
+    if (!updatedPost) {
+      return res.status(404).json({ error: 'Post not found after update' })
+    }
+
+    const likedByCurrentUser = updatedPost.likedBy.some(
+      (like) => like.userId === userId
+    )
+    const likesCount = updatedPost.likedBy.length
+
+    return res
+      .status(200)
+      .json({ ...updatedPost, likedByCurrentUser, likesCount })
   } catch (error) {
     console.error(error)
     return res.status(500).json({ error: 'Failed to toggle like' })

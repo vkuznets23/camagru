@@ -5,6 +5,8 @@ import styles from '@/styles/PostModal.module.css'
 import { type Comment } from '@/types/comment'
 import CommentForm from './AddCommentForm'
 import CommentList from './CommentsList'
+import { FcLike } from 'react-icons/fc'
+import { FiHeart } from 'react-icons/fi'
 
 type PostModalProps = {
   image: string
@@ -16,6 +18,7 @@ type PostModalProps = {
   comments: Comment[]
   postId: string
   isLiked?: boolean
+  likesCount: number
   onCommentAdded: (comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
   onPostDeleted: (postId: string) => void
@@ -32,6 +35,7 @@ export default function PostModal({
   comments,
   postId,
   isLiked,
+  likesCount,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
@@ -72,7 +76,8 @@ export default function PostModal({
                 <button onClick={() => onPostDeleted(postId)}>delete</button>
                 <button>edit</button>
                 <button onClick={() => onToggleLike(postId)}>
-                  {isLiked ? '❤️ Unlike' : '♡ Like'}
+                  {isLiked ? <FcLike /> : <FiHeart />}
+                  {likesCount}
                 </button>
               </div>
             </div>

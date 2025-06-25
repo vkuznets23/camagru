@@ -17,22 +17,23 @@ export default function UserPosts({ posts }: UserPostsProps) {
   const userID = session?.user?.id
 
   const handleToggleLike = async (postId: string) => {
-    if (!userID) return
-
     try {
       const res = await fetch('/api/posts/like', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ postId, userId: userID }),
+        body: JSON.stringify({ postId }),
       })
 
       if (res.ok) {
+        const updatedPost = await res.json()
+
         setPostsList((prevPosts) =>
           prevPosts.map((post) =>
             post.id === postId
               ? {
                   ...post,
-                  likedByCurrentUser: !post.likedByCurrentUser,
+                  likedByCurrentUser: updatedPost.likedByCurrentUser,
+                  likesCount: updatedPost.likesCount,
                 }
               : post
           )
@@ -126,7 +127,8 @@ export default function UserPosts({ posts }: UserPostsProps) {
                 handleCommentDeleted(post.id, commentId)
               }
               onPostDeleted={() => handlePostDeleted(post.id)}
-              isLiked={post.likedByCurrentUser}
+              isLiked={post.likedByCurrentUser ?? false}
+              likesCount={post.likesCount ?? 0}
               onToggleLike={() => handleToggleLike(post.id)}
             />
           ))}

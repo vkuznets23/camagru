@@ -14,6 +14,7 @@ type PostCardProps = {
   createdAt: string
   comments: Comment[]
   isLiked?: boolean
+  likesCount: number
   onCommentAdded: (postId: string, comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
   onPostDeleted: (postId: string) => void
@@ -29,6 +30,7 @@ export default function PostCard({
   avatar,
   comments,
   isLiked,
+  likesCount,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
@@ -71,6 +73,7 @@ export default function PostCard({
           onCommentDeleted={onCommentDeleted}
           onPostDeleted={onPostDeleted}
           isLiked={isLiked}
+          likesCount={likesCount}
           onToggleLike={onToggleLike}
         />
       )}

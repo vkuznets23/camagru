@@ -1,33 +1,35 @@
 import { prisma } from '@/utils/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '../auth/[...nextauth]'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getServerSession(req, res, authOptions)
+  const currentUserId = session?.user?.id
+
   switch (req.method) {
     case 'GET': {
-      const userId = req.query.userId as string | undefined
-
       try {
         const posts = await prisma.post.findMany({
           include: {
             user: true,
-            comments: true,
-            likedBy: userId
-              ? {
-                  where: { id: userId },
-                }
-              : false,
+            comments: { include: { user: true } },
+            likedBy: true,
           },
         })
 
-        const postsWithLikeFlag = posts.map((post) => ({
+        const formattedPosts = posts.map((post) => ({
           ...post,
-          likedByCurrentUser: userId ? post.likedBy.length > 0 : false,
+          likesCount: post.likedBy.length,
+          likedByCurrentUser: post.likedBy.some(
+            (like) => like.userId === currentUserId
+          ),
         }))
 
-        return res.status(200).json(postsWithLikeFlag)
+        return res.status(200).json(formattedPosts)
       } catch (error) {
         console.error(error)
         return res.status(500).json({ error: 'Failed to fetch posts' })
