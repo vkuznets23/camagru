@@ -39,6 +39,7 @@ export default async function handler(
             createdAt: true,
             user: {
               select: {
+                id: true,
                 username: true,
                 name: true,
                 image: true,

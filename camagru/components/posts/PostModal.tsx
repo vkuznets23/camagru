@@ -7,6 +7,7 @@ import CommentForm from './AddCommentForm'
 import CommentList from './CommentsList'
 import { FcLike } from 'react-icons/fc'
 import { FiHeart } from 'react-icons/fi'
+import { useState } from 'react'
 
 type PostModalProps = {
   image: string
@@ -19,10 +20,12 @@ type PostModalProps = {
   postId: string
   isLiked?: boolean
   likesCount: number
+  canEdit: boolean
   onCommentAdded: (comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
   onPostDeleted: (postId: string) => void
   onToggleLike: (postId: string) => void
+  onEditPost: (newContent: string) => void
 }
 
 export default function PostModal({
@@ -36,11 +39,21 @@ export default function PostModal({
   postId,
   isLiked,
   likesCount,
+  canEdit,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
   onToggleLike,
+  onEditPost,
 }: PostModalProps) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedContent, setEditedContent] = useState(content || '')
+
+  const handleSave = () => {
+    onEditPost(editedContent)
+    setIsEditing(false)
+  }
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -71,15 +84,59 @@ export default function PostModal({
                   </small>
                 </div>
               </div>
-              <p className={styles.postContent}>{content}</p>
+              <div>
+                {/* Режим редактирования */}
+                {isEditing ? (
+                  <div className={styles.editSection}>
+                    <textarea
+                      className={styles.textarea}
+                      value={editedContent}
+                      onChange={(e) => setEditedContent(e.target.value)}
+                    />
+                    <div className={styles.editButtons}>
+                      <button onClick={handleSave}>💾 Сохранить</button>
+                      <button onClick={() => setIsEditing(false)}>
+                        ❌ Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p className={styles.postContent}>{content}</p>
+                    <div className={styles.postAction}>
+                      {canEdit && (
+                        <>
+                          <button onClick={() => onPostDeleted(postId)}>
+                            Delete
+                          </button>
+                          <button onClick={() => setIsEditing(true)}>
+                            Edit
+                          </button>
+                        </>
+                      )}
+                      <button
+                        className={styles.likeButton}
+                        onClick={() => onToggleLike(postId)}
+                      >
+                        {isLiked ? <FcLike /> : <FiHeart />}
+                        {likesCount}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+              {/* <p className={styles.postContent}>{content}</p>
               <div className={styles.postAction}>
                 <button onClick={() => onPostDeleted(postId)}>delete</button>
                 <button>edit</button>
-                <button onClick={() => onToggleLike(postId)}>
+                <button
+                  className={styles.likeButton}
+                  onClick={() => onToggleLike(postId)}
+                >
                   {isLiked ? <FcLike /> : <FiHeart />}
                   {likesCount}
                 </button>
-              </div>
+              </div> */}
             </div>
             <CommentList
               comments={comments}

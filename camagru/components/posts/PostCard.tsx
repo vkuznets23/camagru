@@ -15,10 +15,12 @@ type PostCardProps = {
   comments: Comment[]
   isLiked?: boolean
   likesCount: number
+  canEdit: boolean
   onCommentAdded: (postId: string, comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
   onPostDeleted: (postId: string) => void
   onToggleLike: (postId: string) => void
+  onEditPost: (newContent: string) => void
 }
 
 export default function PostCard({
@@ -31,10 +33,12 @@ export default function PostCard({
   comments,
   isLiked,
   likesCount,
+  canEdit,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
   onToggleLike,
+  onEditPost,
 }: PostCardProps) {
   const [open, setOpen] = useState(false)
 
@@ -75,6 +79,8 @@ export default function PostCard({
           isLiked={isLiked}
           likesCount={likesCount}
           onToggleLike={onToggleLike}
+          canEdit={canEdit}
+          onEditPost={onEditPost}
         />
       )}
     </>

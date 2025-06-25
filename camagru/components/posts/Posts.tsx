@@ -16,6 +16,30 @@ export default function UserPosts({ posts }: UserPostsProps) {
   const { data: session } = useSession()
   const userID = session?.user?.id
 
+  const handleEditPost = async (postId: string, newContent: string) => {
+    try {
+      const res = await fetch(`/api/posts?postId=${postId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: newContent }),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to update post')
+      }
+
+      const updatedPost = await res.json()
+
+      setPostsList((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId ? { ...post, content: updatedPost.content } : post
+        )
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const handleToggleLike = async (postId: string) => {
     try {
       const res = await fetch('/api/posts/like', {
@@ -130,6 +154,8 @@ export default function UserPosts({ posts }: UserPostsProps) {
               isLiked={post.likedByCurrentUser ?? false}
               likesCount={post.likesCount ?? 0}
               onToggleLike={() => handleToggleLike(post.id)}
+              canEdit={post.user.id === userID}
+              onEditPost={(newContent) => handleEditPost(post.id, newContent)}
             />
           ))}
       </div>
