@@ -8,6 +8,8 @@ import CommentList from './CommentsList'
 import { FcLike } from 'react-icons/fc'
 import { FiHeart } from 'react-icons/fi'
 import { useState } from 'react'
+import { MdOutlineEdit } from 'react-icons/md'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 
 type PostModalProps = {
   image: string
@@ -85,7 +87,6 @@ export default function PostModal({
                 </div>
               </div>
               <div>
-                {/* Режим редактирования */}
                 {isEditing ? (
                   <div className={styles.editSection}>
                     <textarea
@@ -94,9 +95,9 @@ export default function PostModal({
                       onChange={(e) => setEditedContent(e.target.value)}
                     />
                     <div className={styles.editButtons}>
-                      <button onClick={handleSave}>💾 Сохранить</button>
+                      <button onClick={handleSave}>Save</button>
                       <button onClick={() => setIsEditing(false)}>
-                        ❌ Cancel
+                        Cancel
                       </button>
                     </div>
                   </div>
@@ -106,11 +107,17 @@ export default function PostModal({
                     <div className={styles.postAction}>
                       {canEdit && (
                         <>
-                          <button onClick={() => onPostDeleted(postId)}>
-                            Delete
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => onPostDeleted(postId)}
+                          >
+                            <RiDeleteBin6Line /> Delete
                           </button>
-                          <button onClick={() => setIsEditing(true)}>
-                            Edit
+                          <button
+                            className={styles.editButton}
+                            onClick={() => setIsEditing(true)}
+                          >
+                            <MdOutlineEdit /> Edit
                           </button>
                         </>
                       )}
@@ -125,18 +132,6 @@ export default function PostModal({
                   </>
                 )}
               </div>
-              {/* <p className={styles.postContent}>{content}</p>
-              <div className={styles.postAction}>
-                <button onClick={() => onPostDeleted(postId)}>delete</button>
-                <button>edit</button>
-                <button
-                  className={styles.likeButton}
-                  onClick={() => onToggleLike(postId)}
-                >
-                  {isLiked ? <FcLike /> : <FiHeart />}
-                  {likesCount}
-                </button>
-              </div> */}
             </div>
             <CommentList
               comments={comments}
