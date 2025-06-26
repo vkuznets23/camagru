@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import styles from '@/styles/CommentForm.module.css'
-import Image from 'next/image'
 import { FaArrowUp } from 'react-icons/fa'
 import { type Comment } from '@/types/comment'
 
@@ -11,13 +10,11 @@ const MAX_COMMENT_LENGTH = 2200
 type CommentFormProps = {
   postId: string
   onCommentAdded: (comment: Comment) => void
-  userAvatar?: string
 }
 
 export default function CommentForm({
   postId,
   onCommentAdded,
-  userAvatar,
 }: CommentFormProps) {
   const [newComment, setNewComment] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -59,15 +56,6 @@ export default function CommentForm({
 
   return (
     <form onSubmit={handleSubmit} className={styles.commentForm}>
-      {userAvatar && (
-        <Image
-          src={userAvatar || '/default_avatar.png'}
-          alt="Your avatar"
-          className={styles.avatar}
-          width={32}
-          height={32}
-        />
-      )}
       <div className={styles.inputWrapper}>
         <textarea
           value={newComment}

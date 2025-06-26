@@ -7,11 +7,13 @@ import { type Comment } from '@/types/comment'
 type CommentListProps = {
   comments: Comment[]
   onCommentDeleted: (commentId: string) => void
+  currentUserId: string
 }
 
 export default function CommentList({
   comments,
   onCommentDeleted,
+  currentUserId,
 }: CommentListProps) {
   if (comments.length == 0)
     return (
@@ -23,6 +25,14 @@ export default function CommentList({
   return (
     <div className={styles.commentsSection}>
       {comments.map((comment) => {
+        const canDelete = comment.user.id === currentUserId
+        console.log(
+          'comment.user.id:',
+          comment.user.id,
+          'currentUserId:',
+          currentUserId
+        )
+
         return (
           <div key={comment.id} className={styles.commentBlock}>
             <div className={styles.commentHeader}>
@@ -45,15 +55,17 @@ export default function CommentList({
             <p className={styles.commentContent}>{comment.content}</p>
 
             <div className={styles.actionsWrapper}>
-              <button
-                className={styles.deleteButton}
-                onClick={() => {
-                  console.log('Delete clicked:', comment.id)
-                  onCommentDeleted(comment.id)
-                }}
-              >
-                Delete
-              </button>
+              {canDelete && (
+                <button
+                  className={styles.deleteButton}
+                  onClick={() => {
+                    console.log('Delete clicked:', comment.id)
+                    onCommentDeleted(comment.id)
+                  }}
+                >
+                  Delete
+                </button>
+              )}
             </div>
           </div>
         )

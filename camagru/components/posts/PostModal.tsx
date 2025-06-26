@@ -28,6 +28,7 @@ type PostModalProps = {
   onPostDeleted: (postId: string) => void
   onToggleLike: (postId: string) => void
   onEditPost: (newContent: string) => void
+  currentUserId: string
 }
 
 export default function PostModal({
@@ -42,6 +43,7 @@ export default function PostModal({
   isLiked,
   likesCount,
   canEdit,
+  currentUserId,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
@@ -135,15 +137,12 @@ export default function PostModal({
               </div>
             </div>
             <CommentList
+              currentUserId={currentUserId}
               comments={comments}
               onCommentDeleted={onCommentDeleted}
             />
           </div>
-          <CommentForm
-            postId={postId}
-            onCommentAdded={onCommentAdded}
-            userAvatar={avatar}
-          />
+          <CommentForm postId={postId} onCommentAdded={onCommentAdded} />
         </div>
         <button onClick={onClose} className={styles.closeBtn}>
           ×
