@@ -8,4 +8,6 @@ export type Post = {
   createdAt: string
   user: User
   comments: Comment[]
+  likedByCurrentUser: boolean
+  likesCount: number
 }

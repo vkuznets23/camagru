@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import ForgotPassword from '@/components/ForgotPassword'
+import ForgotPassword from '@/components/registration/ForgotPassword'
 
 export default function ResetPasswordPage() {
   return (

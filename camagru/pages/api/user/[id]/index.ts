@@ -1,10 +1,15 @@
 import { prisma } from '@/utils/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '../../auth/[...nextauth]'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getServerSession(req, res, authOptions)
+  const currentUserId = session?.user?.id
+
   if (req.method !== 'GET') return res.status(405).end()
 
   const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id
@@ -26,6 +31,7 @@ export default async function handler(
             following: true,
           },
         },
+
         posts: {
           select: {
             id: true,
@@ -34,6 +40,7 @@ export default async function handler(
             createdAt: true,
             user: {
               select: {
+                id: true,
                 username: true,
                 name: true,
                 image: true,
@@ -43,10 +50,11 @@ export default async function handler(
               orderBy: { createdAt: 'desc' },
               include: {
                 user: {
-                  select: { username: true, image: true },
+                  select: { id: true, username: true, image: true },
                 },
               },
             },
+            likedBy: true,
           },
         },
       },
@@ -57,6 +65,10 @@ export default async function handler(
     const sanitizedPosts = (user.posts ?? []).map((post) => ({
       ...post,
       comments: Array.isArray(post.comments) ? post.comments : [],
+      likesCount: post.likedBy.length,
+      likedByCurrentUser: currentUserId
+        ? post.likedBy.some((like) => like.userId === currentUserId)
+        : false,
     }))
 
     return res.status(200).json({

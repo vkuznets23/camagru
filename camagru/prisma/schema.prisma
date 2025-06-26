@@ -17,10 +17,13 @@ model User {
   name          String?   //name u show
   createdAt     DateTime?   @default(now())
   updatedAt     DateTime?   @updatedAt
+  likedPosts  Like[]
 
 
   // dependancies
-  posts         Post[]
+  posts         Post[] @relation("UserPosts")
+  savedPosts    Post[] @relation("SavedPosts")
+
   comments      Comment[]
   followers Follower[] @relation("UserFollowers")
   following Follower[] @relation("UserFollowing")
@@ -42,8 +45,23 @@ model Post {
   userId    String
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation("UserPosts", fields: [userId], references: [id])
   comments  Comment[]
+  likedBy   Like[]
+
+  savedBy  User[] @relation("SavedPosts")
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
 }
 
 model Comment {
@@ -53,7 +71,7 @@ model Comment {
   postId    String
   userId    String
 
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id])
 }
 

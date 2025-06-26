@@ -12,4 +12,5 @@ export type User = {
     followers: number
     following: number
   }
+  savedPosts: Post[]
 }

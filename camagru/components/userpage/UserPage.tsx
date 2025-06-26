@@ -11,12 +11,38 @@ import UsernamePanel from './UsernamePanel'
 import UserContentTabs from '../posts/UserContentTabs'
 
 export default function UserProfile() {
+  const { data: session } = useSession()
   const params = useParams()
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const { data: session } = useSession()
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followersCount, setFollowersCount] = useState<number>(0)
+
+  const handleFollow = async () => {
+    const res = await fetch('/api/follow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user?.id }),
+    })
+    if (res.ok) {
+      setIsFollowing(true)
+      setFollowersCount((prev) => prev + 1)
+    }
+  }
+
+  const handleUnfollow = async () => {
+    const res = await fetch('/api/unfollow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user?.id }),
+    })
+    if (res.ok) {
+      setIsFollowing(false)
+      setFollowersCount((prev) => Math.max(prev - 1, 0))
+    }
+  }
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,8 +55,14 @@ export default function UserProfile() {
           return
         }
         const data = await res.json()
-
         setUser(data)
+        setFollowersCount(data._count.followers)
+
+        const followRes = await fetch(`/api/user/${id}/is-following`)
+        if (followRes.ok) {
+          const followData = await followRes.json()
+          setIsFollowing(followData.following)
+        }
       } finally {
         setLoading(false)
       }
@@ -56,7 +88,14 @@ export default function UserProfile() {
           priority
           onError={(e) => (e.currentTarget.src = '/default_avatar.png')}
         />
-        <UsernamePanel user={user} isMyProfile={isMyProfile} />
+        <UsernamePanel
+          user={user}
+          isMyProfile={isMyProfile}
+          isFollowing={isFollowing}
+          onFollow={handleFollow}
+          onUnfollow={handleUnfollow}
+          followersCount={followersCount}
+        />
       </div>
       <UserContentTabs posts={user.posts} />
     </div>

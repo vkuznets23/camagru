@@ -5,10 +5,13 @@ import UserPosts from './Posts'
 
 interface UserContentTabsProps {
   posts: Post[]
-  // savedPosts?: Post[]
+  savedPosts?: Post[]
 }
 
-export default function UserContentTabs({ posts }: UserContentTabsProps) {
+export default function UserContentTabs({
+  posts,
+}: // savedPosts,
+UserContentTabsProps) {
   const [activeTab, setActiveTab] = useState<'posts' | 'saved'>('posts')
   return (
     <div>
@@ -26,7 +29,7 @@ export default function UserContentTabs({ posts }: UserContentTabsProps) {
             Saved posts will go here
           </p>
         )}
-        {/* {activeTab === 'saved' && <SavedPosts posts={savedPosts} />} */}
+        {/* {activeTab === 'saved' && <SavedPosts posts={savedPosts ?? []} />} */}
       </div>
     </div>
   )
