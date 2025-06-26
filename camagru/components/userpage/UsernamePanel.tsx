@@ -8,9 +8,20 @@ import { type User } from '@/types/user'
 interface Props {
   user: User
   isMyProfile: boolean
+  isFollowing?: boolean
+  onFollow?: () => void
+  onUnfollow?: () => void
+  followersCount?: number
 }
 
-export default function UsernamePanel({ user, isMyProfile }: Props) {
+export default function UsernamePanel({
+  user,
+  isMyProfile,
+  isFollowing,
+  onFollow,
+  onUnfollow,
+  followersCount,
+}: Props) {
   return (
     <div className={styles.profileInfo}>
       <div className={styles.usernamePanel}>
@@ -24,14 +35,18 @@ export default function UsernamePanel({ user, isMyProfile }: Props) {
             <MdOutlineEdit />
           </Link>
         ) : (
-          <button data-testid="follow-user" className={styles.button}>
-            follow
+          <button
+            data-testid="follow-user"
+            className={styles.button}
+            onClick={isFollowing ? onUnfollow : onFollow}
+          >
+            {isFollowing ? 'Unfollow' : 'Follow'}
           </button>
         )}
       </div>
       <UserStats
         posts={user._count.posts}
-        followers={user._count.followers}
+        followers={followersCount ?? user._count.followers}
         following={user._count.following}
       />
       <UserBio name={user.name} bio={user.bio} />
