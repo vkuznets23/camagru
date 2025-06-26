@@ -31,6 +31,31 @@ export default async function handler(
             following: true,
           },
         },
+        savedPosts: {
+          select: {
+            id: true,
+            content: true,
+            image: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                image: true,
+              },
+            },
+            comments: {
+              orderBy: { createdAt: 'desc' },
+              include: {
+                user: {
+                  select: { username: true, image: true },
+                },
+              },
+            },
+            likedBy: true,
+          },
+        },
         posts: {
           select: {
             id: true,

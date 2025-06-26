@@ -128,6 +128,7 @@ export default function PostModal({
                         {isLiked ? <FcLike /> : <FiHeart />}
                         {likesCount}
                       </button>
+                      {/* <button> save </button> */}
                     </div>
                   </>
                 )}

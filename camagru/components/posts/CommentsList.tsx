@@ -22,39 +22,42 @@ export default function CommentList({
     )
   return (
     <div className={styles.commentsSection}>
-      {comments.map((comment) => (
-        <div key={comment.id} className={styles.commentBlock}>
-          <div className={styles.commentHeader}>
-            <Image
-              className={styles.commentAvatar}
-              src={comment.user.image || '/default_avatar.png'}
-              alt="user avatar"
-              width={32}
-              height={32}
-            />
-            <div className={styles.commentMeta}>
-              <p className={styles.commentUsername}>{comment.user.username}</p>
-              <small className={styles.commentDate}>
-                {new Date(comment.createdAt).toLocaleString()}
-              </small>
+      {comments.map((comment) => {
+        return (
+          <div key={comment.id} className={styles.commentBlock}>
+            <div className={styles.commentHeader}>
+              <Image
+                className={styles.commentAvatar}
+                src={comment.user.image || '/default_avatar.png'}
+                alt="user avatar"
+                width={32}
+                height={32}
+              />
+              <div className={styles.commentMeta}>
+                <p className={styles.commentUsername}>
+                  {comment.user.username}
+                </p>
+                <small className={styles.commentDate}>
+                  {new Date(comment.createdAt).toLocaleString()}
+                </small>
+              </div>
+            </div>
+            <p className={styles.commentContent}>{comment.content}</p>
+
+            <div className={styles.actionsWrapper}>
+              <button
+                className={styles.deleteButton}
+                onClick={() => {
+                  console.log('Delete clicked:', comment.id)
+                  onCommentDeleted(comment.id)
+                }}
+              >
+                Delete
+              </button>
             </div>
           </div>
-          <p className={styles.commentContent}>{comment.content}</p>
-          <div className={styles.actionsWrapper}>
-            <button className={styles.actionButton}>Reply</button>
-            <button className={styles.actionButton}>See translation</button>
-            <button
-              className={styles.deleteButton}
-              onClick={() => {
-                console.log('Delete clicked:', comment.id)
-                onCommentDeleted(comment.id)
-              }}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }

@@ -21,7 +21,9 @@ model User {
 
 
   // dependancies
-  posts         Post[]
+  posts         Post[] @relation("UserPosts")
+  savedPosts    Post[] @relation("SavedPosts")
+
   comments      Comment[]
   followers Follower[] @relation("UserFollowers")
   following Follower[] @relation("UserFollowing")
@@ -43,9 +45,11 @@ model Post {
   userId    String
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation("UserPosts", fields: [userId], references: [id])
   comments  Comment[]
   likedBy   Like[]
+
+  savedBy  User[] @relation("SavedPosts")
 }
 
 model Like {

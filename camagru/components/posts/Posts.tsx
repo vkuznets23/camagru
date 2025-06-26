@@ -2,8 +2,8 @@
 
 import PostCard from './PostCard'
 import styles from '@/styles/Profile.module.css'
-import { type Post } from '@/types/post'
 import { useState } from 'react'
+import { type Post } from '@/types/post'
 import { useSession } from 'next-auth/react'
 
 interface UserPostsProps {
@@ -116,7 +116,19 @@ export default function UserPosts({ posts }: UserPostsProps) {
   if (!userID) return <p>Loading user...</p>
 
   if (postsList.length === 0) {
-    return <p>No posts yet.</p>
+    return (
+      <div>
+        <p
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '120px',
+          }}
+        >
+          No posts yet.
+        </p>
+      </div>
+    )
   }
 
   return (
