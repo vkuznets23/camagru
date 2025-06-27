@@ -45,7 +45,11 @@ export default function UserProfile() {
   }
 
   useEffect(() => {
-    const fetchUser = async () => {
+    if (!id || !session?.user?.id) return
+
+    const isOwnProfile = session.user.id === id
+
+    const fetchUser = async (isOwnProfile: boolean = false) => {
       try {
         setLoading(true)
 
@@ -58,17 +62,19 @@ export default function UserProfile() {
         setUser(data)
         setFollowersCount(data._count.followers)
 
-        const followRes = await fetch(`/api/user/${id}/is-following`)
-        if (followRes.ok) {
-          const followData = await followRes.json()
-          setIsFollowing(followData.following)
+        if (!isOwnProfile) {
+          const followRes = await fetch(`/api/user/${id}/is-following`)
+          if (followRes.ok) {
+            const followData = await followRes.json()
+            setIsFollowing(followData.following)
+          }
         }
       } finally {
         setLoading(false)
       }
     }
-    if (id) fetchUser()
-  }, [id])
+    if (id) fetchUser(isOwnProfile)
+  }, [id, session?.user.id])
 
   if (loading || !user) {
     return <UserSkeleton />

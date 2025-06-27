@@ -60,6 +60,7 @@ export default function PostCard({
           alt="Post image"
           width={270}
           height={270}
+          priority
           style={{ objectFit: 'cover' }}
         />
       </div>

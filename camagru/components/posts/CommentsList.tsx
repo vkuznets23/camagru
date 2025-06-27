@@ -25,6 +25,12 @@ export default function CommentList({
   return (
     <div className={styles.commentsSection}>
       {comments.map((comment) => {
+        console.log(
+          'comment.user.id:',
+          comment.user.id,
+          'currentUserId:',
+          currentUserId
+        )
         const canDelete = comment.user.id === currentUserId
         console.log(
           'comment.user.id:',
