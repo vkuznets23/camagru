@@ -36,14 +36,6 @@ export default function SearchForm() {
     return () => clearTimeout(delayDebounce)
   }, [search])
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault()
-  //   if (search.trim()) {
-  //     router.push(`/search?query=${encodeURIComponent(search)}`)
-  //     setSearch('')
-  //     setShowDropdown(false)
-  //   }
-  // }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('hello')
