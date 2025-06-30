@@ -1,4 +1,5 @@
 import { Post } from '@/types/post'
+import { type Follower } from '@/types/follower'
 
 export type User = {
   id: string
@@ -12,5 +13,7 @@ export type User = {
     followers: number
     following: number
   }
+  followers: Follower[]
+  following: Follower[]
   savedPosts: Post[]
 }

@@ -1,22 +1,33 @@
 import styles from '@/styles/Profile.module.css'
+import Link from 'next/link'
 
 interface Props {
+  userid: string
   posts: number
   followers: number
   following: number
 }
 
-export default function UserStats({ posts, followers, following }: Props) {
+export default function UserStats({
+  userid,
+  posts,
+  followers,
+  following,
+}: Props) {
   return (
     <div className={styles.followersContainer}>
       <div>
         <strong>{posts}</strong> posts
       </div>
       <div>
-        <strong>{followers}</strong> followers
+        <Link href={`/user/${userid}/followers`}>
+          <strong>{followers}</strong> followers
+        </Link>
       </div>
       <div>
-        <strong>{following}</strong> following
+        <Link href={`/user/${userid}/following`}>
+          <strong>{following}</strong> following
+        </Link>
       </div>
     </div>
   )

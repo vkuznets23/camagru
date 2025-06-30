@@ -38,9 +38,11 @@ export default function SearchForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('hello')
     if (search.trim()) {
-      router.push(`/search?query=${encodeURIComponent(search)}`)
+      const query = encodeURIComponent(search)
       setShowDropdown(false)
+      router.push(`/search?query=${query}`)
     }
   }
 
@@ -82,7 +84,10 @@ export default function SearchForm() {
             >
               <Link
                 href={`/user/${user.id}`}
-                onClick={() => setShowDropdown(false)}
+                onClick={() => {
+                  setShowDropdown(false)
+                  setSearch('')
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',

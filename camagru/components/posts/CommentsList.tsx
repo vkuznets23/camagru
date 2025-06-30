@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import styles from '@/styles/CommentList.module.css'
 import { type Comment } from '@/types/comment'
+import Link from 'next/link'
 
 type CommentListProps = {
   comments: Comment[]
@@ -25,6 +26,12 @@ export default function CommentList({
   return (
     <div className={styles.commentsSection}>
       {comments.map((comment) => {
+        console.log(
+          'comment.user.id:',
+          comment.user.id,
+          'currentUserId:',
+          currentUserId
+        )
         const canDelete = comment.user.id === currentUserId
         console.log(
           'comment.user.id:',
@@ -44,9 +51,11 @@ export default function CommentList({
                 height={32}
               />
               <div className={styles.commentMeta}>
-                <p className={styles.commentUsername}>
-                  {comment.user.username}
-                </p>
+                <Link href={`/user/${comment.user.id}`}>
+                  <p className={styles.commentUsername}>
+                    {comment.user.username}
+                  </p>
+                </Link>
                 <small className={styles.commentDate}>
                   {new Date(comment.createdAt).toLocaleString()}
                 </small>

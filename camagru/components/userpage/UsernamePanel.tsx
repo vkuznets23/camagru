@@ -45,6 +45,7 @@ export default function UsernamePanel({
         )}
       </div>
       <UserStats
+        userid={user.id}
         posts={user._count.posts}
         followers={followersCount ?? user._count.followers}
         following={user._count.following}
