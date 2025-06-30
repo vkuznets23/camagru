@@ -23,6 +23,7 @@ type PostModalProps = {
   isLiked?: boolean
   likesCount: number
   canEdit: boolean
+  postAuthorId: string
   onCommentAdded: (comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
   onPostDeleted: (postId: string) => void
@@ -44,6 +45,7 @@ export default function PostModal({
   likesCount,
   canEdit,
   currentUserId,
+  postAuthorId,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
@@ -140,6 +142,7 @@ export default function PostModal({
               currentUserId={currentUserId}
               comments={comments}
               onCommentDeleted={onCommentDeleted}
+              postAuthorId={postAuthorId}
             />
           </div>
           <CommentForm postId={postId} onCommentAdded={onCommentAdded} />

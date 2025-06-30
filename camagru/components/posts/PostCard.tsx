@@ -16,6 +16,7 @@ type PostCardProps = {
   isLiked?: boolean
   likesCount: number
   canEdit: boolean
+  postAuthorId: string
   onCommentAdded: (postId: string, comment: Comment) => void
   onCommentDeleted: (commentId: string) => void
   onPostDeleted: (postId: string) => void
@@ -36,6 +37,7 @@ export default function PostCard({
   likesCount,
   canEdit,
   currentUserId,
+  postAuthorId,
   onCommentAdded,
   onCommentDeleted,
   onPostDeleted,
@@ -85,6 +87,7 @@ export default function PostCard({
           canEdit={canEdit}
           onEditPost={onEditPost}
           currentUserId={currentUserId}
+          postAuthorId={postAuthorId}
         />
       )}
     </>

@@ -173,6 +173,7 @@ export default function UserPosts({ posts }: UserPostsProps) {
               canEdit={post.user.id === userID}
               onEditPost={(newContent) => handleEditPost(post.id, newContent)}
               currentUserId={userID}
+              postAuthorId={post.user.id}
             />
           ))}
       </div>
