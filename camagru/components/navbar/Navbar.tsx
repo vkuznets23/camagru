@@ -1,6 +1,7 @@
 'use client'
 
 import { GrFormAdd } from 'react-icons/gr'
+import { MdHomeFilled } from 'react-icons/md'
 import Logo from '../Logo'
 import Link from 'next/link'
 import styles from '@/styles/Navbar.module.css'
@@ -14,6 +15,9 @@ export default function Navbar() {
         <Logo className={styles.logo} width={134} height={47} />
         <SearchForm />
         <div className={styles.navActions}>
+          <Link href="/feed">
+            <MdHomeFilled className={styles.feedBtn} />
+          </Link>
           <Link href="/post/create">
             <GrFormAdd className={styles.addBtn} />
           </Link>
