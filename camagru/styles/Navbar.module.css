@@ -42,6 +42,8 @@
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
+  height: 32px;
+  width: 32px;
 }
 
 .menuContainer {
@@ -92,7 +94,19 @@
   border: 1 solid black;
   border-radius: 20%;
 }
+
 .addBtn:hover {
+  background-color: transparent;
+  color: #0095f6;
+  border-color: #0095f6;
+  cursor: pointer;
+}
+
+.feedBtn {
+  font-size: 1.2rem;
+}
+
+.feedBtn:hover {
   background-color: transparent;
   color: #0095f6;
   border-color: #0095f6;

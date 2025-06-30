@@ -30,7 +30,7 @@ export default function UserMenu() {
       <button onClick={toggleMenu} className={styles.toggleBtn}>
         <Image
           src={session?.user?.image || '/default_avatar.png'}
-          alt="Profile photo"
+          alt="Avatar"
           width={32}
           height={32}
           className={styles.avatar}

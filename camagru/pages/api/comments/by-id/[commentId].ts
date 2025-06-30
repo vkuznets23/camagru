@@ -24,10 +24,24 @@ export default async function handler(
       // check u made that comment
       const existingComment = await prisma.comment.findUnique({
         where: { id: commentId },
+        include: {
+          post: {
+            select: { userId: true },
+          },
+        },
       })
 
-      if (!existingComment || existingComment.userId !== session.user.id) {
-        return res.status(403).json({ error: 'Forbidden' })
+      if (!existingComment) {
+        return res.status(404).json({ error: 'Comment not found' })
+      }
+
+      const isCommentOwner = existingComment.userId === session.user.id
+      const isPostOwner = existingComment.post.userId === session.user.id
+
+      if (!isCommentOwner && !isPostOwner) {
+        return res
+          .status(403)
+          .json({ error: 'Forbidden: not allowed to delete' })
       }
 
       await prisma.comment.delete({

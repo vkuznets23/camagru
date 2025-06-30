@@ -9,12 +9,14 @@ type CommentListProps = {
   comments: Comment[]
   onCommentDeleted: (commentId: string) => void
   currentUserId: string
+  postAuthorId: string
 }
 
 export default function CommentList({
   comments,
   onCommentDeleted,
   currentUserId,
+  postAuthorId,
 }: CommentListProps) {
   if (comments.length == 0)
     return (
@@ -26,18 +28,15 @@ export default function CommentList({
   return (
     <div className={styles.commentsSection}>
       {comments.map((comment) => {
+        const canDelete =
+          comment.user.id === currentUserId || currentUserId === postAuthorId
         console.log(
           'comment.user.id:',
           comment.user.id,
           'currentUserId:',
-          currentUserId
-        )
-        const canDelete = comment.user.id === currentUserId
-        console.log(
-          'comment.user.id:',
-          comment.user.id,
-          'currentUserId:',
-          currentUserId
+          currentUserId,
+          'postAuthorId:',
+          postAuthorId
         )
 
         return (
