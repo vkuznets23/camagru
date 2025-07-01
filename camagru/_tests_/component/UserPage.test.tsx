@@ -85,6 +85,7 @@ describe('user profile component', () => {
       expect(
         screen.getByText((content) => content.includes('No posts yet'))
       ).toBeInTheDocument()
+
       const counts = screen.getAllByRole('strong')
       expect(counts[0]).toHaveTextContent('0')
       expect(counts[0].parentElement).toHaveTextContent('posts')
