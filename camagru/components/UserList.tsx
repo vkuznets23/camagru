@@ -1,13 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@/styles/FollowersPage.module.css'
+import { type User } from '@/types/user'
 
 type UserListProps = {
-  users: {
-    id: string
-    username: string
-    image?: string | null
-  }[]
+  users: User[]
   emptyMessage: string
 }
 

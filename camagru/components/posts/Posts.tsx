@@ -5,6 +5,7 @@ import styles from '@/styles/Profile.module.css'
 import { type Post } from '@/types/post'
 import { useSession } from 'next-auth/react'
 import { usePosts, PostsProvider } from '@/context/PostsContext'
+import NoPosts from './NoPosts'
 
 interface UserPostsProps {
   posts: Post[]
@@ -19,19 +20,7 @@ function UserPostsContent() {
   if (!userID) return <p>Loading user...</p>
 
   if (posts.length === 0) {
-    return (
-      <div>
-        <p
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: '120px',
-          }}
-        >
-          No posts yet.
-        </p>
-      </div>
-    )
+    return <NoPosts />
   }
 
   return (
@@ -56,11 +45,7 @@ function UserPostsContent() {
                   )
                 )
               }}
-              // isLiked={post.likedByCurrentUser ?? false}
-              // likesCount={post.likesCount ?? 0}
-              // canEdit={post.user.id === userID}
               currentUserId={userID}
-              // postAuthorId={post.user.id}
             />
           ))}
       </div>
