@@ -50,6 +50,7 @@ export default function PostCard({
             onCommentAdded(id, newComment)
           }
           currentUserId={currentUserId}
+          // postAuthoId={userID}
         />
       )}
     </>
