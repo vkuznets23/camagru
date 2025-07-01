@@ -10,53 +10,48 @@ import { FiHeart } from 'react-icons/fi'
 import { useState } from 'react'
 import { MdOutlineEdit } from 'react-icons/md'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import { usePosts } from '@/context/PostsContext'
+import { type Post } from '@/types/post'
 
 type PostModalProps = {
+  post: Post
   image: string
-  content: string
-  createdAt: string
   onClose: () => void
-  username?: string
-  avatar?: string
-  comments: Comment[]
-  postId: string
-  isLiked?: boolean
-  likesCount: number
-  canEdit: boolean
-  postAuthorId: string
   onCommentAdded: (comment: Comment) => void
-  onCommentDeleted: (commentId: string) => void
-  onPostDeleted: (postId: string) => void
-  onToggleLike: (postId: string) => void
-  onEditPost: (newContent: string) => void
   currentUserId: string
 }
 
 export default function PostModal({
   image,
-  content,
-  createdAt,
+  post,
   onClose,
-  username,
-  avatar,
-  comments,
-  postId,
-  isLiked,
-  likesCount,
-  canEdit,
   currentUserId,
-  postAuthorId,
   onCommentAdded,
-  onCommentDeleted,
-  onPostDeleted,
-  onToggleLike,
-  onEditPost,
 }: PostModalProps) {
+  const {
+    id: postId,
+    content,
+    createdAt,
+    user: { username, image: avatar, id: userID },
+    likesCount,
+    comments,
+  } = post
+
+  const isLiked = post.likedByCurrentUser ?? false
+  const canEdit = userID === currentUserId
+
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState(content || '')
 
+  const {
+    handleEditPost,
+    handleToggleLike,
+    handlePostDeleted,
+    handleCommentDeleted,
+  } = usePosts()
+
   const handleSave = () => {
-    onEditPost(editedContent)
+    handleEditPost(postId, editedContent)
     setIsEditing(false)
   }
 
@@ -113,7 +108,7 @@ export default function PostModal({
                         <>
                           <button
                             className={styles.deleteButton}
-                            onClick={() => onPostDeleted(postId)}
+                            onClick={() => handlePostDeleted(postId)}
                           >
                             <RiDeleteBin6Line /> Delete
                           </button>
@@ -127,12 +122,11 @@ export default function PostModal({
                       )}
                       <button
                         className={styles.likeButton}
-                        onClick={() => onToggleLike(postId)}
+                        onClick={() => handleToggleLike(postId)}
                       >
                         {isLiked ? <FcLike /> : <FiHeart />}
                         {likesCount}
                       </button>
-                      {/* <button> save </button> */}
                     </div>
                   </>
                 )}
@@ -141,8 +135,10 @@ export default function PostModal({
             <CommentList
               currentUserId={currentUserId}
               comments={comments}
-              onCommentDeleted={onCommentDeleted}
-              postAuthorId={postAuthorId}
+              onCommentDeleted={(commentId) =>
+                handleCommentDeleted(postId, commentId)
+              }
+              postAuthorId={userID}
             />
           </div>
           <CommentForm postId={postId} onCommentAdded={onCommentAdded} />
