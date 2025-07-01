@@ -1,11 +1,11 @@
 'use client'
 
-import PostCard from './PostCard'
+import PostCard from '@/components/posts/PostCard'
 import styles from '@/styles/Profile.module.css'
 import { type Post } from '@/types/post'
 import { useSession } from 'next-auth/react'
 import { usePosts, PostsProvider } from '@/context/PostsContext'
-import NoPosts from './NoPosts'
+import NoPosts from '@/components/posts/NoPosts'
 
 interface UserPostsProps {
   posts: Post[]

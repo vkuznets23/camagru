@@ -3,13 +3,13 @@
 import Image from 'next/image'
 import styles from '@/styles/PostModal.module.css'
 import { type Comment } from '@/types/comment'
-import CommentForm from './AddCommentForm'
-import CommentList from './CommentsList'
+import CommentForm from '@/components/posts/AddCommentForm'
+import CommentList from '@/components/posts/CommentsList'
 import { useState } from 'react'
 import { usePosts } from '@/context/PostsContext'
 import { type Post } from '@/types/post'
-import UserInfo from './PostModalUserInfo'
-import PostActions from './PostModalPostActions'
+import UserInfo from '@/components/posts/PostModalUserInfo'
+import PostActions from '@/components/posts/PostModalPostActions'
 
 type PostModalProps = {
   post: Post

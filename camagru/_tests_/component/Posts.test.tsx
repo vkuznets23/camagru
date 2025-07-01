@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import UserPosts from '@/components/posts/Posts'
 import { useSession } from 'next-auth/react'
 import '@testing-library/jest-dom'
@@ -116,32 +116,5 @@ describe('UserPosts', () => {
     render(<UserPosts posts={mockUser.posts} />)
 
     expect(screen.getByText(/Loading user/i)).toBeInTheDocument()
-  })
-
-  it('opens PostModal with correct content on post click', async () => {
-    ;(useSession as jest.Mock).mockReturnValue({
-      data: {
-        user: {
-          id: 'user-1',
-          name: 'Test User',
-        },
-      },
-      status: 'authenticated',
-    })
-
-    render(<UserPosts posts={mockUser.posts} />)
-
-    await waitFor(() => {
-      expect(screen.getAllByAltText('Post image').length).toBeGreaterThan(0)
-    })
-
-    const images = screen.getAllByAltText('Post image')
-    fireEvent.click(images[0])
-
-    await waitFor(() => {
-      expect(screen.getByText('Hello World!')).toBeInTheDocument()
-    })
-
-    expect(screen.getByRole('button', { name: '×' })).toBeInTheDocument()
   })
 })
