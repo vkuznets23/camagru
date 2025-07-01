@@ -9,7 +9,7 @@ interface DividerProps {
 
 export default function Divider({ activeTab, setActiveTab }: DividerProps) {
   return (
-    <div id="divider" test-id="divider" className={styles.divider}>
+    <div id="divider" data-testid="divider" className={styles.divider}>
       <div className={styles.sections}>
         <div
           className={`${styles.section} ${
