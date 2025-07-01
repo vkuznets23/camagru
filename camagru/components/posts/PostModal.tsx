@@ -5,13 +5,11 @@ import styles from '@/styles/PostModal.module.css'
 import { type Comment } from '@/types/comment'
 import CommentForm from './AddCommentForm'
 import CommentList from './CommentsList'
-import { FcLike } from 'react-icons/fc'
-import { FiHeart } from 'react-icons/fi'
 import { useState } from 'react'
-import { MdOutlineEdit } from 'react-icons/md'
-import { RiDeleteBin6Line } from 'react-icons/ri'
 import { usePosts } from '@/context/PostsContext'
 import { type Post } from '@/types/post'
+import UserInfo from './PostModalUserInfo'
+import PostActions from './PostModalPostActions'
 
 type PostModalProps = {
   post: Post
@@ -70,21 +68,11 @@ export default function PostModal({
         <div className={styles.contentWrapper}>
           <div className={styles.info}>
             <div className={styles.infodivider}>
-              <div className={styles.usernamePanel}>
-                <Image
-                  className={styles.avatar}
-                  src={avatar || '/default_avatar.png'}
-                  alt="avatar"
-                  width={32}
-                  height={32}
-                />
-                <div className={styles.postMeta}>
-                  <p className={styles.username}>{username}</p>
-                  <small className={styles.postDate}>
-                    {new Date(createdAt).toLocaleString()}
-                  </small>
-                </div>
-              </div>
+              <UserInfo
+                username={username}
+                avatar={avatar}
+                createdAt={createdAt}
+              />
               <div>
                 {isEditing ? (
                   <div className={styles.editSection}>
@@ -103,31 +91,14 @@ export default function PostModal({
                 ) : (
                   <>
                     <p className={styles.postContent}>{content}</p>
-                    <div className={styles.postAction}>
-                      {canEdit && (
-                        <>
-                          <button
-                            className={styles.deleteButton}
-                            onClick={() => handlePostDeleted(postId)}
-                          >
-                            <RiDeleteBin6Line /> Delete
-                          </button>
-                          <button
-                            className={styles.editButton}
-                            onClick={() => setIsEditing(true)}
-                          >
-                            <MdOutlineEdit /> Edit
-                          </button>
-                        </>
-                      )}
-                      <button
-                        className={styles.likeButton}
-                        onClick={() => handleToggleLike(postId)}
-                      >
-                        {isLiked ? <FcLike /> : <FiHeart />}
-                        {likesCount}
-                      </button>
-                    </div>
+                    <PostActions
+                      canEdit={canEdit}
+                      isLiked={isLiked}
+                      likesCount={likesCount}
+                      onDelete={() => handlePostDeleted(postId)}
+                      onEdit={() => setIsEditing(true)}
+                      onToggleLike={() => handleToggleLike(postId)}
+                    />
                   </>
                 )}
               </div>
