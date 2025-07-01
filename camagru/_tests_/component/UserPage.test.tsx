@@ -44,6 +44,12 @@ describe('user profile component', () => {
         username: 'jdoe',
         bio: 'Hello there',
         image: '/avatar.png',
+        posts: [],
+        _count: {
+          posts: 0,
+          followers: 10,
+          following: 5,
+        },
       }),
       status: 200,
       statusText: 'OK',
@@ -60,7 +66,13 @@ describe('user profile component', () => {
       text: async () => JSON.stringify({}),
     } as unknown as Response
 
-    global.fetch = jest.fn().mockResolvedValueOnce(mockResponse)
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce(mockResponse)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ following: true }),
+      } as Response)
 
     render(<UserProfile />)
 
@@ -70,6 +82,18 @@ describe('user profile component', () => {
       expect(screen.getByText('John Doe')).toBeInTheDocument()
       expect(screen.getByText('jdoe')).toBeInTheDocument()
       expect(screen.getByText('Hello there')).toBeInTheDocument()
+      expect(
+        screen.getByText((content) => content.includes('No posts yet'))
+      ).toBeInTheDocument()
+      const counts = screen.getAllByRole('strong')
+      expect(counts[0]).toHaveTextContent('0')
+      expect(counts[0].parentElement).toHaveTextContent('posts')
+
+      expect(counts[1]).toHaveTextContent('10')
+      expect(counts[1].parentElement).toHaveTextContent('followers')
+
+      expect(counts[2]).toHaveTextContent('5')
+      expect(counts[2].parentElement).toHaveTextContent('following')
     })
   })
 })
