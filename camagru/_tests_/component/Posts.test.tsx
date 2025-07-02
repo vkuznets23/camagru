@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import UserPosts from '@/components/posts/Posts'
 import { useSession } from 'next-auth/react'
 import '@testing-library/jest-dom'
@@ -116,5 +116,50 @@ describe('UserPosts', () => {
     render(<UserPosts posts={mockUser.posts} />)
 
     expect(screen.getByText(/Loading user/i)).toBeInTheDocument()
+  })
+
+  it('opens PostModal with correct content on post click', async () => {
+    ;(useSession as jest.Mock).mockReturnValue({
+      data: {
+        user: {
+          id: 'user-1',
+          name: 'Test User',
+        },
+      },
+      status: 'authenticated',
+    })
+    render(<UserPosts posts={mockUser.posts} />)
+
+    await waitFor(() => {
+      expect(screen.getAllByAltText('Post image').length).toBeGreaterThan(0)
+    })
+
+    const images = screen.getAllByAltText('Post image')
+    fireEvent.click(images[0])
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(mockUser.posts[0].user.username)
+      ).toBeInTheDocument()
+    })
+
+    expect(screen.getByText(/2024/)).toBeInTheDocument()
+
+    expect(screen.getByText(mockUser.posts[0].content)).toBeInTheDocument()
+
+    if (mockUser.posts[0].comments.length === 0) {
+      expect(screen.getByText(/no comments/i)).toBeInTheDocument()
+    }
+
+    expect(
+      screen.getByText(mockUser.posts[0].likesCount.toString())
+    ).toBeInTheDocument()
+
+    expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument()
+
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
+
+    expect(screen.getByRole('button', { name: '×' })).toBeInTheDocument()
   })
 })

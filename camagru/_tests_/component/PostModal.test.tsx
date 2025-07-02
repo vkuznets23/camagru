@@ -1,107 +1,116 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import UserPosts from '@/components/posts/Posts'
-import '@testing-library/jest-dom'
-import { User } from '@/types/user'
+import { render, screen, fireEvent } from '@testing-library/react'
+import PostModal from '@/components/posts/PostModal'
+import { Post } from '@/types/post'
+import { PostsContext } from '@/context/PostsContext'
 
-const mockUser: User = {
-  id: 'user-1',
-  name: 'John Doe',
-  username: 'jdoe',
-  bio: 'Hello world!',
-  image: '/avatar.jpg',
-  _count: {
-    posts: 2,
-    followers: 10,
-    following: 3,
+const mockPost: Post = {
+  id: '1',
+  image: '/post.jpg',
+  content: 'Original content',
+  createdAt: '2024-01-01T12:00:00.000Z',
+  user: {
+    id: 'user-1',
+    name: 'John Doe',
+    username: 'jdoe',
+    image: '/avatar.jpg',
+    posts: [],
+    _count: { posts: 1, followers: 0, following: 0 },
+    followers: [],
+    following: [],
+    savedPosts: [],
   },
-  followers: [],
-  following: [],
-  savedPosts: [],
-  posts: [
-    {
-      id: 'post-1',
-      image: '/post1.jpg',
-      content: 'Hello World!',
-      createdAt: '2024-01-01T12:00:00.000Z',
-      user: {
-        id: 'user-1',
-        name: 'John Doe',
-        username: 'jdoe',
-        image: '/avatar.jpg',
-        posts: [],
-        _count: { posts: 2, followers: 0, following: 0 },
-        followers: [],
-        following: [],
-        savedPosts: [],
-      },
-      comments: [],
-      likedByCurrentUser: false,
-      likesCount: 3,
-    },
-    {
-      id: 'post-2',
-      image: '/post2.jpg',
-      content: 'Second post!',
-      createdAt: '2024-01-01T12:00:00.000Z',
-      user: {
-        id: 'user-1',
-        name: 'John Doe',
-        username: 'jdoe',
-        image: '/avatar.jpg',
-        posts: [],
-        _count: { posts: 2, followers: 0, following: 0 },
-        followers: [],
-        following: [],
-        savedPosts: [],
-      },
-      comments: [],
-      likedByCurrentUser: false,
-      likesCount: 3,
-    },
-  ],
+  comments: [],
+  likedByCurrentUser: false,
+  likesCount: 5,
 }
 
-jest.mock('next-auth/react', () => ({
-  useSession: jest.fn(() => ({
-    data: { user: { id: 'user-1' } },
-    status: 'authenticated',
-  })),
-}))
+describe('PostModal', () => {
+  const onClose = jest.fn()
+  const onCommentAdded = jest.fn()
+  const handleEditPost = jest.fn()
+  const handleToggleLike = jest.fn()
+  const handlePostDeleted = jest.fn()
+  const handleCommentDeleted = jest.fn()
 
-describe('UserPosts', () => {
-  it('opens PostModal with correct content on post click', async () => {
-    render(<UserPosts posts={mockUser.posts} />)
+  function MockPostsProvider({ children }: { children: React.ReactNode }) {
+    return (
+      <PostsContext.Provider
+        value={{
+          posts: [mockPost],
+          setPosts: jest.fn(),
+          handleEditPost,
+          handleToggleLike,
+          handlePostDeleted,
+          handleCommentDeleted,
+        }}
+      >
+        {children}
+      </PostsContext.Provider>
+    )
+  }
 
-    await waitFor(() => {
-      expect(screen.getAllByAltText('Post image').length).toBeGreaterThan(0)
-    })
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
-    const images = screen.getAllByAltText('Post image')
-    fireEvent.click(images[0])
+  it('allows editing post content', () => {
+    render(
+      <MockPostsProvider>
+        <PostModal
+          post={mockPost}
+          image={mockPost.image}
+          onClose={onClose}
+          currentUserId="user-1"
+          onCommentAdded={onCommentAdded}
+        />
+      </MockPostsProvider>
+    )
 
-    await waitFor(() => {
-      expect(
-        screen.getByText(mockUser.posts[0].user.username)
-      ).toBeInTheDocument()
-    })
+    fireEvent.click(screen.getByRole('button', { name: /edit/i }))
 
-    expect(screen.getByText(/2024/)).toBeInTheDocument()
+    const textarea = screen.getByTestId('edit-post') as HTMLTextAreaElement
+    expect(textarea.value).toBe('Original content')
 
-    expect(screen.getByText(mockUser.posts[0].content)).toBeInTheDocument()
+    fireEvent.change(textarea, { target: { value: 'Updated content' } })
 
-    if (mockUser.posts[0].comments.length === 0) {
-      expect(screen.getByText(/no comments/i)).toBeInTheDocument()
-    }
+    fireEvent.click(screen.getByRole('button', { name: /save/i }))
 
-    expect(
-      screen.getByText(mockUser.posts[0].likesCount.toString())
-    ).toBeInTheDocument()
+    expect(handleEditPost).toHaveBeenCalledWith('1', 'Updated content')
+  })
 
-    expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument()
+  it('allows toggling like', () => {
+    render(
+      <MockPostsProvider>
+        <PostModal
+          post={mockPost}
+          image={mockPost.image}
+          onClose={onClose}
+          currentUserId="user-1"
+          onCommentAdded={onCommentAdded}
+        />
+      </MockPostsProvider>
+    )
 
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    fireEvent.click(screen.getByTestId('likeBtn'))
 
-    expect(screen.getByRole('button', { name: '×' })).toBeInTheDocument()
+    expect(handleToggleLike).toHaveBeenCalledWith('1')
+  })
+
+  it('allows deleting post', () => {
+    render(
+      <MockPostsProvider>
+        <PostModal
+          post={mockPost}
+          image={mockPost.image}
+          onClose={onClose}
+          currentUserId="user-1"
+          onCommentAdded={onCommentAdded}
+        />
+      </MockPostsProvider>
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /delete/i }))
+
+    expect(handlePostDeleted).toHaveBeenCalledWith('1')
   })
 })

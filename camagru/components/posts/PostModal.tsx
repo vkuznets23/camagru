@@ -77,6 +77,7 @@ export default function PostModal({
                 {isEditing ? (
                   <div className={styles.editSection}>
                     <textarea
+                      data-testid="edit-post"
                       className={styles.textarea}
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
