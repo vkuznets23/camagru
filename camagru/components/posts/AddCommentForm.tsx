@@ -80,7 +80,11 @@ export default function CommentForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.commentForm}>
+    <form
+      data-testid="comment-form"
+      onSubmit={handleSubmit}
+      className={styles.commentForm}
+    >
       <div className={styles.inputWrapper}>
         <textarea
           ref={textareaRef}
