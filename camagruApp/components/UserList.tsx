@@ -3,8 +3,14 @@ import Link from 'next/link'
 import styles from '@/styles/FollowersPage.module.css'
 import { type User } from '@/types/user'
 
+export type FollowerPreview = {
+  id: string
+  username: string
+  image?: string | null
+}
+
 type UserListProps = {
-  users: User[]
+  users: FollowerPreview[]
   emptyMessage: string
 }
 

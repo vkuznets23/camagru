@@ -3,7 +3,7 @@ import { type Follower } from '@/types/follower'
 
 export type User = {
   id: string
-  name: string
+  name?: string
   username: string
   bio?: string
   image?: string

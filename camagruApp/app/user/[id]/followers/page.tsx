@@ -1,34 +1,15 @@
-import { prisma } from '@/utils/prisma'
-import { notFound } from 'next/navigation'
 import UserList from '@/components/UserList'
+import { getUserFollowers } from '@/pages/api/user/[id]/followers'
+import { notFound } from 'next/navigation'
 
 type Props = {
   params: { id: string }
 }
 
 export default async function FollowersPage({ params }: Props) {
-  const userId = params.id
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: {
-      followers: {
-        select: {
-          follower: {
-            select: {
-              id: true,
-              username: true,
-              image: true,
-            },
-          },
-        },
-      },
-    },
-  })
-
-  if (!user) return notFound()
-
-  const followers = user.followers.map((f) => f.follower)
+  const { id } = await params
+  const followers = await getUserFollowers(id)
+  if (!followers) return notFound()
 
   return <UserList users={followers} emptyMessage="No followers yet." />
 }
