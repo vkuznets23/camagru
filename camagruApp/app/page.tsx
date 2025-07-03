@@ -5,7 +5,6 @@ import Image from 'next/image'
 export default function Home() {
   return (
     <div className={styles.fullscreenCenter}>
-      <p>NEXT_PUBLIC_DATABASE_URL: {process.env.NEXT_PUBLIC_DATABASE_URL}</p>
       <div className={styles.container}>
         <div className={styles.imageWrapper}>
           <Image
