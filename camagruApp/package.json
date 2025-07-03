@@ -10,7 +10,7 @@
     "test:components": "jest",
     "test:e2e": "npx playwright test --ui",
     "coverage": "jest --coverage",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
