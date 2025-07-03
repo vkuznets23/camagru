@@ -63,25 +63,6 @@
   align-items: flex-start;
 }
 
-/* .postsContainer > * {
-  flex: 1 1 calc(33.333% - 10px);
-  max-width: calc(33.333% - 10px);
-}
-
-@media (max-width: 700px) {
-  .postsContainer > * {
-    flex: 1 1 calc(50% - 15px);
-    max-width: calc(50% - 15px);
-  }
-}
-
-@media (max-width: 500px) {
-  .postsContainer > * {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-} */
-
 .userContainer {
   display: flex;
   flex-direction: column;
@@ -102,16 +83,44 @@
   gap: 15px;
 }
 
-@media (max-width: 600px) {
-  .followersContainer {
-    gap: 1rem;
-    font-size: 0.9rem;
-  }
-}
-
 .followersContainer strong {
   font-size: 1rem;
   font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .profileContainer {
+    padding: 20px 20px 45px 20px;
+    align-items: start;
+    width: 100%;
+    max-width: 100%;
+    gap: 20px;
+  }
+
+  .profileInfo {
+    width: 100%;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .usernamePanel {
+    font-size: 20px;
+    gap: 10px;
+  }
+
+  .followersContainer {
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .nameBioContainer {
+    text-align: center;
+  }
+
+  .avatar {
+    width: 100px !important;
+    height: 100px !important;
+  }
 }
 
 /* ===== Typography ===== */

@@ -9,6 +9,8 @@ import Image from 'next/image'
 import UserSkeleton from './UserSkeleton'
 import UsernamePanel from './UsernamePanel'
 import UserContentTabs from '../posts/UserContentTabs'
+import UserStats from './UserStats'
+import UserBio from './UserBio'
 
 export default function UserProfile() {
   const { data: session } = useSession()
@@ -94,6 +96,7 @@ export default function UserProfile() {
           priority
           onError={(e) => (e.currentTarget.src = '/default_avatar.png')}
         />
+
         <UsernamePanel
           user={user}
           isMyProfile={isMyProfile}
@@ -103,6 +106,7 @@ export default function UserProfile() {
           followersCount={followersCount}
         />
       </div>
+
       <UserContentTabs posts={user.posts} />
     </div>
   )
