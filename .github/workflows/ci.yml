@@ -1,4 +1,4 @@
-name: Camagru
+name: CI
 
 on:
   push:
