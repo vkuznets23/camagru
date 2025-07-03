@@ -9,8 +9,6 @@ import Image from 'next/image'
 import UserSkeleton from './UserSkeleton'
 import UsernamePanel from './UsernamePanel'
 import UserContentTabs from '../posts/UserContentTabs'
-import UserStats from './UserStats'
-import UserBio from './UserBio'
 
 export default function UserProfile() {
   const { data: session } = useSession()
