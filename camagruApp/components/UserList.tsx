@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@/styles/FollowersPage.module.css'
-import { type User } from '@/types/user'
 
 export type FollowerPreview = {
   id: string

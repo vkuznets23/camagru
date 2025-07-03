@@ -1,7 +1,7 @@
 import styles from '@/styles/Profile.module.css'
 
 interface Props {
-  name: string
+  name?: string
   bio?: string
 }
 

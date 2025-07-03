@@ -2,11 +2,11 @@ import UserList from '@/components/UserList'
 import { getUserFollowers } from '@/pages/api/user/[id]/followers'
 import { notFound } from 'next/navigation'
 
-type Props = {
-  params: { id: string }
-}
-
-export default async function FollowersPage({ params }: Props) {
+export default async function FollowersPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
   const { id } = await params
   const followers = await getUserFollowers(id)
   if (!followers) return notFound()
