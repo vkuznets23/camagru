@@ -6,9 +6,51 @@
   align-items: center;
   justify-content: space-between;
   padding: 40px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  position: static;
+}
+
+.searchNavbarWrapper {
+  flex: 1;
+  max-width: 500px;
+  width: 100%;
+  margin: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 40px;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 500px) {
+  .navbar {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 150px;
+    align-items: flex-start;
+  }
+
+  .searchNavbarWrapper {
+    width: 100%;
+    margin: 0;
+  }
+
+  .searchForm {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .navActions {
+    width: 100%;
+    align-items: space-between;
+    flex-wrap: wrap;
+  }
 }
 
 .divider {
@@ -19,8 +61,7 @@
 
 .searchForm {
   flex: 1;
-  max-width: 300px;
-  margin: 0 20px;
+  max-width: none;
 }
 
 .searchForm input {

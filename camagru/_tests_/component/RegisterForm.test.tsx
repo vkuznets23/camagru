@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import RegisterForm from '@/components/RegisterForm'
+import RegisterForm from '@/components/registration/RegisterForm'
 import PasswordStrengthBar from '@/components/PasswordStrengthBar'
 
 jest.mock('next/navigation', () => ({

@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import SignInForm from '@/components/SigninForm'
+import SignInForm from '@/components/registration/SigninForm'
 import userEvent from '@testing-library/user-event'
 import { signIn } from 'next-auth/react'
 

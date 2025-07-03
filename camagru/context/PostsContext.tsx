@@ -16,7 +16,9 @@ interface PostsContextType {
   handleCommentDeleted: (postId: string, commentId: string) => Promise<void>
 }
 
-const PostsContext = createContext<PostsContextType | undefined>(undefined)
+export const PostsContext = createContext<PostsContextType | undefined>(
+  undefined
+)
 
 export function PostsProvider({
   children,

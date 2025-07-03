@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import Divider from './Divider'
+import Divider from '@/components/posts/Divider'
 import { type Post } from '@/types/post'
-import UserPosts from './Posts'
+import UserPosts from '@/components/posts/Posts'
 
 interface UserContentTabsProps {
   posts: Post[]

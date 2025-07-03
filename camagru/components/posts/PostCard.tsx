@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import PostModal from './PostModal'
+import PostModal from '@/components/posts/PostModal'
 import { type Comment } from '@/types/comment'
 import { type Post } from '@/types/post'
 

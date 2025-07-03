@@ -13,8 +13,10 @@ export default function Navbar() {
     <>
       <nav id="navbar" data-testid="navbar" className={styles.navbar}>
         <Logo className={styles.logo} width={134} height={47} />
-        <SearchForm />
         <div className={styles.navActions}>
+          <div className={styles.searchNavbarWrapper}>
+            <SearchForm />
+          </div>
           <Link href="/feed">
             <MdHomeFilled className={styles.feedBtn} />
           </Link>

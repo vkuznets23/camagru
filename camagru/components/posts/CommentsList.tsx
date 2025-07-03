@@ -30,14 +30,6 @@ export default function CommentList({
       {comments.map((comment) => {
         const canDelete =
           comment.user.id === currentUserId || currentUserId === postAuthorId
-        console.log(
-          'comment.user.id:',
-          comment.user.id,
-          'currentUserId:',
-          currentUserId,
-          'postAuthorId:',
-          postAuthorId
-        )
 
         return (
           <div key={comment.id} className={styles.commentBlock}>
@@ -67,7 +59,6 @@ export default function CommentList({
                 <button
                   className={styles.deleteButton}
                   onClick={() => {
-                    console.log('Delete clicked:', comment.id)
                     onCommentDeleted(comment.id)
                   }}
                 >

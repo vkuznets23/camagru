@@ -33,7 +33,11 @@ export default function PostActions({
           </button>
         </>
       )}
-      <button className={styles.likeButton} onClick={onToggleLike}>
+      <button
+        data-testid="likeBtn"
+        className={styles.likeButton}
+        onClick={onToggleLike}
+      >
         {isLiked ? <FcLike /> : <FiHeart />}
         {likesCount}
       </button>
