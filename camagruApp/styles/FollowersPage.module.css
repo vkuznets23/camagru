@@ -1,0 +1,33 @@
+.container {
+  max-width: 935px;
+  width: 935px;
+  margin: 2rem auto;
+  padding: 20px 45px 45px 45px;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.item {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+.image {
+  border: 1px solid #cdcdcd;
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}

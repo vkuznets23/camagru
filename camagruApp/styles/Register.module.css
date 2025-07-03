@@ -1,0 +1,173 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #fafafa;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.formBox {
+  background-color: white;
+  border: 1px solid #dbdbdb;
+  padding: 40 40 20 40;
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.logoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  margin-bottom: 10px;
+}
+
+.heading {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #737373;
+}
+
+.label {
+  display: block;
+  position: relative;
+}
+
+.input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  background: #fafafa;
+  font-size: 14px;
+  width: 100%;
+  padding-right: 50px;
+  box-sizing: border-box;
+}
+
+.button {
+  background-color: #0095f6;
+  border: none;
+  padding: 8px;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.toggleButton {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #262626;
+  padding: 0;
+}
+
+.inputError {
+  border-color: red;
+  outline: none;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* password strength */
+.strengthBarContainer {
+  height: 4px;
+  width: 100%;
+  background-color: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+
+.strengthBarFill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.weak {
+  width: 20%;
+  background-color: red;
+}
+
+.fair {
+  width: 40%;
+  background-color: orange;
+}
+
+.medium {
+  width: 60%;
+  background-color: yellowgreen;
+}
+
+.good {
+  width: 80%;
+  background-color: #4caf50;
+}
+
+.strong {
+  width: 100%;
+  background-color: #2e7d32;
+}
+
+.extraContainer {
+  background-color: white;
+  border: 1px solid #dbdbdb;
+  padding: 20px;
+  width: 100%;
+  max-width: 350px;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.extraContainer a {
+  font-weight: bold;
+  text-transform: capitalize;
+  color: #0095f6;
+  text-decoration: none;
+}
+
+.extraContainer a:hover {
+  text-decoration: underline;
+}
+
+.forgotPassword {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 14;
+  color: #0095f6;
+  text-decoration: none;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+}
