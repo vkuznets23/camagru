@@ -1,4 +1,3 @@
-'use client'
 import styles from '@/styles/Register.module.css'
 import SignInForm from '@/components/registration/SigninForm'
 
