@@ -28,6 +28,7 @@ export function PostsProvider({
   initialPosts: Post[]
 }) {
   const [posts, setPosts] = useState<Post[]>(initialPosts)
+  const [isLiking, setIsLiking] = useState(false)
 
   useEffect(() => {
     setPosts(initialPosts)
@@ -58,6 +59,9 @@ export function PostsProvider({
   }
 
   const handleToggleLike = async (postId: string) => {
+    if (isLiking) return
+    setIsLiking(true)
+
     try {
       const res = await fetch('/api/posts/like', {
         method: 'PATCH',
@@ -84,6 +88,8 @@ export function PostsProvider({
       }
     } catch (error) {
       console.error(error)
+    } finally {
+      setIsLiking(false)
     }
   }
 
