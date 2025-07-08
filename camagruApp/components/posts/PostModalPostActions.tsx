@@ -37,6 +37,7 @@ export default function PostActions({
         data-testid="likeBtn"
         className={styles.likeButton}
         onClick={onToggleLike}
+        // disabled={isLiking}
       >
         {isLiked ? <FcLike /> : <FiHeart />}
         {likesCount}

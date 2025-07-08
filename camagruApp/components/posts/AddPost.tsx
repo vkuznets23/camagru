@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import CameraCapture from '@/components/CameraCapture'
 import { useSession } from 'next-auth/react'
 import styles from '@/styles/AddPost.module.css'
 import Image from 'next/image'
@@ -11,6 +12,39 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
   const [content, setContent] = useState('')
   const [image, setImage] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [showCamera, setShowCamera] = useState(false)
+
+  const handleCameraCapture = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append(
+      'upload_preset',
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOADPRESET!
+    )
+
+    setUploading(true)
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      )
+
+      const data = await res.json()
+      if (data.secure_url) {
+        setImage(data.secure_url)
+        setShowCamera(false)
+      }
+    } catch (err) {
+      console.error('Upload failed', err)
+      alert('Upload failed')
+    } finally {
+      setUploading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -113,6 +147,12 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
             )}
             {uploading && <p>Uploading...</p>}
             <input type="file" accept="image/*" onChange={handleFileChange} />
+            <div>
+              <button type="button" onClick={() => setShowCamera(!showCamera)}>
+                {showCamera ? 'Close Camera' : 'Open Camera'}
+              </button>
+              {showCamera && <CameraCapture onCapture={handleCameraCapture} />}
+            </div>
           </div>
           <div className={styles.textareaContainer}>
             <textarea
