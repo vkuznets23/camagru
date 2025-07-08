@@ -5,6 +5,7 @@ import { MdOutlineEdit } from 'react-icons/md'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { FcLike } from 'react-icons/fc'
 import { FiHeart } from 'react-icons/fi'
+import { useState } from 'react'
 
 export default function PostActions({
   canEdit,
@@ -19,8 +20,22 @@ export default function PostActions({
   likesCount: number
   onDelete: () => void
   onEdit: () => void
-  onToggleLike: () => void
+  onToggleLike: () => Promise<void>
 }) {
+  const [isLiking, setIsLiking] = useState(false)
+
+  const handleLike = async () => {
+    if (isLiking) return
+    setIsLiking(true)
+    try {
+      await onToggleLike()
+    } catch (err) {
+      console.error('Failed to like', err)
+    } finally {
+      setIsLiking(false)
+    }
+  }
+
   return (
     <div className={styles.postAction}>
       {canEdit && (
@@ -36,8 +51,9 @@ export default function PostActions({
       <button
         data-testid="likeBtn"
         className={styles.likeButton}
-        onClick={onToggleLike}
-        // disabled={isLiking}
+        // onClick={onToggleLike}
+        onClick={handleLike}
+        disabled={isLiking}
       >
         {isLiked ? <FcLike /> : <FiHeart />}
         {likesCount}
