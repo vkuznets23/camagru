@@ -14,18 +14,21 @@ interface UserPostsProps {
 function UserPostsContent() {
   const { posts, setPosts } = usePosts()
 
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const userID = session?.user?.id
 
-  if (!userID) return <p>Loading user...</p>
+  const isLoadingSession = status === 'loading'
+  const isLoadingPosts = posts.length === 0 && !isLoadingSession
 
-  if (posts.length === 0) {
+  if (!userID) return
+
+  if (posts.length === 0 && !isLoadingPosts) {
     return <NoPosts />
   }
 
   return (
     <div className={styles.posts}>
-      <div className={styles.postsContainer}>
+      <div className={styles.postsContainer} role="list">
         {posts
           .slice()
           .sort(
@@ -33,20 +36,21 @@ function UserPostsContent() {
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           )
           .map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onCommentAdded={(postId, newComment) => {
-                setPosts((prevPosts) =>
-                  prevPosts.map((p) =>
-                    p.id === postId
-                      ? { ...p, comments: [newComment, ...p.comments] }
-                      : p
+            <article key={post.id} role="listitem">
+              <PostCard
+                post={post}
+                onCommentAdded={(postId, newComment) => {
+                  setPosts((prevPosts) =>
+                    prevPosts.map((p) =>
+                      p.id === postId
+                        ? { ...p, comments: [newComment, ...p.comments] }
+                        : p
+                    )
                   )
-                )
-              }}
-              currentUserId={userID}
-            />
+                }}
+                currentUserId={userID}
+              />
+            </article>
           ))}
       </div>
     </div>

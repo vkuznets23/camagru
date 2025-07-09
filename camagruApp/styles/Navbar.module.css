@@ -93,6 +93,35 @@
   width: 32px;
 }
 
+.avatarWrapper {
+  padding: 2px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.avatarActive {
+  border-radius: 50%;
+  object-fit: cover;
+  height: 32px;
+  width: 32px;
+  display: block;
+}
+
+.avatarWrapperActive {
+  border-color: black;
+}
+
+.toggleBtn:hover > .avatarWrapper {
+  border-color: black;
+}
+
 .searchAvatar {
   border: 1px solid #e1e1e1;
   border-radius: 50%;
@@ -129,11 +158,6 @@
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.toggleBtn:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
-}
-
 .navBtn {
   display: block;
   padding: 10px 16px;
@@ -148,28 +172,97 @@
   cursor: pointer;
 }
 
-.addBtn {
+.addBtn,
+.goAddBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
   font-size: 1.2rem;
-  border: 1px solid black;
   border-radius: 20%;
+  border: 1px solid black;
 }
 
-.addBtn:hover {
-  background-color: transparent;
-  color: #0095f6;
-  border-color: #0095f6;
-  cursor: pointer;
+.goAddBtn {
+  background-color: black;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.addLink:hover .goAddBtn {
+  opacity: 1;
+}
+
+.activeAddIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 1.2rem;
+  border-radius: 20%;
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+}
+
+.feedLink,
+.addLink {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+
+.goFeedBtn,
+.feedBtn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 0.2s ease;
+  font-size: 1.5rem;
+}
+
+.goFeedBtn {
+  opacity: 1;
+  color: #333;
 }
 
 .feedBtn {
-  font-size: 1.2rem;
+  opacity: 0;
+  color: #333;
 }
 
-.feedBtn:hover {
-  background-color: transparent;
-  color: #0095f6;
-  border-color: #0095f6;
-  cursor: pointer;
+.feedLink:hover .feedBtn {
+  opacity: 1;
+}
+
+.activeIcon {
+  font-size: 1.5rem;
+  opacity: 1;
+}
+
+.dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  min-width: 160px;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
 }
 
 @keyframes fadeIn {

@@ -24,7 +24,11 @@ export default function PostCard({
 
   return (
     <>
-      <div className={styles.postCardWrapper} onClick={() => setOpen(true)}>
+      <button
+        className={styles.postCardWrapper}
+        onClick={() => setOpen(true)}
+        aria-label="open modal"
+      >
         <Image
           src={image}
           alt="Post image"
@@ -32,7 +36,7 @@ export default function PostCard({
           priority
           style={{ objectFit: 'cover' }}
         />
-      </div>
+      </button>
       {open && (
         <PostModal
           image={image}

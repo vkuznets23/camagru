@@ -2,7 +2,9 @@
 
 import { type Post } from '@/types/post'
 import { useEffect, useState, useCallback, useRef } from 'react'
+import styles from '@/styles/Profile.module.css'
 import UserPosts from '@/components/posts/Posts'
+import PostSkeleton from '@/components/posts/PostsSceleton'
 
 export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>([])
@@ -68,11 +70,23 @@ export default function FeedPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [fetchPosts])
 
+  const initialLoading = posts.length === 0 && loading
+
   return (
     <div>
-      <UserPosts posts={posts} />
+      {initialLoading ? (
+        <div className={styles.posts}>
+          <div className={styles.postsContainer}>
+            {[...Array(12)].map((_, i) => (
+              <PostSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <UserPosts posts={posts} />
+      )}
       {loading && <p style={{ textAlign: 'center' }}>Loading...</p>}
-      {!hasMore && <p style={{ textAlign: 'center' }}>No more posts</p>}
+      {!hasMore && <p className={styles.notingToSee}>Nothing more to see</p>}
     </div>
   )
 }
