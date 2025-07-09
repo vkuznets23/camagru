@@ -28,8 +28,7 @@ export default function PostCard({
         <Image
           src={image}
           alt="Post image"
-          width={270}
-          height={270}
+          fill
           priority
           style={{ objectFit: 'cover' }}
         />

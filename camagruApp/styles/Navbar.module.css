@@ -84,7 +84,16 @@
   gap: 15px;
 }
 
-.avatar .searchAvatar {
+.avatar {
+  border: 1px solid #e1e1e1;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+}
+
+.searchAvatar {
   border: 1px solid #e1e1e1;
   border-radius: 50%;
   object-fit: cover;

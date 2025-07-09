@@ -1,10 +1,16 @@
 /* ===== Layout Containers ===== */
-.profileContainer,
-.posts {
+.profileContainer {
   max-width: 935px;
-  width: 935px;
+  width: 100%;
   margin: auto;
   display: flex;
+  padding: 20px 45px 45px 45px;
+}
+
+.posts {
+  max-width: 935px;
+  width: 100%;
+  margin: auto;
   padding: 20px 45px 45px 45px;
 }
 
@@ -57,16 +63,47 @@
 }
 
 .postsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 350px) {
+  .posts {
+    padding: 15px 30px 30px 30px;
+  }
+}
+
+@media (min-width: 600px) {
+  .postsContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .postCardWrapper {
+    max-width: 500px;
+    max-height: 500px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media (min-width: 820px) {
+  .postsContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .postCardWrapper {
+    max-width: 270px;
+    max-height: 270px;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .postCardWrapper {
-  width: 270px;
-  height: 270px;
   position: relative;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
