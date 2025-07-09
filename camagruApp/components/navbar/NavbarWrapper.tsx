@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import Navbar from './Navbar'
+import MobileNavbar from './NavbarMobile'
 
 export default function NavbarWrapper() {
   const pathName = usePathname()
@@ -18,5 +19,10 @@ export default function NavbarWrapper() {
   ]
   if (pathName == null) return null
   const shouldHideNavbar = hideNavbar.includes(pathName)
-  return <div>{!shouldHideNavbar && <Navbar />}</div>
+  return (
+    <div>
+      {!shouldHideNavbar && <Navbar />}
+      {!shouldHideNavbar && <MobileNavbar />}
+    </div>
+  )
 }

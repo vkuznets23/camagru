@@ -7,12 +7,17 @@ import Link from 'next/link'
 import styles from '@/styles/Navbar.module.css'
 import SearchForm from './SearchForm'
 import UserMenu from './UserMenu'
+import { useSession } from 'next-auth/react'
 
 export default function Navbar() {
+  const { data: session } = useSession()
+  const id = session?.user.id
   return (
     <>
       <nav id="navbar" data-testid="navbar" className={styles.navbar}>
-        <Logo className={styles.logo} width={134} height={47} />
+        <Link href={`/user/${id}`}>
+          <Logo className={styles.logo} width={134} height={47} />
+        </Link>
         <div className={styles.navActions}>
           <div className={styles.searchNavbarWrapper}>
             <SearchForm />

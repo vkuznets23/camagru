@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import styles from '@/styles/Profile.module.css'
 import PostModal from '@/components/posts/PostModal'
 import { type Comment } from '@/types/comment'
 import { type Post } from '@/types/post'
@@ -23,15 +24,7 @@ export default function PostCard({
 
   return (
     <>
-      <div
-        style={{
-          width: 270,
-          height: 270,
-          position: 'relative',
-          cursor: 'pointer',
-        }}
-        onClick={() => setOpen(true)}
-      >
+      <div className={styles.postCardWrapper} onClick={() => setOpen(true)}>
         <Image
           src={image}
           alt="Post image"

@@ -40,6 +40,7 @@ export default function PostModal({
 
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState(content || '')
+  const [isSaving, setIsSaving] = useState(false)
 
   const {
     handleEditPost,
@@ -48,8 +49,10 @@ export default function PostModal({
     handleCommentDeleted,
   } = usePosts()
 
-  const handleSave = () => {
-    handleEditPost(postId, editedContent)
+  const handleSave = async () => {
+    setIsSaving(true)
+    await handleEditPost(postId, editedContent)
+    setIsSaving(false)
     setIsEditing(false)
   }
 
@@ -83,8 +86,13 @@ export default function PostModal({
                       onChange={(e) => setEditedContent(e.target.value)}
                     />
                     <div className={styles.editButtons}>
-                      <button onClick={handleSave}>Save</button>
-                      <button onClick={() => setIsEditing(false)}>
+                      <button onClick={handleSave} disabled={isSaving}>
+                        {isSaving ? 'Saving...' : 'Save'}
+                      </button>
+                      <button
+                        onClick={() => setIsEditing(false)}
+                        disabled={isSaving}
+                      >
                         Cancel
                       </button>
                     </div>

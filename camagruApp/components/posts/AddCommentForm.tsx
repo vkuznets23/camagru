@@ -47,8 +47,10 @@ export default function CommentForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const trimmedComment = newComment.trim()
-    if (!trimmedComment) return
+    const trimmedComment = newComment.trimEnd()
+    const trimmedCommentFull = trimmedComment.trimStart()
+
+    if (!trimmedCommentFull) return
 
     if (trimmedComment.length > MAX_COMMENT_LENGTH) {
       setError(
@@ -63,7 +65,7 @@ export default function CommentForm({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: newComment,
+          content: trimmedCommentFull,
           postId,
         }),
       })
@@ -76,6 +78,13 @@ export default function CommentForm({
       console.error('Error posting comment:', err)
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault() // prevent moving to another line
+      handleSubmit(e)
     }
   }
 
@@ -95,6 +104,7 @@ export default function CommentForm({
             if (error) setError('')
             autoResize()
           }}
+          onKeyDown={handleKeyDown}
           placeholder="Write a comment..."
           rows={1}
           required

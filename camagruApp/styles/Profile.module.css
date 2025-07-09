@@ -63,6 +63,20 @@
   align-items: flex-start;
 }
 
+.postCardWrapper {
+  width: 270px;
+  height: 270px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.postCardWrapper:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
 .userContainer {
   display: flex;
   flex-direction: column;
