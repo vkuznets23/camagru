@@ -76,7 +76,7 @@ export default function SearchForm() {
                     alt={user.username}
                     width={24}
                     height={24}
-                    className={styles.avatar}
+                    className={styles.searchAvatar}
                   />
                   {user.username}
                 </Link>

@@ -84,7 +84,7 @@
   gap: 15px;
 }
 
-.avatar {
+.avatar .searchAvatar {
   border: 1px solid #e1e1e1;
   border-radius: 50%;
   object-fit: cover;
@@ -103,6 +103,15 @@
   border-bottom: 1px solid #eee;
   font-size: 16px;
   color: #ccc;
+}
+
+@media (max-width: 820px) {
+  .noResults {
+    padding: 0.7rem;
+  }
+  .searchDropdown li {
+    padding: 0.7rem;
+  }
 }
 
 .toggleBtn {
