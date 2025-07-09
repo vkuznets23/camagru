@@ -83,13 +83,17 @@ export default function UserProfile() {
   const isMyProfile = session?.user?.id === user.id
 
   return (
-    <div className={styles.userContainer}>
+    <div
+      className={styles.userContainer}
+      role="region"
+      aria-label={`${user.name}'s profile`}
+    >
       <div className={styles.profileContainer}>
         <Image
           src={user.image || '/default_avatar.png'}
           width={100}
           height={100}
-          alt="avatar"
+          alt={`${user.name || 'User'}'s profile picture`}
           className={styles.avatar}
           priority
           onError={(e) => (e.currentTarget.src = '/default_avatar.png')}

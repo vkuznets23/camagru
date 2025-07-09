@@ -123,13 +123,24 @@
   }
 }
 
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
 /* ===== Typography ===== */
-.profileContainer h2 {
+.profileContainer h1 {
   font-size: 20px;
   font-weight: normal;
 }
 
-.profileInfo h2 {
+.profileInfo h1 {
   margin: 0;
   font-size: 24px;
 }

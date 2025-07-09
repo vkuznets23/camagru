@@ -140,15 +140,32 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
                 <Image
                   src={image}
                   fill
-                  alt="Preview"
+                  alt="Preview of the uploaded image"
                   style={{ objectFit: 'contain' }}
                 />
               </div>
             )}
-            {uploading && <p>Uploading...</p>}
-            <input type="file" accept="image/*" onChange={handleFileChange} />
+            {uploading && (
+              <p aria-live="polite" role="status">
+                Uploading...
+              </p>
+            )}
+            <label htmlFor="fileUpload" className={styles.visuallyHidden}>
+              Upload an image
+            </label>
+            <input
+              id="fileUpload"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
             <div>
-              <button type="button" onClick={() => setShowCamera(!showCamera)}>
+              <button
+                type="button"
+                onClick={() => setShowCamera(!showCamera)}
+                aria-pressed={showCamera}
+                aria-label={showCamera ? 'Close camera' : 'Open camera'}
+              >
                 {showCamera ? 'Close Camera' : 'Open Camera'}
               </button>
               {showCamera && <CameraCapture onCapture={handleCameraCapture} />}
@@ -157,6 +174,7 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
           <div className={styles.textareaContainer}>
             <textarea
               ref={textareaRef}
+              aria-describedby="caption-desc"
               placeholder="Add a caption..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -164,7 +182,9 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
               rows={3}
               className={styles.textarea}
             />
-            <div className={styles.charCount}>{content.length}/2200</div>
+            <div id="caption-desc" className={styles.charCount}>
+              {content.length}/2200
+            </div>
           </div>
         </div>
         <Button
@@ -172,6 +192,7 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
           testid="addPost"
           text="Post"
           disabled={!image || uploading}
+          aria-disabled={!image || uploading}
         />
       </div>
     </form>

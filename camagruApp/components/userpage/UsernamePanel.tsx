@@ -25,20 +25,27 @@ export default function UsernamePanel({
   return (
     <div className={styles.profileInfo}>
       <div className={styles.usernamePanel}>
-        <h2>{user.username}</h2>
+        <h1>{user.username}</h1>
         {isMyProfile ? (
           <Link
             data-testid="edit-user"
             href="/edit-user"
             className={styles.navBtn}
+            aria-label="Edit profile"
           >
-            <MdOutlineEdit />
+            <MdOutlineEdit aria-hidden="true" />
           </Link>
         ) : (
           <button
             data-testid="follow-user"
             className={styles.button}
             onClick={isFollowing ? onUnfollow : onFollow}
+            aria-label={
+              isFollowing
+                ? `Unfollow ${user.username}`
+                : `Follow ${user.username}`
+            }
+            aria-pressed={isFollowing}
           >
             {isFollowing ? 'Unfollow' : 'Follow'}
           </button>
