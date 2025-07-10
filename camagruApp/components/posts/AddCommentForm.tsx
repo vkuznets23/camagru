@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import styles from '@/styles/CommentForm.module.css'
-import { FaArrowUp } from 'react-icons/fa'
+// import { FaArrowUp } from 'react-icons/fa'
 import { type Comment } from '@/types/comment'
 
 const MAX_COMMENT_LENGTH = 2200
@@ -110,11 +110,13 @@ export default function CommentForm({
           required
         />
         {error && <p className={styles.error}>{error}</p>}
-        {newComment.length > 0 && (
-          <button type="submit" disabled={isSubmitting}>
-            <FaArrowUp />
-          </button>
-        )}
+        <button
+          type="submit"
+          disabled={isSubmitting || !newComment.trim()}
+          className={styles.submitButton}
+        >
+          send
+        </button>
       </div>
     </form>
   )

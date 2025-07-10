@@ -9,6 +9,7 @@ import Image from 'next/image'
 import UserSkeleton from './UserSkeleton'
 import UsernamePanel from './UsernamePanel'
 import UserContentTabs from '../posts/UserContentTabs'
+import Link from 'next/link'
 
 export default function UserProfile() {
   const { data: session } = useSession()
@@ -75,6 +76,14 @@ export default function UserProfile() {
     }
     if (id) fetchUser(isOwnProfile)
   }, [id, session?.user.id])
+
+  if (!session) {
+    return (
+      <p>
+        u need to <Link href="/auth/signin">sign in</Link>
+      </p>
+    )
+  }
 
   if (loading || !user) {
     return <UserSkeleton />

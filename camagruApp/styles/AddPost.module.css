@@ -23,6 +23,23 @@
   gap: 40px;
 }
 
+@media (max-width: 600px) {
+  .pageContainer {
+    padding: 20px;
+  }
+
+  .pageContainer button {
+    height: 40px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .form {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
 .textareaContainer {
   width: 100%;
   display: flex;

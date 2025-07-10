@@ -279,7 +279,7 @@
 @media (max-width: 820px) {
   .navbar {
     margin: 0;
-    padding: 10px 16px;
+    padding: 10px 45px;
     display: flex;
     height: 60px;
     align-items: center;
@@ -304,15 +304,23 @@
     gap: 0px;
   }
 
-  .feedBtn {
+  .feedBtn,
+  .goFeedBtn,
+  .feedLink,
+  .activeIcon {
     display: none !important;
   }
 
-  .addBtn {
+  .addBtn,
+  .goAddBtn,
+  .addLink {
     display: none !important;
   }
 
-  .avatar {
+  .avatar,
+  .avatarWrapper,
+  .avatarWrapperActive,
+  .avatarActive {
     display: none !important;
   }
 }

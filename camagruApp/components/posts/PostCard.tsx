@@ -33,6 +33,7 @@ export default function PostCard({
           src={image}
           alt="Post image"
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           priority
           style={{ objectFit: 'cover' }}
         />

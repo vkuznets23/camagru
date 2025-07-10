@@ -24,27 +24,38 @@ export default function AvatarUploader({
     <div className={styles.imageContainer}>
       <Image
         src={image || '/default_avatar.png'}
-        alt="Avatar Preview"
+        alt={image ? 'User avatar preview' : 'Default avatar image'}
         width={80}
         height={80}
         className={styles.avatar}
       />
-      {uploading && <div>uploading...</div>}
+      {uploading && (
+        <div role="status" aria-live="polite">
+          Uploading...
+        </div>
+      )}
 
       <div className={styles.photoOptionsWrapper}>
         <button
           type="button"
           className={styles.secondBtn}
           onClick={() => setShowOptions((prev) => !prev)}
+          aria-expanded={showOptions}
+          aria-controls="avatar-options"
         >
           {showOptions ? 'Close' : 'Edit photo'}
         </button>
 
         {showOptions && (
-          <div className={styles.editBtnsContainer}>
-            <label className={styles.option}>
+          <div
+            id="avatar-options"
+            role="menu"
+            className={styles.editBtnsContainer}
+          >
+            <label className={styles.option} role="menuitem">
               Upload from gallery
               <input
+                aria-label="Upload new avatar"
                 type="file"
                 accept="image/*"
                 onChange={onFileChange}
@@ -52,14 +63,22 @@ export default function AvatarUploader({
               />
             </label>
             <button
+              aria-label="Open camera to take new avatar"
               className={styles.option}
               type="button"
+              role="menuitem"
               onClick={onOpenCamera}
             >
-              take a picture
+              Take a picture
             </button>
-            <button className={styles.option} type="button" onClick={onDelete}>
-              remove photo
+            <button
+              aria-label="Delete current avatar"
+              className={styles.option}
+              type="button"
+              role="menuitem"
+              onClick={onDelete}
+            >
+              Remove photo
             </button>
           </div>
         )}

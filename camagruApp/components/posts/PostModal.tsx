@@ -5,7 +5,7 @@ import styles from '@/styles/PostModal.module.css'
 import { type Comment } from '@/types/comment'
 import CommentForm from '@/components/posts/AddCommentForm'
 import CommentList from '@/components/posts/CommentsList'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { usePosts } from '@/context/PostsContext'
 import { type Post } from '@/types/post'
 import UserInfo from '@/components/posts/PostModalUserInfo'
@@ -56,6 +56,13 @@ export default function PostModal({
     setIsEditing(false)
   }
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [])
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -69,59 +76,63 @@ export default function PostModal({
           />
         </div>
         <div className={styles.contentWrapper}>
-          <div className={styles.info}>
-            <div className={styles.infodivider}>
-              <UserInfo
-                username={username}
-                avatar={avatar}
-                createdAt={createdAt}
-              />
-              <div>
-                {isEditing ? (
-                  <div className={styles.editSection}>
-                    <textarea
-                      data-testid="edit-post"
-                      className={styles.textarea}
-                      value={editedContent}
-                      onChange={(e) => setEditedContent(e.target.value)}
-                    />
-                    <div className={styles.editButtons}>
-                      <button onClick={handleSave} disabled={isSaving}>
-                        {isSaving ? 'Saving...' : 'Save'}
-                      </button>
-                      <button
-                        onClick={() => setIsEditing(false)}
-                        disabled={isSaving}
-                      >
-                        Cancel
-                      </button>
+          <div className={styles.topContent}>
+            <div className={styles.info}>
+              <div className={styles.infodivider}>
+                <UserInfo
+                  username={username}
+                  avatar={avatar}
+                  createdAt={createdAt}
+                />
+                <div>
+                  {isEditing ? (
+                    <div className={styles.editSection}>
+                      <textarea
+                        data-testid="edit-post"
+                        className={styles.textarea}
+                        value={editedContent}
+                        onChange={(e) => setEditedContent(e.target.value)}
+                      />
+                      <div className={styles.editButtons}>
+                        <button onClick={handleSave} disabled={isSaving}>
+                          {isSaving ? 'Saving...' : 'Save'}
+                        </button>
+                        <button
+                          onClick={() => setIsEditing(false)}
+                          disabled={isSaving}
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <>
-                    <p className={styles.postContent}>{content}</p>
-                    <PostActions
-                      canEdit={canEdit}
-                      isLiked={isLiked}
-                      likesCount={likesCount}
-                      onDelete={() => handlePostDeleted(postId)}
-                      onEdit={() => setIsEditing(true)}
-                      onToggleLike={() => handleToggleLike(postId)}
-                    />
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <p className={styles.postContent}>{content}</p>
+                      <PostActions
+                        canEdit={canEdit}
+                        isLiked={isLiked}
+                        likesCount={likesCount}
+                        onDelete={() => handlePostDeleted(postId)}
+                        onEdit={() => setIsEditing(true)}
+                        onToggleLike={() => handleToggleLike(postId)}
+                      />
+                    </>
+                  )}
+                </div>
               </div>
+              <CommentList
+                currentUserId={currentUserId}
+                comments={comments}
+                onCommentDeleted={(commentId) =>
+                  handleCommentDeleted(postId, commentId)
+                }
+                postAuthorId={userID}
+              />
             </div>
-            <CommentList
-              currentUserId={currentUserId}
-              comments={comments}
-              onCommentDeleted={(commentId) =>
-                handleCommentDeleted(postId, commentId)
-              }
-              postAuthorId={userID}
-            />
           </div>
-          <CommentForm postId={postId} onCommentAdded={onCommentAdded} />
+          <div className={styles.commentForm}>
+            <CommentForm postId={postId} onCommentAdded={onCommentAdded} />
+          </div>
         </div>
         <button onClick={onClose} className={styles.closeBtn}>
           ×
