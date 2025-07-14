@@ -1,6 +1,29 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --border: #ccc;
+  --border-alt: #e1e1e1;
+  --divider: #eee;
+  --hover-bg: #f5f5f5;
+  --text-primary: #333;
+  --icon-border: black;
+  --icon-bg: black;
+  --icon-color-light: white;
+  --dropdown-bg: white;
+}
+
+[data-theme="dark"] {
+  --background: #121212;
+  --foreground: #eee;
+  --border: #444;
+  --border-alt: #555;
+  --divider: #333;
+  --hover-bg: #222;
+  --text-primary: #ddd;
+  --icon-border: #ccc;
+  --icon-bg: #ccc;
+  --icon-color-light: #121212;
+  --dropdown-bg: #222;
 }
 
 @media (prefers-color-scheme: dark) {

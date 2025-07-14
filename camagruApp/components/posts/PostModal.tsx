@@ -46,16 +46,20 @@ export default function PostModal({
   const [isSaving, setIsSaving] = useState(false)
   const [showFullContent, setShowFullContent] = useState(false)
 
-  const lines = content.split('\n')
+  const safeContent = content || ''
+  const lines = safeContent.split('\n')
 
   const shouldShowButton =
-    !showFullContent && (lines.length > MAX_LINES || content.length > MAX_CHARS)
+    !showFullContent &&
+    (safeContent == '' ||
+      lines.length > MAX_LINES ||
+      safeContent.length > MAX_CHARS)
 
   const truncatedByLines = lines.slice(0, MAX_LINES).join('\n')
-  const truncatedByChars = content.slice(0, MAX_CHARS)
+  const truncatedByChars = safeContent.slice(0, MAX_CHARS)
 
   const displayedContent = showFullContent
-    ? content
+    ? safeContent
     : truncatedByLines.length < truncatedByChars.length
     ? truncatedByLines
     : truncatedByChars

@@ -11,8 +11,33 @@ import SearchForm from './SearchForm'
 import UserMenu from './UserMenu'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function Navbar() {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+    if (savedTheme) {
+      setTheme(savedTheme)
+      document.documentElement.setAttribute('data-theme', savedTheme)
+    } else {
+      const prefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches
+      const defaultTheme = prefersDark ? 'dark' : 'light'
+      setTheme(defaultTheme)
+      document.documentElement.setAttribute('data-theme', defaultTheme)
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
+    document.documentElement.setAttribute('data-theme', newTheme)
+    localStorage.setItem('theme', newTheme)
+  }
+
   const { data: session } = useSession()
   const id = session?.user?.id
 
@@ -59,6 +84,23 @@ export default function Navbar() {
               </>
             )}
           </Link>
+
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className={styles.themeToggleBtn}
+            style={{
+              cursor: 'pointer',
+              marginLeft: '1rem',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--foreground)',
+              fontSize: '1rem',
+            }}
+          >
+            {theme === 'light' ? '🌞 Light' : '🌙 Dark'}
+          </button>
+
           <UserMenu />
         </div>
       </nav>
