@@ -2,6 +2,7 @@
   max-height: 300px; /* или что-то подходящее под твой дизайн */
   overflow: hidden;
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: flex-end;
   background: white;

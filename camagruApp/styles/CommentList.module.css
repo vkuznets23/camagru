@@ -3,10 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: 300px;
-  max-width: 420px;
   word-wrap: break-word;
-  overflow-y: auto;
   padding-right: 4px;
 }
 

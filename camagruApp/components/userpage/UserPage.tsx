@@ -77,16 +77,16 @@ export default function UserProfile() {
     if (id) fetchUser(isOwnProfile)
   }, [id, session?.user.id])
 
+  if (loading || !user) {
+    return <UserSkeleton />
+  }
+
   if (!session) {
     return (
       <p>
         u need to <Link href="/auth/signin">sign in</Link>
       </p>
     )
-  }
-
-  if (loading || !user) {
-    return <UserSkeleton />
   }
 
   const isMyProfile = session?.user?.id === user.id

@@ -40,8 +40,7 @@
 }
 
 .contentWrapper {
-  flex: 1;
-  padding: 1rem 1.5rem 1rem 1.5rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -49,8 +48,9 @@
 }
 
 .topContent {
-  height: 90%;
-  overflow: visible;
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
 }
 
 .closeBtn {
