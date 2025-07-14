@@ -1,11 +1,11 @@
 .commentForm {
-  max-height: 300px; /* или что-то подходящее под твой дизайн */
+  max-height: 300px;
   overflow: hidden;
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: flex-end;
-  background: white;
+  background: var(--background);
 }
 
 .scrollContainer {
@@ -27,24 +27,26 @@
   resize: none;
   padding: 10px;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--textarea-border);
   border-radius: 0.8rem;
   font-family: inherit;
   outline: none;
   transition: border 0.2s ease;
   line-height: 1.5;
+  background-color: var(--textarea-bg);
+  color: var(--textarea-text);
 }
 
 .inputWrapper textarea:focus {
-  border-color: #0070f3;
-  background-color: #fff;
+  border-color: var(--button-bg);
+  background-color: var(--textarea-bg);
 }
 
 .submitButton {
   align-self: flex-end;
   padding: 6px 12px;
-  background-color: #0070f3;
-  color: white;
+  background-color: var(--button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 15px;
   font-weight: 500;
@@ -54,7 +56,7 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: #0059c1;
+  background-color: var(--button-bg-hover);
 }
 
 .submitButton:disabled {
@@ -63,7 +65,7 @@
 }
 
 .error {
-  color: red;
+  color: var(--error-color);
   font-size: 12px;
   margin-bottom: 4px;
 }

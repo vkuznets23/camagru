@@ -10,8 +10,8 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    background: #fff;
-    border-top: 1px solid #ccc;
+    background: var(--background);
+    border-top: 1px solid var(--border);
     padding: 0.5rem 0;
     z-index: 50;
   }
@@ -24,16 +24,20 @@
 
   .addBtn {
     font-size: 2rem;
-    border: 1px solid black;
+    border: 1px solid var(--icon-border);
     border-radius: 20%;
+    background-color: var(--icon-bg);
+    color: var(--icon-color-light);
+    padding: 4px 8px;
   }
 
   .feedBtn {
     font-size: 2rem;
+    color: var(--text-primary);
   }
 
   .avatar {
-    border: 1px solid #e1e1e1;
+    border: 1px solid var(--border-alt);
     border-radius: 50%;
     object-fit: cover;
     height: 40px;
@@ -43,7 +47,7 @@
   .avatarWrapper {
     display: inline-block;
     padding: 2px;
-    border: 1px solid black;
+    border: 1px solid var(--icon-border);
     border-radius: 50%;
   }
 
