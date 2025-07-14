@@ -1,11 +1,17 @@
 /* ===== Layout Containers ===== */
-.profileContainer,
-.posts {
+.profileContainer {
   max-width: 935px;
-  width: 935px;
+  width: 100%;
   margin: auto;
   display: flex;
   padding: 20px 45px 45px 45px;
+}
+
+.posts {
+  max-width: 910px;
+  width: 100%;
+  margin: auto;
+  padding: 20px 45px 30px 45px;
 }
 
 .profileContainer {
@@ -23,9 +29,10 @@
 }
 
 .profileContainerEdit {
-  width: 845px;
   max-width: 845px;
+  width: 100%;
   display: flex;
+  align-items: flex-start;
   gap: 40px;
 }
 
@@ -56,11 +63,105 @@
   width: 120px;
 }
 
+@media (max-width: 600px) {
+  .profileContainerEdit {
+    flex-direction: column;
+  }
+
+  .profileContainer button {
+    height: 40px;
+  }
+
+  .imageContainer {
+    flex-direction: row;
+    gap: 20px;
+    max-width: 300px;
+    width: 100%;
+  }
+
+  .editBtnsContainer {
+    align-items: flex-start;
+  }
+
+  .profileBio {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .profileBio input,
+  .profileBio textarea {
+    width: 100%;
+  }
+}
+
 .postsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+}
+
+.notingToSee {
+  max-width: 935px;
+  text-align: center;
+  width: 100%;
+  margin: auto;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 375px) {
+  .posts {
+    padding: 15px 30px 30px 30px;
+  }
+
+  .notingToSee {
+    margin-bottom: 90px;
+  }
+}
+
+@media (min-width: 600px) {
+  .postsContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .postCardWrapper {
+    max-width: 600px;
+    max-height: 600px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media (min-width: 820px) {
+  .postsContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .postCardWrapper {
+    max-width: 270px;
+    max-height: 270px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.postCardWrapper {
+  all: unset;
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.postCardWrapper:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.postCardWrapper:focus-visible {
+  outline: 2px solid #0095f6;
+  outline-offset: 2px;
 }
 
 .userContainer {
@@ -123,13 +224,24 @@
   }
 }
 
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
 /* ===== Typography ===== */
-.profileContainer h2 {
+.profileContainer h1 {
   font-size: 20px;
   font-weight: normal;
 }
 
-.profileInfo h2 {
+.profileInfo h1 {
   margin: 0;
   font-size: 24px;
 }

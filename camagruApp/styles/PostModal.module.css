@@ -40,11 +40,17 @@
 }
 
 .contentWrapper {
-  flex: 1;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  height: 100%;
+  width: 50%;
+}
+
+.topContent {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
 }
 
 .closeBtn {
@@ -95,6 +101,7 @@
 .postContent {
   margin: 10px 0;
   font-size: 16px;
+  white-space: pre-wrap;
 }
 
 .postAction {
@@ -184,4 +191,19 @@
 
 .editButtons button:last-child:hover {
   background-color: #d32f2f;
+}
+
+.showMoreButton {
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.showMoreButton:hover {
+  text-decoration: underline;
 }

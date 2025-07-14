@@ -38,7 +38,6 @@ export default function SearchForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('hello')
     if (search.trim()) {
       const query = encodeURIComponent(search)
       setShowDropdown(false)
@@ -59,53 +58,33 @@ export default function SearchForm() {
         />
       </form>
 
-      {showDropdown && results.length > 0 && (
-        <ul
-          className={styles.searchDropdown}
-          style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            right: 0,
-            background: 'white',
-            border: '1px solid #ccc',
-            zIndex: 1000,
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-            maxHeight: '200px',
-            overflowY: 'auto',
-          }}
-        >
-          {results.map((user) => (
-            <li
-              key={user.id}
-              style={{ padding: '0.5rem', borderBottom: '1px solid #eee' }}
-            >
-              <Link
-                href={`/user/${user.id}`}
-                onClick={() => {
-                  setShowDropdown(false)
-                  setSearch('')
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  textDecoration: 'none',
-                  color: '#333',
-                }}
-              >
-                <Image
-                  src={user.image || '/default_avatar.png'}
-                  alt={user.username}
-                  width={24}
-                  height={24}
-                  style={{ borderRadius: '50%', marginRight: '0.5rem' }}
-                />
-                {user.username}
-              </Link>
-            </li>
-          ))}
+      {showDropdown && (
+        <ul className={styles.searchDropdown}>
+          {results.length > 0 ? (
+            results.map((user) => (
+              <li key={user.id} className={styles.searchDropdownItem}>
+                <Link
+                  href={`/user/${user.id}`}
+                  onClick={() => {
+                    setShowDropdown(false)
+                    setSearch('')
+                  }}
+                  className={styles.searchDropdownLink}
+                >
+                  <Image
+                    src={user.image || '/default_avatar.png'}
+                    alt={user.username}
+                    width={24}
+                    height={24}
+                    className={styles.searchAvatar}
+                  />
+                  {user.username}
+                </Link>
+              </li>
+            ))
+          ) : (
+            <p className={styles.noResults}>No results found</p>
+          )}
         </ul>
       )}
     </div>

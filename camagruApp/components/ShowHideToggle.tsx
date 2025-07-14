@@ -20,6 +20,7 @@ export default function ShowHideToggle({
       onClick={onToggle}
       className={className}
       aria-label={show ? 'Hide password' : 'Show password'}
+      aria-pressed={show}
     >
       {show ? <BiHide /> : <BiShow />}
     </button>

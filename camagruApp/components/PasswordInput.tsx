@@ -37,6 +37,8 @@ export default function PasswordInput({
           onChange={onChange}
           autoComplete={autoComplete}
           className={`${className} ${error ? styles.inputError : ''}`}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-error` : undefined}
         />
         <ShowHideToggle
           show={show}
@@ -45,7 +47,7 @@ export default function PasswordInput({
         />
       </div>
       {error && (
-        <span data-testid={`${id}-error`} className={styles.error}>
+        <span data-testid={`${id}-error`} role="alert" className={styles.error}>
           {error}
         </span>
       )}

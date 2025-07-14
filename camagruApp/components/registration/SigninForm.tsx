@@ -88,20 +88,18 @@ export default function SignInForm() {
           autoComplete="username"
         />
 
-        <label htmlFor="password" className={styles.label}>
-          <div className={styles.passwordWrapper}>
-            <PasswordInput
-              id="password"
-              data-testid="password-signin"
-              className={styles.input}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              error={errors.password}
-            />
-          </div>
-        </label>
+        <div className={styles.passwordWrapper}>
+          <PasswordInput
+            id="password"
+            data-testid="password-signin"
+            className={styles.input}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            error={errors.password}
+          />
+        </div>
         {errors.auth && <p className={styles.error}>{errors.auth}</p>}
         <Button
           id="signin-button"

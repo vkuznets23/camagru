@@ -7,17 +7,26 @@ interface Props {
 }
 
 export default function NameInput({ name, onChange, error }: Props) {
+  const inputId = `${name}-input`
+  const errorId = `${name}-error`
+  const counterId = `${name}-counter`
+
   return (
     <>
       <input
+        id={inputId}
         maxLength={30}
         className={`${styles.input} ${error ? styles.inputError : ''}`}
         value={name}
         onChange={onChange}
+        aria-invalid={!!error}
+        aria-describedby={`${error ? errorId : ''} ${counterId}`}
       />
-      <div className={styles.errorContainer}>
+      <div id={errorId} className={styles.errorContainer}>
         {error && <p className={styles.error}>{error}</p>}
-        <div className={styles.charCount}>{name.length}/30</div>
+        <div id={counterId} className={styles.charCount}>
+          {name.length}/30
+        </div>
       </div>
     </>
   )

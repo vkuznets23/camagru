@@ -1,35 +1,38 @@
 .commentForm {
+  max-height: 300px; /* или что-то подходящее под твой дизайн */
+  overflow: hidden;
   display: flex;
-  gap: 8px;
-  position: relative;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: white;
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+.scrollContainer {
+  overflow-y: auto;
+  max-height: 108px;
 }
 
 .inputWrapper {
+  display: flex;
   align-items: center;
-  flex: 1;
-  position: relative;
+  gap: 8px;
 }
 
 .inputWrapper textarea {
-  width: 100%;
+  flex-grow: 1;
+  min-height: 36px;
+  max-height: 108px;
+  overflow-y: auto;
   resize: none;
-  padding: 10px 40px 10px 10px;
+  padding: 10px;
   font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 20px;
+  border-radius: 0.8rem;
   font-family: inherit;
   outline: none;
   transition: border 0.2s ease;
-
-  min-height: 36px;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .inputWrapper textarea:focus {
@@ -37,29 +40,24 @@
   background-color: #fff;
 }
 
-.inputWrapper button {
-  position: absolute;
-  right: 5px;
-  bottom: 10px;
-
+.submitButton {
+  align-self: flex-end;
   padding: 6px 12px;
   background-color: #0070f3;
   color: white;
   border: none;
   border-radius: 15px;
   font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-
-  white-space: nowrap;
-  font-size: 14px;
 }
 
-.inputWrapper button:hover:not(:disabled) {
+.submitButton:hover:not(:disabled) {
   background-color: #0059c1;
 }
 
-.inputWrapper button:disabled {
+.submitButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -67,5 +65,5 @@
 .error {
   color: red;
   font-size: 12px;
-  margin-top: 2px;
+  margin-bottom: 4px;
 }

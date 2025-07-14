@@ -6,6 +6,7 @@ import Link from 'next/link'
 import SignoutButton from '../SignoutButton'
 import styles from '@/styles/Navbar.module.css'
 import { useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 
 export default function UserMenu() {
   const { data: session } = useSession()
@@ -25,23 +26,40 @@ export default function UserMenu() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const pathname = usePathname()
+  const isUserActive = pathname === `/user/${userId}`
+
   return (
     <div ref={menuRef} className={styles.menuContainer}>
       <button onClick={toggleMenu} className={styles.toggleBtn}>
-        <Image
-          src={session?.user?.image || '/default_avatar.png'}
-          alt="Avatar"
-          width={32}
-          height={32}
-          className={styles.avatar}
-        />
+        <div
+          className={`${styles.avatarWrapper} ${
+            isUserActive ? styles.avatarWrapperActive : ''
+          }`}
+        >
+          <Image
+            src={session?.user?.image || '/default_avatar.png'}
+            alt="Avatar"
+            width={32}
+            height={32}
+            className={styles.avatar}
+          />
+        </div>
       </button>
       {isOpen && (
         <div className={styles.dropdown}>
-          <Link href={`/user/${userId}`} className={styles.navBtn}>
+          <Link
+            href={`/user/${userId}`}
+            className={styles.navBtn}
+            onClick={() => setIsOpen(false)}
+          >
             Profile
           </Link>
-          <Link href="/settings" className={styles.navBtn}>
+          <Link
+            href="/settings"
+            className={styles.navBtn}
+            onClick={() => setIsOpen(false)}
+          >
             Settings
           </Link>
           <SignoutButton />

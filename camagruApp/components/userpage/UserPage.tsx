@@ -9,6 +9,7 @@ import Image from 'next/image'
 import UserSkeleton from './UserSkeleton'
 import UsernamePanel from './UsernamePanel'
 import UserContentTabs from '../posts/UserContentTabs'
+import Link from 'next/link'
 
 export default function UserProfile() {
   const { data: session } = useSession()
@@ -80,16 +81,28 @@ export default function UserProfile() {
     return <UserSkeleton />
   }
 
+  if (!session) {
+    return (
+      <p>
+        u need to <Link href="/auth/signin">sign in</Link>
+      </p>
+    )
+  }
+
   const isMyProfile = session?.user?.id === user.id
 
   return (
-    <div className={styles.userContainer}>
+    <div
+      className={styles.userContainer}
+      role="region"
+      aria-label={`${user.name}'s profile`}
+    >
       <div className={styles.profileContainer}>
         <Image
           src={user.image || '/default_avatar.png'}
           width={100}
           height={100}
-          alt="avatar"
+          alt={`${user.name || 'User'}'s profile picture`}
           className={styles.avatar}
           priority
           onError={(e) => (e.currentTarget.src = '/default_avatar.png')}

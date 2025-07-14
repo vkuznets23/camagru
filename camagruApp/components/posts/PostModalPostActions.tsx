@@ -51,7 +51,6 @@ export default function PostActions({
       <button
         data-testid="likeBtn"
         className={styles.likeButton}
-        // onClick={onToggleLike}
         onClick={handleLike}
         disabled={isLiking}
       >

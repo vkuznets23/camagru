@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import styles from '@/styles/AddPost.module.css'
 
 interface CameraCaptureProps {
   onCapture: (file: File) => void
@@ -70,9 +71,18 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture }) => {
 
   return (
     <div>
-      <video ref={videoRef} autoPlay playsInline muted width={400} />
-      <br />
-      <button type="button" onClick={handleCapture}>
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        style={{ width: '100%' }}
+      />
+      <button
+        type="button"
+        onClick={handleCapture}
+        className={styles.takePictureBtn}
+      >
         📸 Capture
       </button>
     </div>

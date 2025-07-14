@@ -7,9 +7,38 @@
   padding: 20px 45px 45px 45px;
 }
 
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
 .form {
   display: flex;
   gap: 40px;
+}
+
+.takePictureBtn {
+  align-self: flex-end;
+  padding: 6px 12px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.takePictureBtn {
+  background-color: #0059c1;
 }
 
 .textareaContainer {
@@ -45,4 +74,55 @@
   overflow: hidden;
   margin-bottom: 10px;
   background-color: #f0f0f0;
+}
+
+.imageContainer {
+  max-width: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.uploadButton {
+  background-color: transparent;
+  color: #0070f3;
+  border: 1px solid #0070f3;
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-block;
+  text-align: center;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uploadButton:hover {
+  background-color: #0059c1;
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .imageContainer {
+    max-width: 600px;
+  }
+
+  .pageContainer {
+    padding: 20px;
+  }
+
+  .pageContainer button {
+    height: 40px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .form {
+    flex-direction: column;
+    gap: 20px;
+  }
 }
