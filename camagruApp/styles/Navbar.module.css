@@ -277,7 +277,7 @@
 }
 
 @media (max-width: 820px) {
-  .navbar {
+  /* .navbar {
     margin: 0;
     padding: 10px 45px;
     display: flex;
@@ -302,6 +302,13 @@
 
   .navActions {
     gap: 0px;
+  } */
+
+  .searchNavbarWrapper,
+  .searchForm,
+  .navbar,
+  .navActions {
+    display: none !important;
   }
 
   .feedBtn,

@@ -145,30 +145,32 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
                 />
               </div>
             )}
-            {uploading && (
-              <p aria-live="polite" role="status">
-                Uploading...
-              </p>
-            )}
-            <label htmlFor="fileUpload" className={styles.visuallyHidden}>
-              Upload an image
+
+            <label htmlFor="fileUpload" className={styles.uploadButton}>
+              {uploading ? 'Uploading...' : 'Upload Image'}
             </label>
             <input
               id="fileUpload"
               type="file"
               accept="image/*"
               onChange={handleFileChange}
+              className={styles.visuallyHidden}
             />
-            <div>
+            <div className={styles.cameraDiv}>
               <button
                 type="button"
                 onClick={() => setShowCamera(!showCamera)}
                 aria-pressed={showCamera}
                 aria-label={showCamera ? 'Close camera' : 'Open camera'}
+                className={styles.uploadButton}
               >
                 {showCamera ? 'Close Camera' : 'Open Camera'}
               </button>
-              {showCamera && <CameraCapture onCapture={handleCameraCapture} />}
+              <div className={styles.camera}>
+                {showCamera && (
+                  <CameraCapture onCapture={handleCameraCapture} />
+                )}
+              </div>
             </div>
           </div>
           <div className={styles.textareaContainer}>
