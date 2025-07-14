@@ -1,5 +1,9 @@
 :root {
   --background: #ffffff;
+  --bg: #fafafa;
+  --card-bg: #ffffff;
+  --card-border: #dbdbdb;
+
   --foreground: #171717;
   --border: #ccc;
   --border-alt: #e1e1e1;
@@ -14,6 +18,14 @@
   --section-color-active-light: #262626;
   --error-color: red;
   --delete-hover-color: #d9363e;
+
+  /* accent */
+  --accent: #0095f6;
+  --accent-hover: #007ac9;
+
+  --text-muted: #737373;
+  --input-bg: #fafafa;
+  --input-border: #dbdbdb;
 
   /* ... */
   --button-bg: #0070f3;
@@ -38,7 +50,17 @@
 }
 
 [data-theme="dark"] {
+  --accent: #339af0;
+  --accent-hover: #1c7ed6;
+  --text-muted: #aaa;
+  --input-bg: #2a2a2a;
+  --input-border: #444;
+
   --background: #121212;
+  --bg: #161616;
+  --card-bg: #121212;
+  --card-border: #333;
+
   --foreground: #eee;
   --border: #444;
   --border-alt: #555;
@@ -78,16 +100,51 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --text-primary: #ffffff;
-    --border: #333;
-    --border-alt: #444;
     --accent: #339af0;
-    --input-bg: #1e1e1e;
-    --input-border: #555;
-    --error-color: #ff6b6b;
-    --skeleton-base: #333;
+    --accent-hover: #1c7ed6;
+    --text-muted: #aaa;
+    --input-bg: #2a2a2a;
+    --input-border: #444;
+
+    --background: #121212;
+    --bg: #161616;
+    --card-bg: #121212;
+    --card-border: #333;
+
+    --foreground: #eee;
+    --border: #444;
+    --border-alt: #555;
+    --divider: #333;
+    --hover-bg: #222;
+    --text-primary: #ddd;
+    --icon-border: #ccc;
+    --icon-bg: #ccc;
+    --icon-color-light: #121212;
+    --dropdown-bg: #222;
+    --section-color-inactive-light: #262626;
+    --section-color-active-light: #dbdbdb;
+    --error-color: red;
+
+    /* ... */
+    --button-bg: #3390ff;
+    --button-bg-hover: #0070f3;
+    --button-text: #fff;
+
+    --textarea-border: #555;
+    --textarea-bg: #1c1c1c;
+    --textarea-text: #ddd;
+
+    --char-color: #aaa;
+
+    --image-bg: #2a2a2a;
+
+    --upload-border: #3390ff;
+    --upload-text: #3390ff;
+    --upload-hover-bg: #3390ff;
+    --upload-hover-text: #121212;
+    --delete-hover-color: #ff5f66;
+
+    --skeleton-base: #555;
     --skeleton-highlight: #444;
   }
 }
