@@ -19,6 +19,9 @@ type PostModalProps = {
   currentUserId: string
 }
 
+const MAX_LINES = 20
+const MAX_CHARS = 500
+
 export default function PostModal({
   image,
   post,
@@ -41,6 +44,21 @@ export default function PostModal({
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState(content || '')
   const [isSaving, setIsSaving] = useState(false)
+  const [showFullContent, setShowFullContent] = useState(false)
+
+  const lines = content.split('\n')
+
+  const shouldShowButton =
+    !showFullContent && (lines.length > MAX_LINES || content.length > MAX_CHARS)
+
+  const truncatedByLines = lines.slice(0, MAX_LINES).join('\n')
+  const truncatedByChars = content.slice(0, MAX_CHARS)
+
+  const displayedContent = showFullContent
+    ? content
+    : truncatedByLines.length < truncatedByChars.length
+    ? truncatedByLines
+    : truncatedByChars
 
   const {
     handleEditPost,
@@ -107,7 +125,17 @@ export default function PostModal({
                     </div>
                   ) : (
                     <>
-                      <p className={styles.postContent}>{content}</p>
+                      <p className={styles.postContent}>
+                        {displayedContent}
+                        {shouldShowButton && (
+                          <button
+                            className={styles.showMoreButton}
+                            onClick={() => setShowFullContent(true)}
+                          >
+                            ...show all
+                          </button>
+                        )}
+                      </p>
                       <PostActions
                         canEdit={canEdit}
                         isLiked={isLiked}
