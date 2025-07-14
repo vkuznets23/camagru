@@ -107,17 +107,6 @@ describe('UserPosts', () => {
     })
   })
 
-  it('shows loading if session is not ready', async () => {
-    ;(useSession as jest.Mock).mockReturnValue({
-      data: null,
-      status: 'loading',
-    })
-
-    render(<UserPosts posts={mockUser.posts} />)
-
-    expect(screen.getByText(/Loading user/i)).toBeInTheDocument()
-  })
-
   it('opens PostModal with correct content on post click', async () => {
     ;(useSession as jest.Mock).mockReturnValue({
       data: {

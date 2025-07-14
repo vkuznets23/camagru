@@ -18,11 +18,14 @@ function UserPostsContent() {
   const userID = session?.user?.id
 
   const isLoadingSession = status === 'loading'
-  const isLoadingPosts = posts.length === 0 && !isLoadingSession
 
   if (!userID) return
 
-  if (posts.length === 0 && !isLoadingPosts) {
+  if (isLoadingSession) {
+    return
+  }
+
+  if (!posts || posts.length === 0) {
     return <NoPosts />
   }
 

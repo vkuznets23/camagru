@@ -268,7 +268,9 @@ describe('user profile component', () => {
 
     render(<UserProfile />)
 
-    const avatar = await screen.findByAltText('avatar')
+    const avatar = await screen.findByAltText(
+      "No Avatar User's profile picture"
+    )
     expect(avatar).toHaveAttribute('src', expect.stringContaining('default'))
   })
 

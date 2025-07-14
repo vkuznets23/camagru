@@ -1,7 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import PostModal from '@/components/posts/PostModal'
 import { Post } from '@/types/post'
 import { PostsContext } from '@/context/PostsContext'
+import userEvent from '@testing-library/user-event'
 
 const mockPost: Post = {
   id: '1',
@@ -53,7 +54,7 @@ describe('PostModal', () => {
     jest.clearAllMocks()
   })
 
-  it('allows editing post content', () => {
+  it('allows editing post content', async () => {
     render(
       <MockPostsProvider>
         <PostModal
@@ -66,7 +67,9 @@ describe('PostModal', () => {
       </MockPostsProvider>
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /edit/i }))
+    const editButton = screen.getByRole('button', { name: /edit/i })
+
+    await userEvent.click(editButton)
 
     const textarea = screen.getByTestId('edit-post') as HTMLTextAreaElement
     expect(textarea.value).toBe('Original content')
@@ -75,7 +78,9 @@ describe('PostModal', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /save/i }))
 
-    expect(handleEditPost).toHaveBeenCalledWith('1', 'Updated content')
+    await waitFor(() => {
+      expect(handleEditPost).toHaveBeenCalledWith('1', 'Updated content')
+    })
   })
 
   it('allows toggling like', () => {
@@ -96,7 +101,7 @@ describe('PostModal', () => {
     expect(handleToggleLike).toHaveBeenCalledWith('1')
   })
 
-  it('allows deleting post', () => {
+  it('allows deleting post', async () => {
     render(
       <MockPostsProvider>
         <PostModal
@@ -111,6 +116,8 @@ describe('PostModal', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /delete/i }))
 
-    expect(handlePostDeleted).toHaveBeenCalledWith('1')
+    await waitFor(() => {
+      expect(handlePostDeleted).toHaveBeenCalledWith('1')
+    })
   })
 })
