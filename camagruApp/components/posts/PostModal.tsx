@@ -51,9 +51,7 @@ export default function PostModal({
 
   const shouldShowButton =
     !showFullContent &&
-    (safeContent == '' ||
-      lines.length > MAX_LINES ||
-      safeContent.length > MAX_CHARS)
+    (lines.length > MAX_LINES || safeContent.length > MAX_CHARS)
 
   const truncatedByLines = lines.slice(0, MAX_LINES).join('\n')
   const truncatedByChars = safeContent.slice(0, MAX_CHARS)
