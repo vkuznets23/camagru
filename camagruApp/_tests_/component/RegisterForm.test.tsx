@@ -2,6 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import RegisterForm from '@/components/registration/RegisterForm'
 import PasswordStrengthBar from '@/components/PasswordStrengthBar'
+import { ThemeProvider } from '@/context/DarkModeContext'
+
+const renderWithProviders = (ui: React.ReactElement) => {
+  return render(<ThemeProvider>{ui}</ThemeProvider>)
+}
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -20,9 +25,20 @@ describe('Basic RegisterForm tests', () => {
       })
     ) as jest.Mock
   })
+  beforeAll(() => {
+    window.matchMedia =
+      window.matchMedia ||
+      function () {
+        return {
+          matches: false,
+          addListener: () => {},
+          removeListener: () => {},
+        }
+      }
+  })
 
   it('renders inputs and buttons', () => {
-    render(<RegisterForm />)
+    renderWithProviders(<RegisterForm />)
 
     expect(screen.queryByTestId('navbar')).not.toBeInTheDocument()
 
@@ -34,7 +50,7 @@ describe('Basic RegisterForm tests', () => {
     expect(screen.getByText('Already have an account?')).toBeInTheDocument()
   })
   it('toggle password visibility when clicking toggle button', async () => {
-    render(<RegisterForm />)
+    renderWithProviders(<RegisterForm />)
 
     const passwordInput = screen.getByTestId('password')
     const toggleButton = screen.getByTestId('toggle-btn')
@@ -71,7 +87,7 @@ describe('Basic RegisterForm tests', () => {
   })
 
   it('shows validation errors when submitting empty form and submit button is disabled', async () => {
-    render(<RegisterForm />)
+    renderWithProviders(<RegisterForm />)
 
     const submitButton = screen.getByTestId('register-button')
     expect(submitButton).toBeDisabled()
@@ -93,7 +109,7 @@ describe('Basic RegisterForm tests', () => {
   })
 
   it('submit button is actuve when fields are filled', async () => {
-    render(<RegisterForm />)
+    renderWithProviders(<RegisterForm />)
 
     const emailInput = screen.getByTestId('email')
     const usernameInput = screen.getByTestId('username')
@@ -108,7 +124,7 @@ describe('Basic RegisterForm tests', () => {
   })
 
   it('shows validation errors when submitting invalid email', async () => {
-    render(<RegisterForm />)
+    renderWithProviders(<RegisterForm />)
 
     const emailInput = screen.getByTestId('email')
     const usernameInput = screen.getByTestId('username')
@@ -130,7 +146,7 @@ describe('Basic RegisterForm tests', () => {
 
   describe('shows validation errors when submitting invalid username', () => {
     it('short username', async () => {
-      render(<RegisterForm />)
+      renderWithProviders(<RegisterForm />)
 
       const emailInput = screen.getByTestId('email')
       const usernameInput = screen.getByTestId('username')
@@ -151,7 +167,7 @@ describe('Basic RegisterForm tests', () => {
     })
 
     it('long username', async () => {
-      render(<RegisterForm />)
+      renderWithProviders(<RegisterForm />)
 
       const emailInput = screen.getByTestId('email')
       const usernameInput = screen.getByTestId('username')
@@ -172,7 +188,7 @@ describe('Basic RegisterForm tests', () => {
     })
 
     it('extra characters in username', async () => {
-      render(<RegisterForm />)
+      renderWithProviders(<RegisterForm />)
 
       const emailInput = screen.getByTestId('email')
       const usernameInput = screen.getByTestId('username')
@@ -212,7 +228,7 @@ describe('Basic RegisterForm tests', () => {
         } as unknown as Response)
       })
       global.fetch = mockFetch
-      render(<RegisterForm />)
+      renderWithProviders(<RegisterForm />)
 
       const emailInput = screen.getByTestId('email')
       const usernameInput = screen.getByTestId('username')
@@ -252,7 +268,7 @@ describe('Basic RegisterForm tests', () => {
         } as unknown as Response)
       })
       global.fetch = mockFetch
-      render(<RegisterForm />)
+      renderWithProviders(<RegisterForm />)
 
       const emailInput = screen.getByTestId('email')
       const usernameInput = screen.getByTestId('username')
