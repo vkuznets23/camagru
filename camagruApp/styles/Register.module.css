@@ -28,6 +28,7 @@
 
 .logo {
   margin-bottom: 10px;
+  color: var(--foreground);
 }
 
 .heading {

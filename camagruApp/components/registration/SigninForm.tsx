@@ -2,13 +2,16 @@
 
 import { signIn, getSession } from 'next-auth/react'
 import { useRef, useState } from 'react'
-import Logo from '@/components/Logo'
 import styles from '@/styles/Register.module.css'
 import Button from '@/components/Button'
 import TextInput from '@/components/TextInput'
 import PasswordInput from '@/components/PasswordInput'
+import RegisterLogo from '../RegisterLogo'
+import { useTheme } from '@/context/DarkModeContext'
 
 export default function SignInForm() {
+  const { theme } = useTheme()
+
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
@@ -71,9 +74,10 @@ export default function SignInForm() {
     <>
       <form onSubmit={handleSubmit} className={styles.formBox}>
         <div className={styles.logoContainer}>
-          <Logo
+          <RegisterLogo
             className={styles.logo}
             text="Sign in to see photos and videos from your friends"
+            mode={theme}
           />
         </div>
 

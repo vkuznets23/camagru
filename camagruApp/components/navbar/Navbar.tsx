@@ -11,32 +11,11 @@ import SearchForm from './SearchForm'
 import UserMenu from './UserMenu'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useTheme } from '@/context/DarkModeContext'
+import DarkModeToggle from '../DarkModeToggle'
 
 export default function Navbar() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
-    if (savedTheme) {
-      setTheme(savedTheme)
-      document.documentElement.setAttribute('data-theme', savedTheme)
-    } else {
-      const prefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)'
-      ).matches
-      const defaultTheme = prefersDark ? 'dark' : 'light'
-      setTheme(defaultTheme)
-      document.documentElement.setAttribute('data-theme', defaultTheme)
-    }
-  }, [])
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    document.documentElement.setAttribute('data-theme', newTheme)
-    localStorage.setItem('theme', newTheme)
-  }
+  const { theme } = useTheme()
 
   const { data: session } = useSession()
   const id = session?.user?.id
@@ -50,7 +29,7 @@ export default function Navbar() {
     <>
       <nav id="navbar" data-testid="navbar" className={styles.navbar}>
         <Link href={`/user/${id}`}>
-          <Logo className={styles.logo} width={134} height={47} />
+          <Logo className={styles.logo} width={134} height={47} mode={theme} />
         </Link>
         <div className={styles.navActions}>
           <div className={styles.searchNavbarWrapper}>
@@ -85,7 +64,8 @@ export default function Navbar() {
             )}
           </Link>
 
-          <button
+          <DarkModeToggle />
+          {/* <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
             className={styles.themeToggleBtn}
@@ -99,7 +79,7 @@ export default function Navbar() {
             }}
           >
             {theme === 'light' ? '🌞 Light' : '🌙 Dark'}
-          </button>
+          </button> */}
 
           <UserMenu />
         </div>
