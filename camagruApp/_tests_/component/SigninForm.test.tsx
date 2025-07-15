@@ -2,14 +2,31 @@ import { render, screen, waitFor } from '@testing-library/react'
 import SignInForm from '@/components/registration/SigninForm'
 import userEvent from '@testing-library/user-event'
 import { signIn } from 'next-auth/react'
+import { ThemeProvider } from '@/context/DarkModeContext'
+
+const renderWithProviders = (ui: React.ReactElement) => {
+  return render(<ThemeProvider>{ui}</ThemeProvider>)
+}
 
 jest.mock('next-auth/react', () => ({
   signIn: jest.fn(),
 }))
 
 describe('SigninForm', () => {
+  beforeAll(() => {
+    window.matchMedia =
+      window.matchMedia ||
+      function () {
+        return {
+          matches: false,
+          addListener: () => {},
+          removeListener: () => {},
+        }
+      }
+  })
+
   it('render inputs and buttons', () => {
-    render(<SignInForm />)
+    renderWithProviders(<SignInForm />)
 
     expect(screen.queryByTestId('navbar')).not.toBeInTheDocument()
 
@@ -22,14 +39,14 @@ describe('SigninForm', () => {
   })
 
   it('submit button is disabled when fields are empty', async () => {
-    render(<SignInForm />)
+    renderWithProviders(<SignInForm />)
 
     const submitButton = screen.getByTestId('signin-button')
     expect(submitButton).toBeDisabled()
   })
 
   it('submit button is active when fields are fielled', async () => {
-    render(<SignInForm />)
+    renderWithProviders(<SignInForm />)
 
     const loginInput = screen.getByTestId('login-signin')
     const passwordInput = screen.getByTestId('password-signin')
@@ -42,7 +59,7 @@ describe('SigninForm', () => {
   })
 
   it('login and password are empty', async () => {
-    render(<SignInForm />)
+    renderWithProviders(<SignInForm />)
 
     const submitButton = screen.getByTestId('signin-button')
 
@@ -64,7 +81,7 @@ describe('SigninForm', () => {
     ;(signIn as jest.Mock).mockResolvedValueOnce({
       error: 'Credentialssignin',
     })
-    render(<SignInForm />)
+    renderWithProviders(<SignInForm />)
     const loginInput = screen.getByTestId('login-signin')
     const passwordInput = screen.getByTestId('password-signin')
     const submitButton = screen.getByTestId('signin-button')
