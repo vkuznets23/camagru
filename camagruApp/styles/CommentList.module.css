@@ -5,6 +5,7 @@
   gap: 16px;
   word-wrap: break-word;
   padding-right: 4px;
+  color: var(--text-primary);
 }
 
 .commentHeader {
@@ -28,22 +29,25 @@
 .commentUsername {
   font-weight: 600;
   margin: 0;
+  color: var(--foreground);
 }
 
 .commentDate {
   font-size: 12px;
-  color: #888;
+  color: var(--char-color);
 }
 
 .commentContent {
   margin: 0;
   line-height: 1.4;
   white-space: pre-wrap;
+  color: var(--text-primary);
 }
 
 .postContent {
   margin: 10px 0;
   font-size: 16px;
+  color: var(--text-primary);
 }
 
 .actionsWrapper {
@@ -56,22 +60,22 @@
 .actionButton {
   background-color: transparent;
   border: none;
-  color: #888;
+  color: var(--char-color);
   cursor: pointer;
 }
 .actionButton:hover {
-  color: #0070f3;
+  color: var(--button-bg);
 }
 
 .deleteButton {
   background-color: transparent;
   border: none;
-  color: #888;
+  color: var(--char-color);
   cursor: pointer;
 }
 
 .deleteButton:hover {
-  color: #d9363e;
+  color: var(--delete-hover-color);
 }
 
 .noCommentsWrapper h4 {
@@ -79,7 +83,7 @@
 }
 .noCommentsWrapper p {
   font-size: 14px;
-  color: #888;
+  color: var(--char-color);
 }
 
 .noCommentsWrapper {
@@ -90,4 +94,5 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  color: var(--text-primary);
 }

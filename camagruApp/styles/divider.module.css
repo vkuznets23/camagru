@@ -5,7 +5,7 @@
   max-width: 840px;
   width: 100%;
   margin: 0 auto;
-  border-top: 1px solid #dbdbdb;
+  border-top: 1px solid var(--divider);
 }
 
 .sections {
@@ -18,13 +18,13 @@
 }
 
 .section.active {
-  color: #262626;
-  border-top: 1px solid #262626;
+  color: var(--section-color-active-light);
+  border-top: 1px solid var(--section-color-active-light);
 }
 
 .section {
   display: flex;
   gap: 10px;
   padding: 10px;
-  color: #dbdbdb;
+  color: var(--section-color-inactive-light);
 }

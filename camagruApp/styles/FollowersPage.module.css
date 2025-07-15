@@ -1,13 +1,15 @@
 .container {
   max-width: 935px;
-  width: 935px;
+  width: 100%;
   margin: 2rem auto;
   padding: 20px 45px 45px 45px;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .empty {
   text-align: center;
-  color: #777;
+  color: var(--char-color);
 }
 
 .list {
@@ -22,10 +24,14 @@
   display: flex;
   gap: 1rem;
   padding: 0.5rem;
+  width: 100%;
+  background-color: var(--hover-bg);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
 }
 
 .image {
-  border: 1px solid #cdcdcd;
+  border: 1px solid var(--border-alt);
   height: 40px;
   width: 40px;
   object-fit: cover;

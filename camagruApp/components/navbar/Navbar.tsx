@@ -11,8 +11,12 @@ import SearchForm from './SearchForm'
 import UserMenu from './UserMenu'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
+import { useTheme } from '@/context/DarkModeContext'
+import DarkModeToggle from '../DarkModeToggle'
 
 export default function Navbar() {
+  const { theme } = useTheme()
+
   const { data: session } = useSession()
   const id = session?.user?.id
 
@@ -25,7 +29,7 @@ export default function Navbar() {
     <>
       <nav id="navbar" data-testid="navbar" className={styles.navbar}>
         <Link href={`/user/${id}`}>
-          <Logo className={styles.logo} width={134} height={47} />
+          <Logo className={styles.logo} width={134} height={47} mode={theme} />
         </Link>
         <div className={styles.navActions}>
           <div className={styles.searchNavbarWrapper}>
@@ -59,6 +63,24 @@ export default function Navbar() {
               </>
             )}
           </Link>
+
+          <DarkModeToggle />
+          {/* <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className={styles.themeToggleBtn}
+            style={{
+              cursor: 'pointer',
+              marginLeft: '1rem',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--foreground)',
+              fontSize: '1rem',
+            }}
+          >
+            {theme === 'light' ? '🌞 Light' : '🌙 Dark'}
+          </button> */}
+
           <UserMenu />
         </div>
       </nav>

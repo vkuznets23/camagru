@@ -4,13 +4,14 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #fafafa;
+  background-color: var(--bg);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--foreground);
 }
 
 .formBox {
-  background-color: white;
-  border: 1px solid #dbdbdb;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
   padding: 40px 40px 20px 40px;
   width: 100%;
   max-width: 350px;
@@ -27,13 +28,14 @@
 
 .logo {
   margin-bottom: 10px;
+  color: var(--foreground);
 }
 
 .heading {
   font-size: 16px;
   text-align: center;
   margin-bottom: 10px;
-  color: #737373;
+  color: var(--text-muted);
 }
 
 .label {
@@ -43,9 +45,10 @@
 
 .input {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #dbdbdb;
+  border: 1px solid var(--input-border);
   border-radius: 3px;
-  background: #fafafa;
+  background: var(--input-bg);
+  color: var(--foreground);
   font-size: 14px;
   width: 100%;
   padding-right: 50px;
@@ -53,7 +56,7 @@
 }
 
 .button {
-  background-color: #0095f6;
+  background-color: var(--accent);
   border: none;
   padding: 8px;
   color: white;
@@ -81,7 +84,7 @@
   background: transparent;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #262626;
+  color: var(--foreground);
   padding: 0;
 }
 
@@ -91,7 +94,7 @@
 }
 
 .error {
-  color: red;
+  color: var(--error-color);
   font-size: 12px;
   margin-top: 2px;
 }
@@ -100,7 +103,7 @@
 .strengthBarContainer {
   height: 4px;
   width: 100%;
-  background-color: #ddd;
+  background-color: var(--border-alt);
   border-radius: 4px;
   overflow: hidden;
   margin-top: 2px;
@@ -138,21 +141,21 @@
 }
 
 .extraContainer {
-  background-color: white;
-  border: 1px solid #dbdbdb;
   padding: 20px;
   width: 100%;
   max-width: 350px;
   margin-top: 10px;
   text-align: center;
   font-size: 14px;
-  color: #333;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--foreground);
 }
 
 .extraContainer a {
   font-weight: bold;
   text-transform: capitalize;
-  color: #0095f6;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -164,7 +167,7 @@
   margin-top: 20px;
   font-weight: bold;
   font-size: 14px;
-  color: #0095f6;
+  color: var(--accent);
   text-decoration: none;
 }
 
