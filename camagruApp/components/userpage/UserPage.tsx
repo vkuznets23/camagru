@@ -9,10 +9,12 @@ import Image from 'next/image'
 import UserSkeleton from './UserSkeleton'
 import UsernamePanel from './UsernamePanel'
 import UserContentTabs from '../posts/UserContentTabs'
-import Link from 'next/link'
+// import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function UserProfile() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const router = useRouter()
   const params = useParams()
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id
   const [user, setUser] = useState<User | null>(null)
@@ -77,17 +79,23 @@ export default function UserProfile() {
     if (id) fetchUser(isOwnProfile)
   }, [id, session?.user.id])
 
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/')
+    }
+  }, [status, router])
+
   if (loading || !user) {
     return <UserSkeleton />
   }
 
-  if (!session) {
-    return (
-      <p>
-        u need to <Link href="/auth/signin">sign in</Link>
-      </p>
-    )
-  }
+  // if (!session) {
+  //   return (
+  //     <p>
+  //       u need to <Link href="/auth/signin">sign in</Link>
+  //     </p>
+  //   )
+  // }
 
   const isMyProfile = session?.user?.id === user.id
 

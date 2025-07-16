@@ -11,6 +11,12 @@ jest.mock('next-auth/react', () => ({
 
 jest.mock('next/navigation', () => ({
   useParams: jest.fn(),
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn(),
+  })),
 }))
 
 describe('user profile component', () => {
