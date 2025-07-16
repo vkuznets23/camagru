@@ -1,0 +1,72 @@
+.mobileSearchPage {
+  padding: 16px;
+  background: var(--background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.closeButton {
+  font-size: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.searchForm {
+  flex: 1;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline-offset: 2px;
+}
+
+.searchDropdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.searchDropdownItem {
+  padding: 12px 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-alt);
+}
+
+.searchDropdownLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--foreground);
+  width: 100%;
+  text-decoration: none;
+}
+
+.searchAvatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.noResults {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+}

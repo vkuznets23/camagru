@@ -89,14 +89,6 @@ export default function UserProfile() {
     return <UserSkeleton />
   }
 
-  // if (!session) {
-  //   return (
-  //     <p>
-  //       u need to <Link href="/auth/signin">sign in</Link>
-  //     </p>
-  //   )
-  // }
-
   const isMyProfile = session?.user?.id === user.id
 
   return (

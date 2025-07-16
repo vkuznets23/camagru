@@ -65,22 +65,6 @@ export default function Navbar() {
           </Link>
 
           <DarkModeToggle />
-          {/* <button
-            onClick={toggleTheme}
-            aria-label="Toggle dark mode"
-            className={styles.themeToggleBtn}
-            style={{
-              cursor: 'pointer',
-              marginLeft: '1rem',
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--foreground)',
-              fontSize: '1rem',
-            }}
-          >
-            {theme === 'light' ? '🌞 Light' : '🌙 Dark'}
-          </button> */}
-
           <UserMenu />
         </div>
       </nav>
