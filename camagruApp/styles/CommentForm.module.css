@@ -69,3 +69,10 @@
   font-size: 12px;
   margin-bottom: 4px;
 }
+
+@media (max-width: 800px) {
+  .commentForm {
+    flex: none;
+    max-height: none;
+  }
+}

@@ -6,6 +6,19 @@
   width: 100%;
   margin: 0 auto;
   border-top: 1px solid var(--divider);
+  padding-inline: 0;
+}
+
+@media (max-width: 900px) {
+  .divider {
+    width: calc(100% - 64px);
+  }
+}
+
+@media (max-width: 600px) {
+  .divider {
+    width: 100%;
+  }
 }
 
 .sections {

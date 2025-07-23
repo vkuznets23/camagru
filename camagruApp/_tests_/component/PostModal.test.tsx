@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import PostModal from '@/components/posts/PostModal'
 import { Post } from '@/types/post'
 import { PostsContext } from '@/context/PostsContext'
@@ -83,7 +83,7 @@ describe('PostModal', () => {
     })
   })
 
-  it('allows toggling like', () => {
+  it('allows toggling like', async () => {
     render(
       <MockPostsProvider>
         <PostModal
@@ -95,8 +95,9 @@ describe('PostModal', () => {
         />
       </MockPostsProvider>
     )
-
-    fireEvent.click(screen.getByTestId('likeBtn'))
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('likeBtn'))
+    })
 
     expect(handleToggleLike).toHaveBeenCalledWith('1')
   })

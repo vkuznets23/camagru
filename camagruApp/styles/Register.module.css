@@ -174,3 +174,40 @@
 .forgotPassword:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 600px) {
+  .formBox {
+    background-color: var(--bg);
+    border: none;
+    border-radius: 0;
+    width: 100vw;
+    max-width: 100vw;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .input,
+  .button {
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .heading {
+    width: 80%;
+    margin-bottom: 50px;
+  }
+
+  .strengthBarContainer {
+    margin-bottom: 10px;
+  }
+
+  .extraContainer {
+    background-color: var(--bg);
+    border: none;
+    border-radius: 0;
+    width: 100vw;
+    max-width: 100vw;
+    padding: 15px;
+    margin-top: 50px;
+  }
+}
