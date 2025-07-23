@@ -96,6 +96,10 @@
   .profileBio textarea {
     width: 100%;
   }
+
+  .posts {
+    padding: 20px 0px 20px 0px;
+  }
 }
 
 .postsContainer {
@@ -114,7 +118,7 @@
 
 @media (max-width: 375px) {
   .posts {
-    padding: 15px 20px 15px 20px;
+    padding: 15px 0px 15px 0px;
   }
 
   .notingToSee {
