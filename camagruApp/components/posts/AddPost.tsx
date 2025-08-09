@@ -7,6 +7,59 @@ import styles from '@/styles/AddPost.module.css'
 import Image from 'next/image'
 import Button from '../Button'
 
+function resizeImage(
+  file: File,
+  maxWidth: number,
+  maxHeight: number
+): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image()
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      if (!e.target?.result) return reject('No file result')
+      img.src = e.target.result as string
+    }
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      let width = img.width
+      let height = img.height
+
+      if (width > height) {
+        if (width > maxWidth) {
+          height *= maxWidth / width
+          width = maxWidth
+        }
+      } else {
+        if (height > maxHeight) {
+          width *= maxHeight / height
+          height = maxHeight
+        }
+      }
+
+      canvas.width = width
+      canvas.height = height
+
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return reject('No canvas context')
+
+      ctx.drawImage(img, 0, 0, width, height)
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return reject('Canvas is empty')
+          resolve(new File([blob], file.name, { type: file.type }))
+        },
+        file.type,
+        0.75 // качество 75%
+      )
+    }
+
+    reader.readAsDataURL(file)
+  })
+}
+
 export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
   const { data: session } = useSession()
   const [content, setContent] = useState('')
@@ -100,16 +153,17 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
     const file = e.target.files?.[0]
     if (!file) return
 
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append(
-      'upload_preset',
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOADPRESET!
-    )
-
     setUploading(true)
 
     try {
+      const resizedFile = await resizeImage(file, 1080, 1080)
+
+      const formData = new FormData()
+      formData.append('file', resizedFile)
+      formData.append(
+        'upload_preset',
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOADPRESET!
+      )
       const res = await fetch(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
         {

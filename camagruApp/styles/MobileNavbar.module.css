@@ -19,6 +19,7 @@
   .navActions {
     display: flex;
     align-items: center;
+    font-size: 30px;
     gap: 50px;
   }
 
@@ -28,7 +29,7 @@
     border-radius: 20%;
     background-color: var(--icon-bg);
     color: var(--icon-color-light);
-    padding: 4px 8px;
+    padding: 2px 4px;
   }
 
   .feedBtn {
