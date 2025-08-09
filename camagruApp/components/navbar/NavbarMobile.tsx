@@ -59,6 +59,7 @@ export default function MobileNavbar() {
                 width={32}
                 height={32}
                 className={isUserActive ? styles.avatarActive : styles.avatar}
+                priority
               />
             </div>
           </Link>

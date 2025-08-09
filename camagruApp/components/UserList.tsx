@@ -29,6 +29,7 @@ export default function UserList({ users, emptyMessage }: UserListProps) {
                   alt={`${user.username}'s avatar`}
                   width={40}
                   height={40}
+                  priority
                 />
                 <span>{user.username}</span>
               </Link>
