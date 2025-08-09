@@ -37,6 +37,7 @@ model Post {
   image     String
   userId    String
   createdAt DateTime  @default(now())
+  blurDataURL String?
   comments  Comment[]
   likedBy   Like[]
   user      User      @relation("UserPosts", fields: [userId], references: [id])

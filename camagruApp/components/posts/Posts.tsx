@@ -38,7 +38,7 @@ function UserPostsContent() {
             (a, b) =>
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           )
-          .map((post) => (
+          .map((post, index) => (
             <article key={post.id} role="listitem">
               <PostCard
                 post={post}
@@ -52,6 +52,7 @@ function UserPostsContent() {
                   )
                 }}
                 currentUserId={userID}
+                priority={index < 3}
               />
             </article>
           ))}

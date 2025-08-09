@@ -1,6 +1,4 @@
 import Image from 'next/image'
-import logoDark from '@/assets/LogoCamagru2.svg'
-import logoLight from '@/assets/LogoCamagru.svg'
 
 interface LogoProps {
   className?: string
@@ -15,11 +13,14 @@ export default function Logo({
   height = 48,
   mode,
 }: LogoProps) {
+  const src =
+    mode === 'light' ? '/assets/LogoCamagru.svg' : '/assets/LogoCamagru2.svg'
+
   return (
     <>
       {mode == 'light' ? (
         <Image
-          src={logoLight}
+          src={src}
           alt="camagru logo"
           width={width}
           height={height}
@@ -28,7 +29,7 @@ export default function Logo({
         />
       ) : (
         <Image
-          src={logoDark}
+          src={src}
           alt="camagru logo"
           width={width}
           height={height}

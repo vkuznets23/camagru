@@ -1,18 +1,22 @@
 'use client'
 
+// icons import
 import { GrFormAdd } from 'react-icons/gr'
 import { GoHome } from 'react-icons/go'
 import { GoHomeFill } from 'react-icons/go'
 
+// component
 import Logo from '../Logo'
 import Link from 'next/link'
 import styles from '@/styles/Navbar.module.css'
 import SearchForm from './SearchForm'
 import UserMenu from './UserMenu'
+import DarkModeToggle from '../DarkModeToggle'
+
+// hooks
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { useTheme } from '@/context/DarkModeContext'
-import DarkModeToggle from '../DarkModeToggle'
 
 export default function Navbar() {
   const { theme } = useTheme()
@@ -24,6 +28,24 @@ export default function Navbar() {
 
   const isFeedActive = pathname === '/feed'
   const isCreatePostActive = pathname === '/post/create'
+
+  // feed icons
+  const FeedActiveIcon = <GoHomeFill className={styles.activeIcon} />
+  const FeedInactiveIcons = (
+    <>
+      <GoHomeFill className={styles.feedBtn} />
+      <GoHome className={styles.goFeedBtn} />
+    </>
+  )
+
+  // create post
+  const CreatePostActiveIcon = <GrFormAdd className={styles.activeAddIcon} />
+  const CreatePostInactiveIcons = (
+    <>
+      <GrFormAdd className={styles.addBtn} />
+      <GrFormAdd className={styles.goAddBtn} />
+    </>
+  )
 
   return (
     <>
@@ -40,28 +62,16 @@ export default function Navbar() {
             aria-current={isFeedActive ? 'page' : undefined}
             className={styles.feedLink}
           >
-            {isFeedActive ? (
-              <GoHomeFill className={styles.activeIcon} />
-            ) : (
-              <>
-                <GoHomeFill className={styles.feedBtn} />
-                <GoHome className={styles.goFeedBtn} />
-              </>
-            )}
+            {isFeedActive ? FeedActiveIcon : FeedInactiveIcons}
           </Link>
           <Link
             href="/post/create"
             aria-current={isCreatePostActive ? 'page' : undefined}
             className={styles.addLink}
           >
-            {isCreatePostActive ? (
-              <GrFormAdd className={styles.activeAddIcon} />
-            ) : (
-              <>
-                <GrFormAdd className={styles.addBtn} />
-                <GrFormAdd className={styles.goAddBtn} />
-              </>
-            )}
+            {isCreatePostActive
+              ? CreatePostActiveIcon
+              : CreatePostInactiveIcons}
           </Link>
 
           <DarkModeToggle />

@@ -24,6 +24,7 @@
     "next": "15.3.3",
     "next-auth": "^4.24.11",
     "nodemailer": "^6.10.1",
+    "plaiceholder": "^3.0.0",
     "prisma": "^6.9.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -39,6 +40,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^20",
+    "@types/node-fetch": "^2.6.13",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.6",
@@ -53,5 +55,4 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
-  
 }

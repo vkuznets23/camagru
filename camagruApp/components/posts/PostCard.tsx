@@ -11,12 +11,14 @@ type PostCardProps = {
   post: Post
   onCommentAdded: (postId: string, comment: Comment) => void
   currentUserId: string
+  priority?: boolean
 }
 
 export default function PostCard({
   post,
   currentUserId,
   onCommentAdded,
+  priority,
 }: PostCardProps) {
   const [open, setOpen] = useState(false)
 
@@ -34,8 +36,10 @@ export default function PostCard({
           alt="Post image"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          priority
+          placeholder={post.blurDataURL ? 'blur' : undefined}
+          blurDataURL={post.blurDataURL ?? undefined}
           style={{ objectFit: 'cover' }}
+          priority={priority}
         />
       </button>
       {open && (
