@@ -5,7 +5,7 @@ import styles from '@/styles/PostModal.module.css'
 import { type Comment } from '@/types/comment'
 import CommentForm from '@/components/posts/AddCommentForm'
 import CommentList from '@/components/posts/CommentsList'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { usePosts } from '@/context/PostsContext'
 import { type Post } from '@/types/post'
 import UserInfo from '@/components/posts/PostModalUserInfo'
@@ -83,9 +83,74 @@ export default function PostModal({
     }
   }, [])
 
+  const modalRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+      }
+
+      if (e.key === 'Tab') {
+        if (!modalRef.current) return
+
+        const focusableElements =
+          modalRef.current.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+          )
+        const focusable = Array.from(focusableElements).filter(
+          (el) =>
+            el.offsetWidth > 0 ||
+            el.offsetHeight > 0 ||
+            el === document.activeElement
+        )
+        if (focusable.length === 0) return
+
+        const firstElement = focusable[0]
+        const lastElement = focusable[focusable.length - 1]
+        const isShift = e.shiftKey
+        const active = document.activeElement
+
+        if (isShift && active === firstElement) {
+          e.preventDefault()
+          lastElement.focus()
+        } else if (!isShift && active === lastElement) {
+          e.preventDefault()
+          firstElement.focus()
+        }
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+
+    if (modalRef.current) {
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      )
+      const focusable = Array.from(focusableElements).filter(
+        (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+      )
+      if (focusable.length > 0) {
+        focusable[0].focus()
+      } else {
+        modalRef.current.focus()
+      }
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onClose])
+
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={modalRef}
+        tabIndex={-1}
+        className={styles.modal}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className={styles.imageWrapper}>
           <Image
             src={image}
