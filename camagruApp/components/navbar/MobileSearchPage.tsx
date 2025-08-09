@@ -81,6 +81,7 @@ export default function MobileSearchPage() {
                     width={40}
                     height={40}
                     className={styles.searchAvatar}
+                    priority
                   />
                   <span>{user.username}</span>
                 </Link>

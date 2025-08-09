@@ -43,6 +43,7 @@ export default function UserMenu() {
             width={32}
             height={32}
             className={styles.avatar}
+            priority
           />
         </div>
       </button>

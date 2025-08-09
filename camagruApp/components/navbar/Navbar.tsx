@@ -30,11 +30,11 @@ export default function Navbar() {
   const isCreatePostActive = pathname === '/post/create'
 
   // feed icons
-  const FeedActiveIcon = <GoHomeFill className={styles.activeIcon} />
+  const FeedActiveIcon = <GoHomeFill className={styles.activeIcon} role="img" />
   const FeedInactiveIcons = (
     <>
-      <GoHomeFill className={styles.feedBtn} />
-      <GoHome className={styles.goFeedBtn} />
+      <GoHomeFill className={styles.feedBtn} role="img" />
+      <GoHome className={styles.goFeedBtn} role="img" />
     </>
   )
 
@@ -42,15 +42,21 @@ export default function Navbar() {
   const CreatePostActiveIcon = <GrFormAdd className={styles.activeAddIcon} />
   const CreatePostInactiveIcons = (
     <>
-      <GrFormAdd className={styles.addBtn} />
-      <GrFormAdd className={styles.goAddBtn} />
+      <GrFormAdd className={styles.addBtn} role="img" />
+      <GrFormAdd className={styles.goAddBtn} role="img" />
     </>
   )
 
   return (
     <>
-      <nav id="navbar" data-testid="navbar" className={styles.navbar}>
-        <Link href={`/user/${id}`}>
+      <nav
+        id="navbar"
+        data-testid="navbar"
+        className={styles.navbar}
+        role="navigation"
+        aria-label="main navigation"
+      >
+        <Link href={`/user/${id}`} aria-label="go to profile page">
           <Logo className={styles.logo} width={134} height={47} mode={theme} />
         </Link>
         <div className={styles.navActions}>
@@ -60,6 +66,7 @@ export default function Navbar() {
           <Link
             href="/feed"
             aria-current={isFeedActive ? 'page' : undefined}
+            aria-label="feed"
             className={styles.feedLink}
           >
             {isFeedActive ? FeedActiveIcon : FeedInactiveIcons}
@@ -67,6 +74,7 @@ export default function Navbar() {
           <Link
             href="/post/create"
             aria-current={isCreatePostActive ? 'page' : undefined}
+            aria-label="create post"
             className={styles.addLink}
           >
             {isCreatePostActive

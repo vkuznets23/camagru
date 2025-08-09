@@ -425,10 +425,15 @@
 }
 
 .skeletonPost {
-  width: 270px;
-  height: 270px;
-  background-color: #e0e0e0;
+  all: unset;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: var(--skeleton-base);
   border-radius: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+  cursor: default;
+  overflow: hidden;
 }
 
 /* ===== Animations ===== */

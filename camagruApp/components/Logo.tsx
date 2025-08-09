@@ -13,14 +13,11 @@ export default function Logo({
   height = 48,
   mode,
 }: LogoProps) {
-  const src =
-    mode === 'light' ? '/assets/LogoCamagru.svg' : '/assets/LogoCamagru2.svg'
-
   return (
     <>
       {mode == 'light' ? (
         <Image
-          src={src}
+          src="/assets/LogoCamagru.svg"
           alt="camagru logo"
           width={width}
           height={height}
@@ -29,7 +26,7 @@ export default function Logo({
         />
       ) : (
         <Image
-          src={src}
+          src="/assets/LogoCamagru2.svg"
           alt="camagru logo"
           width={width}
           height={height}
