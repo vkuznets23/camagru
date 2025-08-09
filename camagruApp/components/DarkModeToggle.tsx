@@ -2,6 +2,8 @@
 
 import { useTheme } from '@/context/DarkModeContext'
 import styles from '@/styles/DarkModeToggle.module.css'
+import { AiFillSun } from 'react-icons/ai'
+import { IoMoon } from 'react-icons/io5'
 
 export default function DarkModeToggle() {
   const { theme, toggleTheme } = useTheme()
@@ -18,6 +20,12 @@ export default function DarkModeToggle() {
       />
       <label htmlFor="toggle" className={styles.label}>
         <span className={styles.ball} />
+        <span className={styles.iconSun}>
+          <AiFillSun />
+        </span>
+        <span className={styles.iconMoon}>
+          <IoMoon />
+        </span>
       </label>
     </div>
   )

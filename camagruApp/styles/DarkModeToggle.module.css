@@ -17,7 +17,7 @@
   justify-content: space-between;
   padding: 2px;
   position: relative;
-  width: 40px;
+  width: 30px; /* уменьшено */
   height: 20px;
   user-select: none;
   transition: background-color 0.3s ease;
@@ -40,26 +40,72 @@
 }
 
 .checkbox:checked + .label .ball {
-  transform: translateX(20px);
+  transform: translateX(11px); /* смещение */
   background-color: #000;
 }
 
-@media (max-width: 600px) {
+.iconSun {
+  display: none;
+}
+.iconMoon {
+  display: none;
+}
+
+@media (max-width: 820px) {
   .label {
-    width: 50px;
-    height: 30px;
-    padding: 3px;
+    width: 45px !important;
+    height: 45px !important;
+    padding: 0 !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .checkbox:checked + .label {
+    background-color: transparent !important;
   }
 
   .ball {
-    width: 24px;
-    height: 24px;
-    top: 3px;
-    left: 3px;
-    transition: transform 0.3s ease;
+    display: none !important;
   }
 
-  .checkbox:checked + .label .ball {
-    transform: translateX(16px);
+  .iconSun,
+  .iconMoon {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.3s ease;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .iconSun {
+    color: #ffffff;
+    opacity: 0;
+  }
+
+  .iconMoon {
+    color: #000000;
+    opacity: 1;
+  }
+
+  .checkbox:checked + .label .iconSun {
+    opacity: 1;
+  }
+
+  .checkbox:checked + .label .iconMoon {
+    opacity: 0;
   }
 }
