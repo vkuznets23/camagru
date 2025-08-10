@@ -11,11 +11,16 @@ export type FollowerPreview = {
 type UserListProps = {
   users: FollowerPreview[]
   emptyMessage: string
+  noPadding?: boolean
 }
 
-export default function UserList({ users, emptyMessage }: UserListProps) {
+export default function UserList({
+  users,
+  emptyMessage,
+  noPadding = false,
+}: UserListProps) {
   return (
-    <div className={styles.container}>
+    <div className={noPadding ? styles.noPaddingContainer : styles.container}>
       {users.length === 0 ? (
         <p className={styles.empty}>{emptyMessage}</p>
       ) : (
@@ -31,7 +36,7 @@ export default function UserList({ users, emptyMessage }: UserListProps) {
                   height={40}
                   priority
                 />
-                <span>{user.username}</span>
+                <span className={styles.userName}>{user.username}</span>
               </Link>
             </li>
           ))}
