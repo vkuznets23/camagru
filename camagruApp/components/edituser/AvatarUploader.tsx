@@ -7,7 +7,7 @@ interface Props {
   setImage: (url: string) => void
   onOpenCamera: () => void
   onDelete: () => void
-  uploading: boolean
+  // uploading: boolean
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -15,25 +15,31 @@ export default function AvatarUploader({
   image,
   onOpenCamera,
   onDelete,
-  uploading,
+  // uploading,
   onFileChange,
 }: Props) {
   const [showOptions, setShowOptions] = useState(false)
 
   return (
     <div className={styles.imageContainer}>
-      <Image
-        src={image || '/default_avatar.png'}
-        alt={image ? 'User avatar preview' : 'Default avatar image'}
-        width={80}
-        height={80}
-        className={styles.avatar}
-      />
-      {uploading && (
-        <div role="status" aria-live="polite">
-          Uploading...
-        </div>
-      )}
+      <div className={styles.avatarWrapper}>
+        <Image
+          src={image || '/default_avatar.png'}
+          alt={image ? 'User avatar preview' : 'Default avatar image'}
+          width={80}
+          height={80}
+          className={styles.avatar}
+        />
+        {/* {uploading && (
+          <div
+            className={styles.uploadingOverlay}
+            role="status"
+            aria-live="polite"
+          >
+            <div className={styles.spinner}></div>
+          </div>
+        )} */}
+      </div>
 
       <div className={styles.photoOptionsWrapper}>
         <button
