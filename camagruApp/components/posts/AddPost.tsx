@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import CameraCapture from '@/components/CameraCapture'
 import { useSession } from 'next-auth/react'
 import styles from '@/styles/AddPost.module.css'
 import Image from 'next/image'
 import Button from '../Button'
+import CameraModal from './CameraModal'
 
 function resizeImage(
   file: File,
@@ -65,7 +65,7 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
   const [content, setContent] = useState('')
   const [image, setImage] = useState('')
   const [uploading, setUploading] = useState(false)
-  const [showCamera, setShowCamera] = useState(false)
+  const [showCameraModal, setShowCameraModal] = useState(false)
 
   const handleCameraCapture = async (file: File) => {
     const formData = new FormData()
@@ -89,7 +89,6 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
       const data = await res.json()
       if (data.secure_url) {
         setImage(data.secure_url)
-        setShowCamera(false)
       }
     } catch (err) {
       console.error('Upload failed', err)
@@ -210,23 +209,24 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
               onChange={handleFileChange}
               className={styles.visuallyHidden}
             />
-            <div className={styles.cameraDiv}>
-              <button
-                type="button"
-                onClick={() => setShowCamera(!showCamera)}
-                aria-pressed={showCamera}
-                aria-label={showCamera ? 'Close camera' : 'Open camera'}
-                className={styles.uploadButton}
-              >
-                {showCamera ? 'Close Camera' : 'Open Camera'}
-              </button>
-              <div className={styles.camera}>
-                {showCamera && (
-                  <CameraCapture onCapture={handleCameraCapture} />
-                )}
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowCameraModal(true)}
+              aria-label="Open camera"
+              className={styles.uploadButton}
+            >
+              Open Camera
+            </button>
           </div>
+          {showCameraModal && (
+            <CameraModal
+              onClose={() => setShowCameraModal(false)}
+              onCapture={(file) => {
+                setShowCameraModal(false)
+                handleCameraCapture(file)
+              }}
+            />
+          )}
           <div className={styles.textareaContainer}>
             <textarea
               ref={textareaRef}

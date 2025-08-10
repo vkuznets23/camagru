@@ -5,12 +5,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from '@/styles/Profile.module.css'
 import Button from '@/components/Button'
-import Modal from '@/components/Modal'
-import CameraCapture from '@/components/CameraCapture'
 import AvatarUploader from '@/components/edituser/AvatarUploader'
 import NameInput from '@/components/edituser/NameInput'
 import BioInput from '@/components/edituser/BioInput'
 import SkeletonLoading from '@/components/edituser/SkeletonLoading'
+import CameraModal from '@/components/posts/CameraModal'
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
 const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOADPRESET
@@ -108,10 +107,6 @@ export default function SettingsPage() {
     }
   }
 
-  const handleStopCamera = () => {
-    setShowCamera(false)
-  }
-
   const handleDeleteAvatar = async () => {
     try {
       const res = await fetch('/api/user/update', {
@@ -170,9 +165,15 @@ export default function SettingsPage() {
             />
           </div>
         </div>
-        <Modal isOpen={showCamera} onClose={handleStopCamera}>
-          <CameraCapture onCapture={uploadImage} />
-        </Modal>
+        {showCamera && (
+          <CameraModal
+            onClose={() => setShowCamera(false)}
+            onCapture={(file) => {
+              setShowCamera(false)
+              uploadImage(file)
+            }}
+          />
+        )}
 
         <Button
           id="saving-button"
