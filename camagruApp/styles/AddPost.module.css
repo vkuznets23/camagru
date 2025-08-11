@@ -23,24 +23,6 @@
   gap: 40px;
 }
 
-.takePictureBtn {
-  align-self: flex-end;
-  padding: 6px 12px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 5px;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.2s ease;
-}
-
-.takePictureBtn:hover {
-  background-color: var(--button-bg-hover);
-}
-
 .textareaContainer {
   width: 100%;
   display: flex;
@@ -127,4 +109,36 @@
     flex-direction: column;
     gap: 20px;
   }
+}
+.Btns {
+  display: flex;
+  gap: 10px;
+}
+
+.takePictureBtn,
+.closeBtn {
+  height: 40px;
+  align-self: flex-end;
+  line-height: 1.2;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: var(--button-text);
+  transition: background-color 0.2s ease;
+}
+
+.takePictureBtn {
+  width: 90%;
+  background-color: var(--button-bg);
+}
+
+.takePictureBtn:hover {
+  background-color: var(--button-bg-hover);
+}
+
+.closeBtn {
+  background-color: red;
 }

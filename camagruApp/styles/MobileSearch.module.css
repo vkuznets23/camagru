@@ -1,6 +1,10 @@
 .mobileSearchPage {
-  padding: 16px;
-  background: var(--background);
+  max-width: 935px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 20px 45px 45px 45px;
+  background-color: var(--background);
+  color: var(--foreground);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -30,9 +34,16 @@
   width: 100%;
   padding: 10px 14px;
   font-size: 18px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid var(--border-alt);
+  border-radius: 0.5rem;
   outline-offset: 2px;
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: border-color 0.3s ease;
+}
+
+.searchInput:focus {
+  border-color: var(--accent);
 }
 
 .searchDropdown {
@@ -41,32 +52,45 @@
   padding: 0;
   overflow-y: auto;
   flex-grow: 1;
+  margin-top: 1rem;
 }
 
 .searchDropdownItem {
-  padding: 12px 8px;
+  padding: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid var(--border-alt);
+  gap: 1rem;
+  width: 100%;
+  background-color: var(--hover-bg);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.searchDropdownItem:hover {
+  background-color: var(--hover-bg-active);
 }
 
 .searchDropdownLink {
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: var(--foreground);
+  gap: 1rem;
+  color: inherit;
   width: 100%;
   text-decoration: none;
 }
 
 .searchAvatar {
-  border-radius: 50%;
+  border: 1px solid var(--border-alt);
+  height: 40px;
+  width: 40px;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .noResults {
   padding: 20px;
   text-align: center;
-  color: var(--text-muted);
+  color: var(--char-color);
 }

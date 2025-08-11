@@ -2,10 +2,10 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
 import styles from '@/styles/MobileSearch.module.css'
 import { type User } from '@/types/user'
+import UserList from '../UserList'
+import { useSession } from 'next-auth/react'
 
 export default function MobileSearchPage() {
   const router = useRouter()
@@ -13,6 +13,15 @@ export default function MobileSearchPage() {
   const [results, setResults] = useState<User[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { data: session } = useSession()
+
+  const id = session?.user?.id
+
+  useEffect(() => {
+    if (window.innerWidth > 820) {
+      router.replace(`/user/${id}`)
+    }
+  }, [id, router])
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -63,34 +72,7 @@ export default function MobileSearchPage() {
       </header>
 
       {showDropdown && (
-        <ul className={styles.searchDropdown}>
-          {results.length > 0 ? (
-            results.map((user) => (
-              <li key={user.id} className={styles.searchDropdownItem}>
-                <Link
-                  href={`/user/${user.id}`}
-                  onClick={() => {
-                    setShowDropdown(false)
-                    setSearch('')
-                  }}
-                  className={styles.searchDropdownLink}
-                >
-                  <Image
-                    src={user.image || '/default_avatar.png'}
-                    alt={user.username}
-                    width={40}
-                    height={40}
-                    className={styles.searchAvatar}
-                    priority
-                  />
-                  <span>{user.username}</span>
-                </Link>
-              </li>
-            ))
-          ) : (
-            <p className={styles.noResults}>No results found</p>
-          )}
-        </ul>
+        <UserList users={results} emptyMessage="No results" noPadding={true} />
       )}
     </div>
   )
