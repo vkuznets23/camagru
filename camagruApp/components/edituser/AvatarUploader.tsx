@@ -7,7 +7,7 @@ interface Props {
   setImage: (url: string) => void
   onOpenCamera: () => void
   onDelete: () => void
-  // uploading: boolean
+  uploading: boolean
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -15,7 +15,7 @@ export default function AvatarUploader({
   image,
   onOpenCamera,
   onDelete,
-  // uploading,
+  uploading,
   onFileChange,
 }: Props) {
   const [showOptions, setShowOptions] = useState(false)
@@ -30,7 +30,7 @@ export default function AvatarUploader({
           height={80}
           className={styles.avatar}
         />
-        {/* {uploading && (
+        {uploading && (
           <div
             className={styles.uploadingOverlay}
             role="status"
@@ -38,7 +38,7 @@ export default function AvatarUploader({
           >
             <div className={styles.spinner}></div>
           </div>
-        )} */}
+        )}
       </div>
 
       <div className={styles.photoOptionsWrapper}>
