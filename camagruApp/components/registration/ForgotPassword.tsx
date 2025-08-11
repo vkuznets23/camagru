@@ -3,12 +3,14 @@
 import Button from '@/components/Button'
 import TextInput from '@/components/TextInput'
 import styles from '@/styles/Register.module.css'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -30,6 +32,10 @@ export default function ForgotPasswordPage() {
     if (res.ok) {
       setEmail('')
       setMessage('Password reset link sent to your email')
+
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
     } else {
       setError(data.error || 'Something went wrong')
     }

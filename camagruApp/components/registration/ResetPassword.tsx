@@ -1,6 +1,6 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import styles from '@/styles/Register.module.css'
 import {
@@ -20,6 +20,7 @@ export default function ResetPassword() {
   const [passwordStrength, setPasswordStrength] = useState(0)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -41,6 +42,10 @@ export default function ResetPassword() {
     const data = await res.json()
     if (res.ok) {
       setMessage('Password successfully updated')
+
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
     } else {
       setError(data.error || 'Invalid or expired token')
     }
