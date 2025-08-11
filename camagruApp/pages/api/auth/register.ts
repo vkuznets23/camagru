@@ -91,11 +91,15 @@ export default async function handler(
     const transporter = nodemailer.createTransport({
       host: process.env.NEXT_PUBLIC_EMAIL_SERVER_HOST,
       port: Number(process.env.EMAIL_NEXT_PUBLIC_EMAIL_SERVER_PORT),
+      secure: Number(process.env.EMAIL_SERVER_PORT) === 465,
       auth: {
         user: process.env.NEXT_PUBLIC_EMAIL_SERVER_USER,
         pass: process.env.NEXT_PUBLIC_EMAIL_SERVER_PASSWORD,
       },
     })
+
+    await transporter.verify()
+    console.log('SMTP connection is working')
 
     const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${token}`
 
