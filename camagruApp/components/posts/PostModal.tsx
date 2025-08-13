@@ -69,6 +69,60 @@ export default function PostModal({
     handleCommentDeleted,
   } = usePosts()
 
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (window.innerWidth > 820) return
+    const modalEl = modalRef.current
+    if (!modalEl) return
+
+    let startY = 0
+    let currentY = 0
+    let isDragging = false
+
+    const handleTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY
+      isDragging = true
+      modalEl.style.transition = 'none'
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging) return
+      currentY = e.touches[0].clientY - startY
+      if (currentY > 0) {
+        modalEl.style.transform = `translateY(${currentY}px)`
+        const overlayEl = modalEl.parentElement
+        if (overlayEl) {
+          overlayEl.style.background = `rgba(0,0,0,${0.7 - currentY / 600})`
+        }
+      }
+    }
+
+    const handleTouchEnd = () => {
+      isDragging = false
+      const overlayEl = modalEl.parentElement
+      if (currentY > 150) {
+        if (overlayEl) overlayEl.style.opacity = '0'
+        setTimeout(() => onClose(), 200)
+      } else {
+        modalEl.style.transition = 'transform 0.3s'
+        modalEl.style.transform = 'translateY(0)'
+        if (overlayEl) overlayEl.style.background = 'rgba(0,0,0,0.7)'
+      }
+      currentY = 0
+    }
+
+    modalEl.addEventListener('touchstart', handleTouchStart)
+    modalEl.addEventListener('touchmove', handleTouchMove)
+    modalEl.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      modalEl.removeEventListener('touchstart', handleTouchStart)
+      modalEl.removeEventListener('touchmove', handleTouchMove)
+      modalEl.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [onClose])
+
   const handleSave = async () => {
     setIsSaving(true)
     await handleEditPost(postId, editedContent)
@@ -83,7 +137,6 @@ export default function PostModal({
     }
   }, [])
 
-  const modalRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     document.body.style.overflow = 'hidden'
 
@@ -151,6 +204,7 @@ export default function PostModal({
         className={styles.modal}
         onClick={(e) => e.stopPropagation()}
       >
+        <div className={styles.dragHandle} />
         <div className={styles.imageWrapper}>
           <Image
             src={image}
@@ -230,6 +284,7 @@ export default function PostModal({
             <CommentForm postId={postId} onCommentAdded={onCommentAdded} />
           </div>
         </div>
+
         <button onClick={onClose} className={styles.closeBtn}>
           ×
         </button>
