@@ -131,9 +131,12 @@ export default function PostModal({
   }
 
   useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow
     document.body.style.overflow = 'hidden'
+    document.documentElement.style.touchAction = 'none'
     return () => {
-      document.body.style.overflow = ''
+      document.body.style.overflow = originalStyle
+      document.documentElement.style.touchAction = ''
     }
   }, [])
 
