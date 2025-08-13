@@ -1,16 +1,3 @@
-:root {
-  --bg: #fafafa;
-  --foreground: #262626;
-  --text-muted: #8e8e8e;
-  --card-bg: #ffffff;
-  --card-border: #dbdbdb;
-  --input-bg: #ffffff;
-  --input-border: #dbdbdb;
-  --accent: #0095f6;
-  --error-color: #ed4956;
-  --border-alt: #efefef;
-}
-
 .container {
   display: flex;
   flex-direction: column;
