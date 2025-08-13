@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import PasswordInput from '@/components/PasswordInput'
 import TextInput from '@/components/TextInput'
 import styles from '@/styles/SettingsUserEdit.module.css'
 import PasswordStrengthBar from '@/components/PasswordStrengthBar'
+import { QRCodeCanvas } from 'qrcode.react'
 
 export default function SettingsPage() {
   const [username, setUsername] = useState('')
@@ -31,6 +32,15 @@ export default function SettingsPage() {
     if (password.length >= 12) score++
     return Math.min(score, 4) // 0–4
   }
+
+  const { data: session } = useSession()
+  const [profileUrl, setProfileUrl] = useState('')
+
+  useEffect(() => {
+    if (session?.user?.id && typeof window !== 'undefined') {
+      setProfileUrl(`${window.location.origin}/user/${session.user.id}`)
+    }
+  }, [session?.user?.id])
 
   const fetchCurrentUser = async () => {
     const session = await getSession()
@@ -118,12 +128,28 @@ export default function SettingsPage() {
 
   return (
     <div className={styles.container}>
+      <div className={styles.banner}>
+        <p className={styles.bannerText}>
+          Scan this QR code to&nbsp;share your&nbsp;profile&nbsp;with friends
+        </p>
+        <div
+          style={{
+            backgroundColor: 'white',
+            padding: '15px',
+            borderRadius: '15px',
+            display: 'inline-block',
+          }}
+        >
+          <QRCodeCanvas value={profileUrl} size={150} bgColor="transparent" />
+        </div>
+      </div>
       <div className={styles.formContainer}>
-        {message && <div className={styles.message}>{message}</div>}
+        {message && <p className={styles.message}>{message}</p>}
         <div className={styles.formBox}>
           <p className={styles.infoText}>
-            Here you can change your username. Must be unique, 3–20 characters,
-            and can include letters, numbers, or underscores.
+            Here you can&nbsp;change your&nbsp;username. Must be&nbsp;unique,
+            3&#8209;20&nbsp;characters, and&nbsp;can include letters, numbers,
+            or&nbsp;underscores.
           </p>
           {/* Username Form */}
           <form onSubmit={handleUsernameUpdate} className={styles.form}>
@@ -154,8 +180,8 @@ export default function SettingsPage() {
         {/* Password Form */}
         <div className={styles.formBox}>
           <p className={styles.infoText}>
-            Your new password should be at least 8 characters long and include
-            letters and numbers.
+            Your new&nbsp;password should be&nbsp;at&nbsp;least
+            8&nbsp;characters long and&nbsp;include letters and&nbsp;numbers.
           </p>
           <form onSubmit={handlePasswordUpdate} className={styles.form}>
             <input

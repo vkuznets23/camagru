@@ -26,6 +26,7 @@
     "nodemailer": "^6.10.1",
     "plaiceholder": "^3.0.0",
     "prisma": "^6.9.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
