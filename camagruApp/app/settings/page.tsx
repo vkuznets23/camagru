@@ -20,6 +20,7 @@ export default function SettingsPage() {
     confirmPassword?: string
   }>({})
   const [passwordStrength, setPasswordStrength] = useState(0)
+  const [initialUsername, setInitialUsername] = useState('')
 
   function calculateStrength(password: string) {
     let score = 0
@@ -33,7 +34,10 @@ export default function SettingsPage() {
 
   const fetchCurrentUser = async () => {
     const session = await getSession()
-    if (session?.user?.username) setUsername(session.user.username)
+    if (session?.user?.username) {
+      setUsername(session.user.username)
+      setInitialUsername(session.user.username)
+    }
   }
 
   useEffect(() => {
@@ -47,6 +51,11 @@ export default function SettingsPage() {
 
     if (!username.trim()) {
       setFieldErrors({ username: 'Username cannot be empty' })
+      return
+    }
+
+    if (username.trim() === initialUsername.trim()) {
+      setFieldErrors({ username: 'This is already your username' })
       return
     }
 
@@ -73,6 +82,13 @@ export default function SettingsPage() {
     e.preventDefault()
     setFieldErrors({})
     setMessage(null)
+
+    if (newPassword === currentPassword) {
+      setFieldErrors({
+        newPassword: 'New password must be different from current',
+      })
+      return
+    }
 
     if (newPassword !== confirmPassword) {
       setFieldErrors({ confirmPassword: 'New passwords do not match' })
