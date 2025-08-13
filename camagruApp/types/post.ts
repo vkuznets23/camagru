@@ -12,4 +12,5 @@ export type Post = {
   likesCount: number
   savedByCurrentUser: boolean
   blurDataURL?: string
+  savedBy?: User[]
 }

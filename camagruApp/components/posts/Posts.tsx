@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { PostsProvider, usePosts } from '@/context/PostsContext'
 import NoPosts from '@/components/posts/NoPosts'
 import { Post } from '@/types/post'
+import { User } from '@/types/user'
 
 function UserPostsContent() {
   const { posts, setPosts } = usePosts()
@@ -58,10 +59,11 @@ function UserPostsContent() {
 }
 type UserPostsProps = {
   posts: Post[]
+  user: User
 }
-export default function UserPosts({ posts }: UserPostsProps) {
+export default function UserPosts({ posts, user }: UserPostsProps) {
   return (
-    <PostsProvider initialPosts={posts}>
+    <PostsProvider initialPosts={posts} initialUser={user}>
       <UserPostsContent />
     </PostsProvider>
   )

@@ -1,20 +1,15 @@
 'use client'
 
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  // useEffect,
-  useMemo,
-} from 'react'
+import { createContext, useContext, useState, ReactNode } from 'react'
 import { type Post } from '@/types/post'
+import { User } from '@/types/user'
 
 interface PostsContextType {
   posts: Post[]
   savedPosts: Post[]
-  normalPosts: Post[]
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>
+  user: User
+  setUser: React.Dispatch<React.SetStateAction<User>>
   handleEditPost: (postId: string, newContent: string) => Promise<void>
   handleToggleLike: (postId: string) => Promise<void>
   handlePostDeleted: (postId: string) => Promise<void>
@@ -29,15 +24,35 @@ export const PostsContext = createContext<PostsContextType | undefined>(
 export function PostsProvider({
   children,
   initialPosts,
+  initialUser,
 }: {
   children: ReactNode
   initialPosts: Post[]
+  initialUser: User
 }) {
-  const [posts, setPosts] = useState<Post[]>(initialPosts)
+  const [posts, setPosts] = useState<Post[]>(
+    initialPosts.map((p) => ({
+      ...p,
+      savedBy: p.savedBy || [],
+      savedByCurrentUser:
+        p.savedBy?.some((u) => u.id === initialUser.id) || false,
+    }))
+  )
+  const [user, setUser] = useState<User>(initialUser)
+  const [savedPosts, setSavedPosts] = useState<Post[]>(
+    initialUser.savedPosts || []
+  )
 
-  // useEffect(() => {
-  //   setPosts(initialPosts)
-  // }, [initialPosts])
+  console.log('posts', posts)
+  console.log('savedPosts', savedPosts)
+
+  const updateSavedPosts = (updatedPosts: Post[], updatedUser: User) => {
+    setSavedPosts(
+      updatedPosts.filter((p) =>
+        updatedUser.savedPosts?.some((sp) => sp.id === p.id)
+      )
+    )
+  }
 
   const handleEditPost = async (postId: string, newContent: string) => {
     try {
@@ -134,80 +149,52 @@ export function PostsProvider({
     }
   }
 
-  // const handleToggleSave = async (postId: string) => {
-  //   setPosts((prev) =>
-  //     prev.map((p) =>
-  //       p.id === postId
-  //         ? { ...p, savedByCurrentUser: !p.savedByCurrentUser }
-  //         : p
-  //     )
-  //   )
-
-  //   try {
-  //     const post = posts.find((p) => p.id === postId)
-  //     if (!post) return
-
-  //     const res = await fetch(`/api/posts/${postId}/save`, {
-  //       method: 'PATCH',
-  //     })
-
-  //     if (!res.ok) {
-  //       throw new Error('Failed to toggle save')
-  //     }
-
-  //     const updatedPost = await res.json()
-
-  //     setPosts((prev) =>
-  //       prev.map((p) =>
-  //         p.id === postId
-  //           ? { ...p, savedByCurrentUser: updatedPost.savedByCurrentUser }
-  //           : p
-  //       )
-  //     )
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-  const savedPosts = useMemo(
-    () => posts.filter((p) => p.savedByCurrentUser),
-    [posts]
-  )
-
-  const normalPosts = useMemo(
-    () => posts.filter((p) => !p.savedByCurrentUser),
-    [posts]
-  )
-
   const handleToggleSave = async (postId: string) => {
-    setPosts((prev) =>
-      prev.map((p) =>
-        p.id === postId
-          ? { ...p, savedByCurrentUser: !p.savedByCurrentUser }
-          : p
-      )
-    )
+    setPosts((prevPosts) => {
+      const newPosts = prevPosts.map((p) => {
+        if (p.id !== postId) return p
+        const isSaved = !p.savedByCurrentUser
+        const savedBy = isSaved
+          ? [...(p.savedBy || []), user]
+          : (p.savedBy || []).filter((u) => u.id !== user.id)
+        return { ...p, savedBy, savedByCurrentUser: isSaved }
+      })
+
+      const newUser = {
+        ...user,
+        savedPosts: newPosts.filter((p) => p.savedByCurrentUser),
+      }
+      setUser(newUser)
+      updateSavedPosts(newPosts, newUser)
+
+      return newPosts
+    })
 
     try {
       const res = await fetch(`/api/posts/${postId}/save`, { method: 'PATCH' })
       if (!res.ok) throw new Error('Failed to toggle save')
-
       const updatedPost = await res.json()
-      setPosts((prev) =>
-        prev.map((p) =>
+
+      setPosts((prevPosts) => {
+        const newPosts = prevPosts.map((p) =>
           p.id === postId
-            ? { ...p, savedByCurrentUser: updatedPost.savedByCurrentUser }
+            ? {
+                ...p,
+                savedByCurrentUser: updatedPost.savedByCurrentUser,
+                savedBy: updatedPost.savedBy || [],
+              }
             : p
         )
-      )
+        const newUser = {
+          ...user,
+          savedPosts: newPosts.filter((p) => p.savedByCurrentUser),
+        }
+        setUser(newUser)
+        updateSavedPosts(newPosts, newUser)
+        return newPosts
+      })
     } catch (error) {
       console.error(error)
-      setPosts((prev) =>
-        prev.map((p) =>
-          p.id === postId
-            ? { ...p, savedByCurrentUser: !p.savedByCurrentUser }
-            : p
-        )
-      )
     }
   }
 
@@ -215,9 +202,10 @@ export function PostsProvider({
     <PostsContext.Provider
       value={{
         posts,
-        savedPosts,
-        normalPosts,
         setPosts,
+        user,
+        setUser,
+        savedPosts,
         handleEditPost,
         handleToggleLike,
         handlePostDeleted,

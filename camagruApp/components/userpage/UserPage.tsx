@@ -117,7 +117,11 @@ export default function UserProfile() {
         />
       </div>
 
-      <UserContentTabs posts={user.posts} savedPosts={user.savedPosts} />
+      <UserContentTabs
+        posts={user.posts}
+        savedPosts={user.savedPosts}
+        user={user}
+      />
     </div>
   )
 }
