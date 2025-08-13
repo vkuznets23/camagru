@@ -2,8 +2,8 @@
 
 import { useState, useRef } from 'react'
 import styles from '@/styles/CommentForm.module.css'
-// import { FaArrowUp } from 'react-icons/fa'
 import { type Comment } from '@/types/comment'
+import { RiSendPlaneFill } from 'react-icons/ri'
 
 const MAX_COMMENT_LENGTH = 2200
 const MAX_ROWS = 3
@@ -115,7 +115,7 @@ export default function CommentForm({
           disabled={isSubmitting || !newComment.trim()}
           className={styles.submitButton}
         >
-          send
+          <RiSendPlaneFill />
         </button>
       </div>
     </form>
