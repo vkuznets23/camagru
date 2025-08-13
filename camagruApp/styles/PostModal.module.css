@@ -275,4 +275,47 @@
     height: 50vh;
     overflow-y: auto;
   }
+
+  .postAction {
+    gap: 0;
+  }
+
+  .deleteButton,
+  .editButton,
+  .likeButton {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    padding: 0px;
+    cursor: pointer;
+  }
+
+  .deleteButton span,
+  .editButton span {
+    display: none;
+  }
+
+  .likeButton span {
+    font-size: 16px;
+  }
+
+  .usernamePanel {
+    position: absolute;
+    top: 30px;
+    left: 10px;
+    z-index: 10;
+    background: var(--background);
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--text-primary);
+  }
+
+  .imageWrapper {
+    position: relative;
+  }
 }

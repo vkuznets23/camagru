@@ -78,6 +78,31 @@
   color: var(--delete-hover-color);
 }
 
+.deleteButtonMob {
+  display: none;
+  color: var(--char-color);
+  background-color: transparent;
+  font-size: 20px;
+  padding: 10px;
+  border: none;
+}
+
+@media (max-width: 820px) {
+  .commentHeader {
+    justify-content: space-between;
+  }
+  .deleteButtonMob {
+    display: inline;
+  }
+  .deleteButton {
+    display: none;
+  }
+
+  .commentBlock {
+    border-bottom: 1px solid var(--divider2);
+  }
+}
+
 .noCommentsWrapper h4 {
   font-size: 18px;
 }

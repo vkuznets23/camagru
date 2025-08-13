@@ -90,6 +90,7 @@ export default function PostModal({
       if (!isDragging) return
       currentY = e.touches[0].clientY - startY
       if (currentY > 0) {
+        e.preventDefault()
         modalEl.style.transform = `translateY(${currentY}px)`
         const overlayEl = modalEl.parentElement
         if (overlayEl) {
@@ -112,8 +113,8 @@ export default function PostModal({
       currentY = 0
     }
 
-    modalEl.addEventListener('touchstart', handleTouchStart)
-    modalEl.addEventListener('touchmove', handleTouchMove)
+    modalEl.addEventListener('touchstart', handleTouchStart, { passive: false })
+    modalEl.addEventListener('touchmove', handleTouchMove, { passive: false })
     modalEl.addEventListener('touchend', handleTouchEnd)
 
     return () => {
@@ -129,16 +130,6 @@ export default function PostModal({
     setIsSaving(false)
     setIsEditing(false)
   }
-
-  useEffect(() => {
-    const originalStyle = window.getComputedStyle(document.body).overflow
-    document.body.style.overflow = 'hidden'
-    document.documentElement.style.touchAction = 'none'
-    return () => {
-      document.body.style.overflow = originalStyle
-      document.documentElement.style.touchAction = ''
-    }
-  }, [])
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -199,6 +190,13 @@ export default function PostModal({
     }
   }, [onClose])
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSave()
+    }
+  }
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div
@@ -227,11 +225,13 @@ export default function PostModal({
                   createdAt={createdAt}
                   userID={userID}
                 />
+
                 <div>
                   {isEditing ? (
                     <div className={styles.editSection}>
                       <textarea
                         data-testid="edit-post"
+                        onKeyDown={handleKeyDown}
                         className={styles.textarea}
                         value={editedContent}
                         onChange={(e) => setEditedContent(e.target.value)}
