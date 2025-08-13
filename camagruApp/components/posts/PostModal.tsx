@@ -39,6 +39,8 @@ export default function PostModal({
   } = post
 
   const isLiked = post.likedByCurrentUser ?? false
+  const isSaved = post.savedByCurrentUser ?? false
+
   const canEdit = userID === currentUserId
 
   const [isEditing, setIsEditing] = useState(false)
@@ -67,6 +69,7 @@ export default function PostModal({
     handleToggleLike,
     handlePostDeleted,
     handleCommentDeleted,
+    handleToggleSave,
   } = usePosts()
 
   const handleSave = async () => {
@@ -168,6 +171,7 @@ export default function PostModal({
                   username={username}
                   avatar={avatar}
                   createdAt={createdAt}
+                  userID={userID}
                 />
                 <div>
                   {isEditing ? (
@@ -206,10 +210,12 @@ export default function PostModal({
                       <PostActions
                         canEdit={canEdit}
                         isLiked={isLiked}
+                        isSaved={isSaved}
                         likesCount={likesCount}
                         onDelete={() => handlePostDeleted(postId)}
                         onEdit={() => setIsEditing(true)}
                         onToggleLike={() => handleToggleLike(postId)}
+                        onToggleSave={() => handleToggleSave(postId)}
                       />
                     </>
                   )}

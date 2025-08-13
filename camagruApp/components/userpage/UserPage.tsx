@@ -9,7 +9,6 @@ import Image from 'next/image'
 import UserSkeleton from './UserSkeleton'
 import UsernamePanel from './UsernamePanel'
 import UserContentTabs from '../posts/UserContentTabs'
-// import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 export default function UserProfile() {
@@ -118,7 +117,7 @@ export default function UserProfile() {
         />
       </div>
 
-      <UserContentTabs posts={user.posts} />
+      <UserContentTabs posts={user.posts} savedPosts={user.savedPosts} />
     </div>
   )
 }

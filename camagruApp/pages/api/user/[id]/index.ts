@@ -29,6 +29,7 @@ export default async function handler(
             posts: true,
             followers: true,
             following: true,
+            savedPosts: true,
           },
         },
 
@@ -55,6 +56,34 @@ export default async function handler(
               },
             },
             likedBy: true,
+            savedBy: true,
+          },
+        },
+
+        savedPosts: {
+          select: {
+            id: true,
+            content: true,
+            image: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                image: true,
+              },
+            },
+            comments: {
+              orderBy: { createdAt: 'desc' },
+              include: {
+                user: {
+                  select: { id: true, username: true, image: true },
+                },
+              },
+            },
+            likedBy: true,
+            savedBy: true,
           },
         },
       },
@@ -69,11 +98,25 @@ export default async function handler(
       likedByCurrentUser: currentUserId
         ? post.likedBy.some((like) => like.userId === currentUserId)
         : false,
+      savedByCurrentUser: currentUserId
+        ? post.savedBy.some((save) => save.id === currentUserId)
+        : false,
+    }))
+
+    const sanitizedSavedPosts = (user.savedPosts ?? []).map((post) => ({
+      ...post,
+      comments: Array.isArray(post.comments) ? post.comments : [],
+      likesCount: post.likedBy.length,
+      likedByCurrentUser: currentUserId
+        ? post.likedBy.some((like) => like.userId === currentUserId)
+        : false,
+      savedByCurrentUser: true,
     }))
 
     return res.status(200).json({
       ...user,
       posts: sanitizedPosts,
+      savedPosts: sanitizedSavedPosts,
     })
   } catch (err) {
     console.error(err)

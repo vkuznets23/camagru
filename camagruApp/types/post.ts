@@ -10,5 +10,6 @@ export type Post = {
   comments: Comment[]
   likedByCurrentUser: boolean
   likesCount: number
+  savedByCurrentUser: boolean
   blurDataURL?: string
 }

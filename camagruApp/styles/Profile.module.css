@@ -463,7 +463,7 @@
 }
 
 .noPostsPicWrapper {
-  border: 1.5px solid black;
+  border: 1.5px solid var(--text-primary);
   padding: 1rem;
   border-radius: 50%;
   margin-bottom: 10px;

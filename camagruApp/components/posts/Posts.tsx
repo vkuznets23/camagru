@@ -2,14 +2,10 @@
 
 import PostCard from '@/components/posts/PostCard'
 import styles from '@/styles/Profile.module.css'
-import { type Post } from '@/types/post'
 import { useSession } from 'next-auth/react'
-import { usePosts, PostsProvider } from '@/context/PostsContext'
+import { PostsProvider, usePosts } from '@/context/PostsContext'
 import NoPosts from '@/components/posts/NoPosts'
-
-interface UserPostsProps {
-  posts: Post[]
-}
+import { Post } from '@/types/post'
 
 function UserPostsContent() {
   const { posts, setPosts } = usePosts()
@@ -60,7 +56,9 @@ function UserPostsContent() {
     </div>
   )
 }
-
+type UserPostsProps = {
+  posts: Post[]
+}
 export default function UserPosts({ posts }: UserPostsProps) {
   return (
     <PostsProvider initialPosts={posts}>

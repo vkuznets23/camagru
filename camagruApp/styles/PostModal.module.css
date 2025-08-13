@@ -125,6 +125,11 @@
   color: var(--char-color);
 }
 
+.likeButton:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
 .editButton {
   background-color: transparent;
   border: none;
@@ -132,6 +137,11 @@
   gap: 2px;
   cursor: pointer;
   color: var(--char-color);
+}
+
+.editButton:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
 }
 
 .deleteButton {
@@ -144,7 +154,8 @@
 }
 
 .deleteButton:hover {
-  color: var(--delete-hover-color);
+  transform: scale(1.05);
+  opacity: 0.85;
 }
 
 /*  */
@@ -246,4 +257,38 @@
     height: 50vh;
     overflow-y: auto;
   }
+}
+
+.saveButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  color: inherit;
+}
+
+.saveButton span {
+  color: var(--char-color);
+}
+
+.saveButton.saved {
+  color: rgb(244, 67, 54);
+}
+
+.saveButton.unsaved {
+  color: var(--char-color);
+}
+
+.saveButton:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
+.saveButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }

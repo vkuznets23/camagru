@@ -1,19 +1,25 @@
+'use client'
+
 import {
   createContext,
   useContext,
   useState,
   ReactNode,
-  useEffect,
+  // useEffect,
+  useMemo,
 } from 'react'
 import { type Post } from '@/types/post'
 
 interface PostsContextType {
   posts: Post[]
+  savedPosts: Post[]
+  normalPosts: Post[]
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>
   handleEditPost: (postId: string, newContent: string) => Promise<void>
   handleToggleLike: (postId: string) => Promise<void>
   handlePostDeleted: (postId: string) => Promise<void>
   handleCommentDeleted: (postId: string, commentId: string) => Promise<void>
+  handleToggleSave: (postId: string) => Promise<void>
 }
 
 export const PostsContext = createContext<PostsContextType | undefined>(
@@ -29,9 +35,9 @@ export function PostsProvider({
 }) {
   const [posts, setPosts] = useState<Post[]>(initialPosts)
 
-  useEffect(() => {
-    setPosts(initialPosts)
-  }, [initialPosts])
+  // useEffect(() => {
+  //   setPosts(initialPosts)
+  // }, [initialPosts])
 
   const handleEditPost = async (postId: string, newContent: string) => {
     try {
@@ -128,15 +134,95 @@ export function PostsProvider({
     }
   }
 
+  // const handleToggleSave = async (postId: string) => {
+  //   setPosts((prev) =>
+  //     prev.map((p) =>
+  //       p.id === postId
+  //         ? { ...p, savedByCurrentUser: !p.savedByCurrentUser }
+  //         : p
+  //     )
+  //   )
+
+  //   try {
+  //     const post = posts.find((p) => p.id === postId)
+  //     if (!post) return
+
+  //     const res = await fetch(`/api/posts/${postId}/save`, {
+  //       method: 'PATCH',
+  //     })
+
+  //     if (!res.ok) {
+  //       throw new Error('Failed to toggle save')
+  //     }
+
+  //     const updatedPost = await res.json()
+
+  //     setPosts((prev) =>
+  //       prev.map((p) =>
+  //         p.id === postId
+  //           ? { ...p, savedByCurrentUser: updatedPost.savedByCurrentUser }
+  //           : p
+  //       )
+  //     )
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+  const savedPosts = useMemo(
+    () => posts.filter((p) => p.savedByCurrentUser),
+    [posts]
+  )
+
+  const normalPosts = useMemo(
+    () => posts.filter((p) => !p.savedByCurrentUser),
+    [posts]
+  )
+
+  const handleToggleSave = async (postId: string) => {
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === postId
+          ? { ...p, savedByCurrentUser: !p.savedByCurrentUser }
+          : p
+      )
+    )
+
+    try {
+      const res = await fetch(`/api/posts/${postId}/save`, { method: 'PATCH' })
+      if (!res.ok) throw new Error('Failed to toggle save')
+
+      const updatedPost = await res.json()
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === postId
+            ? { ...p, savedByCurrentUser: updatedPost.savedByCurrentUser }
+            : p
+        )
+      )
+    } catch (error) {
+      console.error(error)
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === postId
+            ? { ...p, savedByCurrentUser: !p.savedByCurrentUser }
+            : p
+        )
+      )
+    }
+  }
+
   return (
     <PostsContext.Provider
       value={{
         posts,
+        savedPosts,
+        normalPosts,
         setPosts,
         handleEditPost,
         handleToggleLike,
         handlePostDeleted,
         handleCommentDeleted,
+        handleToggleSave,
       }}
     >
       {children}

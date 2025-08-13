@@ -34,13 +34,15 @@ export default function CommentList({
         return (
           <div key={comment.id} className={styles.commentBlock}>
             <div className={styles.commentHeader}>
-              <Image
-                className={styles.commentAvatar}
-                src={comment.user.image || '/default_avatar.png'}
-                alt="user avatar"
-                width={32}
-                height={32}
-              />
+              <Link href={`/user/${comment.user.id}`}>
+                <Image
+                  className={styles.commentAvatar}
+                  src={comment.user.image || '/default_avatar.png'}
+                  alt="user avatar"
+                  width={32}
+                  height={32}
+                />
+              </Link>
               <div className={styles.commentMeta}>
                 <Link href={`/user/${comment.user.id}`}>
                   <p className={styles.commentUsername}>

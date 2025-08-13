@@ -48,7 +48,7 @@ export default function FeedPage() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setPosts])
 
   useEffect(() => {
     fetchPosts()

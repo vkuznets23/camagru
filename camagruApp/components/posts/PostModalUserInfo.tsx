@@ -2,27 +2,34 @@
 
 import Image from 'next/image'
 import styles from '@/styles/PostModal.module.css'
+import Link from 'next/link'
 
 export default function UserInfo({
   username,
   avatar,
   createdAt,
+  userID,
 }: {
   username: string
   avatar: string | undefined
   createdAt: string
+  userID: string
 }) {
   return (
     <div className={styles.usernamePanel}>
-      <Image
-        className={styles.avatar}
-        src={avatar || '/default_avatar.png'}
-        alt="avatar"
-        width={32}
-        height={32}
-      />
+      <Link href={`/user/${userID}`}>
+        <Image
+          className={styles.avatar}
+          src={avatar || '/default_avatar.png'}
+          alt="avatar"
+          width={32}
+          height={32}
+        />
+      </Link>
       <div className={styles.postMeta}>
-        <p className={styles.username}>{username}</p>
+        <Link href={`/user/${userID}`}>
+          <p className={styles.username}>{username}</p>
+        </Link>
         <small className={styles.postDate}>
           {new Date(createdAt).toLocaleString()}
         </small>
