@@ -41,10 +41,10 @@ export default function PostActions({
       {canEdit && (
         <>
           <button className={styles.deleteButton} onClick={onDelete}>
-            <RiDeleteBin6Line /> Delete
+            <RiDeleteBin6Line /> <span>Delete</span>
           </button>
           <button className={styles.editButton} onClick={onEdit}>
-            <MdOutlineEdit /> Edit
+            <MdOutlineEdit /> <span>Edit</span>
           </button>
         </>
       )}
@@ -55,7 +55,7 @@ export default function PostActions({
         disabled={isLiking}
       >
         {isLiked ? <FcLike /> : <FiHeart />}
-        {likesCount}
+        <span>{likesCount}</span>
       </button>
     </div>
   )
