@@ -76,6 +76,12 @@ export default function PostModal({
     const modalEl = modalRef.current
     if (!modalEl) return
 
+    const setModalHeight = () => {
+      modalEl.style.height = `${window.innerHeight}px`
+    }
+
+    setModalHeight()
+
     let startY = 0
     let currentY = 0
     let isDragging = false
@@ -116,11 +122,13 @@ export default function PostModal({
     modalEl.addEventListener('touchstart', handleTouchStart, { passive: false })
     modalEl.addEventListener('touchmove', handleTouchMove, { passive: false })
     modalEl.addEventListener('touchend', handleTouchEnd)
+    window.addEventListener('resize', setModalHeight)
 
     return () => {
       modalEl.removeEventListener('touchstart', handleTouchStart)
       modalEl.removeEventListener('touchmove', handleTouchMove)
       modalEl.removeEventListener('touchend', handleTouchEnd)
+      window.removeEventListener('resize', setModalHeight)
     }
   }, [onClose])
 
