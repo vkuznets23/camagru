@@ -116,6 +116,10 @@
   align-items: center;
 }
 
+.dragHandle {
+  display: none;
+}
+
 .likeButton {
   background-color: transparent;
   border: none;
@@ -229,6 +233,19 @@
 }
 
 @media (max-width: 800px) {
+  .dragHandle {
+    display: block;
+    width: 40px;
+    height: 4px;
+    background-color: #ccc;
+    border-radius: 2px;
+    margin: 8px auto;
+  }
+
+  .closeBtn {
+    display: none;
+  }
+
   .closeBtn {
     font-size: 3.5rem;
   }
