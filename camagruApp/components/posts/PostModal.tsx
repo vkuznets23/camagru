@@ -168,6 +168,7 @@ export default function PostModal({
                   username={username}
                   avatar={avatar}
                   createdAt={createdAt}
+                  userID={userID}
                 />
                 <div>
                   {isEditing ? (

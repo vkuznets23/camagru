@@ -25,10 +25,10 @@
   max-height: 108px;
   overflow-y: auto;
   resize: none;
-  padding: 10px;
+  padding: 10px 20px;
   font-size: 14px;
   border: 1px solid var(--textarea-border);
-  border-radius: 0.8rem;
+  border-radius: 1.5rem;
   font-family: inherit;
   outline: none;
   transition: border 0.2s ease;
@@ -43,23 +43,21 @@
 }
 
 .submitButton {
-  align-self: flex-end;
-  padding: 6px 12px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
+  background-color: transparent;
+  padding: 6px 6px;
+  color: var(--button-bg);
   border: none;
-  border-radius: 15px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 24px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: var(--button-bg-hover);
+  color: var(--button-bg-hover);
 }
 
 .submitButton:disabled {
+  color: var(--textarea-text);
   opacity: 0.6;
   cursor: not-allowed;
 }

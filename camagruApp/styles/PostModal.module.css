@@ -125,6 +125,11 @@
   color: var(--char-color);
 }
 
+.likeButton:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
 .editButton {
   background-color: transparent;
   border: none;
@@ -132,6 +137,11 @@
   gap: 2px;
   cursor: pointer;
   color: var(--char-color);
+}
+
+.editButton:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
 }
 
 .deleteButton {
@@ -145,6 +155,8 @@
 
 .deleteButton:hover {
   color: var(--delete-hover-color);
+  transform: scale(1.05);
+  opacity: 0.85;
 }
 
 /*  */
