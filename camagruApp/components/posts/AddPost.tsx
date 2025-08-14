@@ -52,7 +52,7 @@ function resizeImage(
           resolve(new File([blob], file.name, { type: file.type }))
         },
         file.type,
-        0.75 // качество 75%
+        0.9
       )
     }
 

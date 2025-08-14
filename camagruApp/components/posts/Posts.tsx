@@ -2,37 +2,24 @@
 
 import PostCard from '@/components/posts/PostCard'
 import styles from '@/styles/Profile.module.css'
-import { type Post } from '@/types/post'
 import { useSession } from 'next-auth/react'
-import { usePosts, PostsProvider } from '@/context/PostsContext'
 import NoPosts from '@/components/posts/NoPosts'
+import { useUser } from '@/context/userContext'
 
-interface UserPostsProps {
-  posts: Post[]
-}
-
-function UserPostsContent() {
-  const { posts, setPosts } = usePosts()
-
+export default function UserPosts() {
   const { data: session, status } = useSession()
-  const userID = session?.user?.id
+  const { user, setUser } = useUser()
 
+  const userID = session?.user?.id
   const isLoadingSession = status === 'loading'
 
-  if (!userID) return
-
-  if (isLoadingSession) {
-    return
-  }
-
-  if (!posts || posts.length === 0) {
-    return <NoPosts />
-  }
+  if (!userID || isLoadingSession) return
+  if (!user?.posts || user.posts.length === 0) return <NoPosts />
 
   return (
     <div className={styles.posts}>
       <div className={styles.postsContainer} role="list">
-        {posts
+        {user.posts
           .slice()
           .sort(
             (a, b) =>
@@ -43,12 +30,17 @@ function UserPostsContent() {
               <PostCard
                 post={post}
                 onCommentAdded={(postId, newComment) => {
-                  setPosts((prevPosts) =>
-                    prevPosts.map((p) =>
-                      p.id === postId
-                        ? { ...p, comments: [newComment, ...p.comments] }
-                        : p
-                    )
+                  setUser((prev) =>
+                    prev
+                      ? {
+                          ...prev,
+                          posts: prev.posts.map((p) =>
+                            p.id === postId
+                              ? { ...p, comments: [newComment, ...p.comments] }
+                              : p
+                          ),
+                        }
+                      : prev
                   )
                 }}
                 currentUserId={userID}
@@ -58,13 +50,5 @@ function UserPostsContent() {
           ))}
       </div>
     </div>
-  )
-}
-
-export default function UserPosts({ posts }: UserPostsProps) {
-  return (
-    <PostsProvider initialPosts={posts}>
-      <UserPostsContent />
-    </PostsProvider>
   )
 }

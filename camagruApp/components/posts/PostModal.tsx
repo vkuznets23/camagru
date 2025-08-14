@@ -6,10 +6,10 @@ import { type Comment } from '@/types/comment'
 import CommentForm from '@/components/posts/AddCommentForm'
 import CommentList from '@/components/posts/CommentsList'
 import { useEffect, useRef, useState } from 'react'
-import { usePosts } from '@/context/PostsContext'
 import { type Post } from '@/types/post'
 import UserInfo from '@/components/posts/PostModalUserInfo'
 import PostActions from '@/components/posts/PostModalPostActions'
+import { useUser } from '@/context/userContext'
 
 type PostModalProps = {
   post: Post
@@ -62,12 +62,7 @@ export default function PostModal({
     ? truncatedByLines
     : truncatedByChars
 
-  const {
-    handleEditPost,
-    handleToggleLike,
-    handlePostDeleted,
-    handleCommentDeleted,
-  } = usePosts()
+  const { editPost, toggleLike, deletePost, deleteComment } = useUser()
 
   const modalRef = useRef<HTMLDivElement>(null)
 
@@ -134,7 +129,7 @@ export default function PostModal({
 
   const handleSave = async () => {
     setIsSaving(true)
-    await handleEditPost(postId, editedContent)
+    await editPost(postId, editedContent)
     setIsSaving(false)
     setIsEditing(false)
   }
@@ -273,9 +268,9 @@ export default function PostModal({
                         canEdit={canEdit}
                         isLiked={isLiked}
                         likesCount={likesCount}
-                        onDelete={() => handlePostDeleted(postId)}
+                        onDelete={() => deletePost(postId)}
                         onEdit={() => setIsEditing(true)}
-                        onToggleLike={() => handleToggleLike(postId)}
+                        onToggleLike={() => toggleLike(postId)}
                       />
                     </>
                   )}
@@ -285,7 +280,7 @@ export default function PostModal({
                 currentUserId={currentUserId}
                 comments={comments}
                 onCommentDeleted={(commentId) =>
-                  handleCommentDeleted(postId, commentId)
+                  deleteComment(postId, commentId)
                 }
                 postAuthorId={userID}
               />

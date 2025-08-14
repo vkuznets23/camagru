@@ -3,11 +3,13 @@
 import { type Post } from '@/types/post'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import styles from '@/styles/Profile.module.css'
-import UserPosts from '@/components/posts/Posts'
 import PostSkeleton from '@/components/posts/PostsSceleton'
+import FeedPosts from '@/components/posts/Feed'
+import { useUser } from '@/context/userContext'
 
 export default function FeedPage() {
-  const [posts, setPosts] = useState<Post[]>([])
+  // const [posts, setPosts] = useState<Post[]>([]) // i create ALL POSTS here and i need to fix them next !!!
+  const { user, posts, setPosts } = useUser()
   const [loading, setLoading] = useState(false)
   const loadingRef = useRef(loading)
   const [hasMore, setHasMore] = useState(true)
@@ -48,7 +50,7 @@ export default function FeedPage() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setPosts])
 
   useEffect(() => {
     fetchPosts()
@@ -72,6 +74,8 @@ export default function FeedPage() {
 
   const initialLoading = posts.length === 0 && loading
 
+  if (!user) return null
+
   return (
     <div>
       {initialLoading ? (
@@ -83,7 +87,7 @@ export default function FeedPage() {
           </div>
         </div>
       ) : (
-        <UserPosts posts={posts} />
+        <FeedPosts posts={posts} setPosts={setPosts} />
       )}
       {loading && <p style={{ textAlign: 'center' }}>Loading...</p>}
       {!hasMore && <p className={styles.notingToSee}>Nothing more to see</p>}
