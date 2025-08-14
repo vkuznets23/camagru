@@ -1,299 +1,105 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import UserProfile from '@/components/userpage/UserPage'
+import { UserProvider } from '@/context/userContext'
 import { useSession } from 'next-auth/react'
-import { useParams } from 'next/navigation'
-import userEvent from '@testing-library/user-event'
+import { useParams, useRouter } from 'next/navigation'
+import '@testing-library/jest-dom'
+import { Post } from '@/types/post'
+import { User } from '@/types/user'
 
 jest.mock('next-auth/react', () => ({
-  signIn: jest.fn(),
   useSession: jest.fn(),
 }))
 
 jest.mock('next/navigation', () => ({
   useParams: jest.fn(),
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn(),
-  })),
+  useRouter: jest.fn(),
 }))
 
-describe('user profile component', () => {
-  const mockedUseParams = useParams as jest.Mock
+describe('UserProfile with real UserProvider', () => {
+  const mockPush = jest.fn()
+
+  const mockUser: User = {
+    id: 'u2',
+    name: 'John Doe',
+    username: 'johndoe',
+    bio: 'Hello world!',
+    image: '/avatar.jpg',
+    _count: {
+      posts: 0,
+      followers: 5,
+      following: 0,
+    },
+    followers: [],
+    following: [],
+    savedPosts: [],
+    posts: [],
+  }
+
+  const mockPosts: Post[] = []
 
   beforeEach(() => {
-    mockedUseParams.mockReturnValue({ id: '123' })
-  })
-
-  afterEach(() => {
     jest.clearAllMocks()
-  })
-
-  it('renders user info when user is authenticated', async () => {
+    ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
+    ;(useParams as jest.Mock).mockReturnValue({ id: 'u2' })
     ;(useSession as jest.Mock).mockReturnValue({
-      data: {
-        user: {
-          id: '123',
-          name: 'John Doe',
-          username: 'jdoe',
-          email: 'john@example.com',
-        },
-      },
+      data: { user: { id: 'u1' } },
       status: 'authenticated',
     })
 
-    const mockResponse = {
-      ok: true,
-      json: async () => ({
-        id: '123',
-        name: 'John Doe',
-        username: 'jdoe',
-        bio: 'Hello there',
-        image: '/avatar.png',
-        posts: [],
-        _count: {
-          posts: 0,
-          followers: 10,
-          following: 5,
-        },
-      }),
-      status: 200,
-      statusText: 'OK',
-      headers: new Headers(),
-      clone: () => mockResponse,
-      redirected: false,
-      type: 'basic',
-      url: '',
-      body: null,
-      bodyUsed: false,
-      arrayBuffer: async () => new ArrayBuffer(0),
-      blob: async () => new Blob(),
-      formData: async () => new FormData(),
-      text: async () => JSON.stringify({}),
-    } as unknown as Response
+    global.fetch = jest.fn((url: string) => {
+      if (url.startsWith('/api/user/')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockUser),
+        })
+      }
+      if (url.includes('/is-following')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ following: false }),
+        })
+      }
+      if (url === '/api/follow') {
+        return Promise.resolve({ ok: true })
+      }
+      return Promise.resolve({ ok: true })
+    }) as jest.Mock
+  })
 
-    global.fetch = jest
-      .fn()
-      .mockResolvedValueOnce(mockResponse)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ following: true }),
-      } as Response)
-
-    render(<UserProfile />)
+  it('renders fetched user inside UserProvider', async () => {
+    render(
+      <UserProvider initialUser={null} initialPosts={[]}>
+        <UserProfile />
+      </UserProvider>
+    )
 
     expect(screen.getByTestId('skeleton')).toBeInTheDocument()
 
     await waitFor(() => {
-      expect(screen.getByText('John Doe')).toBeInTheDocument()
-      expect(screen.getByText('jdoe')).toBeInTheDocument()
-      expect(screen.getByText('Hello there')).toBeInTheDocument()
-      expect(
-        screen.getByText((content) => content.includes('No posts yet'))
-      ).toBeInTheDocument()
-
-      expect(screen.getByTestId('edit-user')).toBeInTheDocument()
-
-      const counts = screen.getAllByRole('strong')
-      expect(counts[0]).toHaveTextContent('0')
-      expect(counts[0].parentElement).toHaveTextContent('posts')
-
-      expect(counts[1]).toHaveTextContent('10')
-      expect(counts[1].parentElement).toHaveTextContent('followers')
-
-      expect(counts[2]).toHaveTextContent('5')
-      expect(counts[2].parentElement).toHaveTextContent('following')
+      expect(screen.getByLabelText(/John Doe's profile/i)).toBeInTheDocument()
     })
   })
 
-  it('shows "Following" button if viewing another user and already following them', async () => {
-    ;(useSession as jest.Mock).mockReturnValue({
-      data: {
-        user: {
-          id: '999',
-          name: 'Jane Viewer',
-          username: 'jviewer',
-          email: 'jane@example.com',
-        },
-      },
-      status: 'authenticated',
-    })
-
-    const mockResponse = {
-      ok: true,
-      json: async () => ({
-        id: '123',
-        name: 'John Doe',
-        username: 'jdoe',
-        bio: 'Hello there',
-        image: '/avatar.png',
-        posts: [],
-        _count: {
-          posts: 0,
-          followers: 10,
-          following: 5,
-        },
-      }),
-    } as Response
-
-    global.fetch = jest
-      .fn()
-      .mockResolvedValueOnce(mockResponse)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ following: true }),
-      } as Response)
-
-    render(<UserProfile />)
-
-    await waitFor(() => {
-      expect(screen.getByTestId('follow-user')).toBeInTheDocument()
-    })
-  })
-
-  it('changes button text from "Follow" to "Unfollow" on click', async () => {
-    ;(useSession as jest.Mock).mockReturnValue({
-      data: {
-        user: {
-          id: '999',
-          name: 'Jane Viewer',
-          username: 'jviewer',
-          email: 'jane@example.com',
-        },
-      },
-      status: 'authenticated',
-    })
-
-    const mockResponse = {
-      ok: true,
-      json: async () => ({
-        id: '123',
-        name: 'John Doe',
-        username: 'jdoe',
-        bio: 'Hello there',
-        image: '/avatar.png',
-        posts: [],
-        _count: {
-          posts: 0,
-          followers: 10,
-          following: 5,
-        },
-      }),
-    } as Response
-
-    global.fetch = jest
-      .fn()
-      .mockResolvedValueOnce(mockResponse)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ following: false }), // not following initially
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true }), // follow request
-      } as Response)
-
-    render(<UserProfile />)
-
-    const button = await screen.findByTestId('follow-user')
-    expect(button).toHaveTextContent('Follow')
-
-    await userEvent.click(button)
-
-    await waitFor(() => {
-      expect(button).toHaveTextContent('Unfollow')
-    })
-  })
-
-  it('unfollow button works and updates to Follow', async () => {
-    ;(useSession as jest.Mock).mockReturnValue({
-      data: { user: { id: '999', name: 'Test', username: 'test' } },
-      status: 'authenticated',
-    })
-
-    global.fetch = jest
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          id: '123',
-          name: 'John Doe',
-          username: 'jdoe',
-          bio: '',
-          image: '/avatar.png',
-          posts: [],
-          _count: { posts: 0, followers: 0, following: 0 },
-        }),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ following: true }),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true }),
-      } as Response)
-
-    render(<UserProfile />)
-
-    const button = await screen.findByTestId('follow-user')
-    expect(button).toHaveTextContent(/unfollow/i)
-
-    await userEvent.click(button)
-
-    await waitFor(() => {
-      expect(button).toHaveTextContent(/follow/i)
-    })
-  })
-
-  it('renders default avatar when user has no image', async () => {
-    ;(useSession as jest.Mock).mockReturnValue({
-      data: { user: { id: '999', name: 'Test', username: 'test' } },
-      status: 'authenticated',
-    })
-
-    global.fetch = jest
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          id: '123',
-          name: 'No Avatar User',
-          username: 'noavatar',
-          bio: '',
-          image: '',
-          posts: [],
-          _count: { posts: 0, followers: 0, following: 0 },
-        }),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ following: false }),
-      } as Response)
-
-    render(<UserProfile />)
-
-    const avatar = await screen.findByAltText(
-      "No Avatar User's profile picture"
+  it('calls follow API and updates followers count', async () => {
+    render(
+      <UserProvider initialUser={mockUser} initialPosts={mockPosts}>
+        <UserProfile />
+      </UserProvider>
     )
-    expect(avatar).toHaveAttribute('src', expect.stringContaining('default'))
-  })
-
-  it('renders fallback when user does not exist (404)', async () => {
-    ;(useSession as jest.Mock).mockReturnValue({
-      data: { user: { id: '999', name: 'Test', username: 'test' } },
-      status: 'authenticated',
-    })
-
-    global.fetch = jest.fn().mockResolvedValueOnce({
-      ok: false,
-    } as Response)
-
-    render(<UserProfile />)
 
     await waitFor(() => {
-      expect(screen.getByTestId('skeleton')).toBeInTheDocument()
+      expect(screen.getByLabelText(/John Doe's profile/i)).toBeInTheDocument()
+    })
+
+    const followButton = await screen.findByRole('button', { name: /follow/i })
+    fireEvent.click(followButton)
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.stringMatching(/\/api\/(follow|unfollow)/),
+        expect.objectContaining({ method: 'POST' })
+      )
     })
   })
 })

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 import { type User } from '@/types/user'
 import { Post } from '@/types/post'
+import { Comment } from '@/types/comment'
 
 interface UserContextType {
   user: User | null
@@ -9,6 +10,7 @@ interface UserContextType {
   toggleLike: (postId: string) => Promise<void>
   deletePost: (postId: string) => Promise<void>
   deleteComment: (postId: string, commentId: string) => Promise<void>
+  handleCommentAdded: (postId: string, newComment: Comment) => void
 
   posts: Post[]
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>
@@ -146,6 +148,26 @@ export function UserProvider({
     )
   }
 
+  const handleCommentAdded = (postId: string, newComment: Comment) => {
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === postId ? { ...p, comments: [newComment, ...p.comments] } : p
+      )
+    )
+    setUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            posts: prev.posts.map((p) =>
+              p.id === postId
+                ? { ...p, comments: [newComment, ...(p.comments || [])] }
+                : p
+            ),
+          }
+        : prev
+    )
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -157,6 +179,7 @@ export function UserProvider({
         toggleLike,
         deletePost,
         deleteComment,
+        handleCommentAdded,
       }}
     >
       {children}

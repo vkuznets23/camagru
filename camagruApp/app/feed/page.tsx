@@ -86,7 +86,7 @@ export default function FeedPage() {
           </div>
         </div>
       ) : (
-        <FeedPosts posts={posts} setPosts={setPosts} />
+        <FeedPosts posts={posts} />
       )}
       {loading && <p style={{ textAlign: 'center' }}>Loading...</p>}
       {!hasMore && <p className={styles.notingToSee}>Nothing more to see</p>}

@@ -207,7 +207,6 @@ export default function UserProfile() {
   }, [status, router])
 
   if (loading || !user) return <UserSkeleton />
-  console.log(user)
 
   const isMyProfile = session?.user?.id === id
 
