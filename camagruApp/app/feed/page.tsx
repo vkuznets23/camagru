@@ -8,7 +8,6 @@ import FeedPosts from '@/components/posts/Feed'
 import { useUser } from '@/context/userContext'
 
 export default function FeedPage() {
-  // const [posts, setPosts] = useState<Post[]>([]) // i create ALL POSTS here and i need to fix them next !!!
   const { user, posts, setPosts } = useUser()
   const [loading, setLoading] = useState(false)
   const loadingRef = useRef(loading)

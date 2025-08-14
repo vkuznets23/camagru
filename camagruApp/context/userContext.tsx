@@ -9,6 +9,7 @@ interface UserContextType {
   toggleLike: (postId: string) => Promise<void>
   deletePost: (postId: string) => Promise<void>
   deleteComment: (postId: string, commentId: string) => Promise<void>
+
   posts: Post[]
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>
 }
@@ -115,6 +116,17 @@ export function UserProvider({
       method: 'DELETE',
     })
     if (!res.ok) throw new Error('Failed to delete comment')
+
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === postId
+          ? {
+              ...p,
+              comments: p.comments?.filter((c) => c.id !== commentId) || [],
+            }
+          : p
+      )
+    )
 
     setUser((prev) =>
       prev

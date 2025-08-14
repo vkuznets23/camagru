@@ -9,9 +9,10 @@ import { useUser } from '@/context/userContext'
 
 type FeedPosts = {
   posts: Post[]
+  setPosts: React.Dispatch<React.SetStateAction<Post[]>>
 }
 export default function FeedPosts({ posts, setPosts }: FeedPosts) {
-  const { user } = useUser()
+  const { user, setUser } = useUser()
 
   if (!user) return null
   if (!posts || posts.length === 0) return <NoPosts />
@@ -21,6 +22,18 @@ export default function FeedPosts({ posts, setPosts }: FeedPosts) {
       prev.map((p) =>
         p.id === postId ? { ...p, comments: [newComment, ...p.comments] } : p
       )
+    )
+    setUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            posts: prev.posts.map((p) =>
+              p.id === postId
+                ? { ...p, comments: [newComment, ...(p.comments || [])] }
+                : p
+            ),
+          }
+        : prev
     )
   }
 
