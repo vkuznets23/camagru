@@ -2,24 +2,23 @@
 
 import PostCard from '@/components/posts/PostCard'
 import styles from '@/styles/Profile.module.css'
-import { useSession } from 'next-auth/react'
 import NoPosts from '@/components/posts/NoPosts'
+import { Post } from '@/types/post'
 import { useUser } from '@/context/userContext'
 
-export default function UserPosts() {
-  const { data: session, status } = useSession()
+type FeedPosts = {
+  posts: Post[]
+}
+export default function FeedPosts({ posts }: FeedPosts) {
   const { user, handleCommentAdded } = useUser()
 
-  const userID = session?.user?.id
-  const isLoadingSession = status === 'loading'
-
-  if (!userID || isLoadingSession) return
-  if (!user?.posts || user.posts.length === 0) return <NoPosts />
+  if (!user) return null
+  if (!posts || posts.length === 0) return <NoPosts />
 
   return (
     <div className={styles.posts}>
       <div className={styles.postsContainer} role="list">
-        {user.posts
+        {posts
           .slice()
           .sort(
             (a, b) =>
@@ -30,7 +29,7 @@ export default function UserPosts() {
               <PostCard
                 post={post}
                 onCommentAdded={handleCommentAdded}
-                currentUserId={userID}
+                currentUserId={user.id}
                 priority={index < 3}
               />
             </article>

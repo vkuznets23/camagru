@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from '@/styles/Verify-email.module.css'
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 
 export default function VerifyEmail() {
   const searchParams = useSearchParams()
@@ -48,7 +49,7 @@ export default function VerifyEmail() {
           <>
             <h2> Email verified successfully!</h2>
             <p>
-              You can now <a href="/auth/signin">sign in</a>.
+              You can now <Link href="/auth/signin">sign in</Link>.
             </p>
           </>
         )}

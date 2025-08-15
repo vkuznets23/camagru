@@ -1,0 +1,14 @@
+name: Delete unverified users
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  delete-users:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Next.js API
+        run: |
+          curl -X GET https://camagru-tau.vercel.app/api/deleteUnverified

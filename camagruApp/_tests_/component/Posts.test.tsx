@@ -1,11 +1,16 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import UserPosts from '@/components/posts/Posts'
 import { useSession } from 'next-auth/react'
+import { useUser } from '@/context/userContext'
 import '@testing-library/jest-dom'
 import { User } from '@/types/user'
 
 jest.mock('next-auth/react', () => ({
   useSession: jest.fn(),
+}))
+
+jest.mock('@/context/userContext', () => ({
+  useUser: jest.fn(),
 }))
 
 describe('UserPosts', () => {
@@ -73,16 +78,15 @@ describe('UserPosts', () => {
 
   it('renders post cards for each post', async () => {
     ;(useSession as jest.Mock).mockReturnValue({
-      data: {
-        user: {
-          id: 'user-1',
-          name: 'Test User',
-        },
-      },
+      data: { user: { id: 'user-1', name: 'Test User' } },
       status: 'authenticated',
     })
+    ;(useUser as jest.Mock).mockReturnValue({
+      user: mockUser,
+      handleCommentAdded: jest.fn(),
+    })
 
-    render(<UserPosts posts={mockUser.posts} />)
+    render(<UserPosts />)
 
     await waitFor(() => {
       expect(screen.getAllByAltText(/Post image/i)).toHaveLength(2)
@@ -91,16 +95,15 @@ describe('UserPosts', () => {
 
   it('shows NoPosts if no posts are passed', async () => {
     ;(useSession as jest.Mock).mockReturnValue({
-      data: {
-        user: {
-          id: 'user-1',
-          name: 'Test User',
-        },
-      },
+      data: { user: { id: 'user-1', name: 'Test User' } },
       status: 'authenticated',
     })
+    ;(useUser as jest.Mock).mockReturnValue({
+      user: { ...mockUser, posts: [] },
+      handleCommentAdded: jest.fn(),
+    })
 
-    render(<UserPosts posts={[]} />)
+    render(<UserPosts />)
 
     await waitFor(() => {
       expect(screen.getByText(/No posts yet/i)).toBeInTheDocument()
@@ -109,15 +112,15 @@ describe('UserPosts', () => {
 
   it('opens PostModal with correct content on post click', async () => {
     ;(useSession as jest.Mock).mockReturnValue({
-      data: {
-        user: {
-          id: 'user-1',
-          name: 'Test User',
-        },
-      },
+      data: { user: { id: 'user-1', name: 'Test User' } },
       status: 'authenticated',
     })
-    render(<UserPosts posts={mockUser.posts} />)
+    ;(useUser as jest.Mock).mockReturnValue({
+      user: mockUser,
+      handleCommentAdded: jest.fn(),
+    })
+
+    render(<UserPosts />)
 
     await waitFor(() => {
       expect(screen.getAllByAltText('Post image').length).toBeGreaterThan(0)
@@ -133,7 +136,6 @@ describe('UserPosts', () => {
     })
 
     expect(screen.getByText(/2024/)).toBeInTheDocument()
-
     expect(screen.getByText(mockUser.posts[0].content)).toBeInTheDocument()
 
     if (mockUser.posts[0].comments.length === 0) {
@@ -143,12 +145,9 @@ describe('UserPosts', () => {
     expect(
       screen.getByText(mockUser.posts[0].likesCount.toString())
     ).toBeInTheDocument()
-
     expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument()
-
     expect(screen.getByRole('textbox')).toBeInTheDocument()
-
     expect(screen.getByRole('button', { name: '×' })).toBeInTheDocument()
   })
 })

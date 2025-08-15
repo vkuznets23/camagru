@@ -3,10 +3,11 @@ import styles from '@/styles/Profile.module.css'
 import { MdOutlineEdit } from 'react-icons/md'
 import UserStats from './UserStats'
 import UserBio from './UserBio'
-import { type User } from '@/types/user'
+import { useUser } from '@/context/userContext'
+// import { type User } from '@/types/user'
 
 interface Props {
-  user: User
+  // user: User
   isMyProfile: boolean
   isFollowing?: boolean
   onFollow?: () => void
@@ -15,13 +16,16 @@ interface Props {
 }
 
 export default function UsernamePanel({
-  user,
+  // user,
   isMyProfile,
   isFollowing,
   onFollow,
   onUnfollow,
   followersCount,
 }: Props) {
+  const { user } = useUser()
+  if (!user) return null
+
   return (
     <div className={styles.profileInfo}>
       <div className={styles.usernamePanel}>

@@ -16,7 +16,12 @@ export default async function handler(
 
   try {
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: {
+        email,
+        emailVerified: {
+          not: null,
+        },
+      },
     })
 
     return res.status(200).json({ available: !user })

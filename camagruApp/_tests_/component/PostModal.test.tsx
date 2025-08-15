@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import PostModal from '@/components/posts/PostModal'
 import { Post } from '@/types/post'
-import { PostsContext } from '@/context/PostsContext'
+import { UserContext } from '@/context/userContext'
 import userEvent from '@testing-library/user-event'
 
 const mockPost: Post = {
@@ -35,18 +35,21 @@ describe('PostModal', () => {
 
   function MockPostsProvider({ children }: { children: React.ReactNode }) {
     return (
-      <PostsContext.Provider
+      <UserContext.Provider
         value={{
+          user: null,
+          setUser: jest.fn(),
           posts: [mockPost],
           setPosts: jest.fn(),
-          handleEditPost,
-          handleToggleLike,
-          handlePostDeleted,
-          handleCommentDeleted,
+          editPost: handleEditPost,
+          toggleLike: handleToggleLike,
+          deletePost: handlePostDeleted,
+          deleteComment: handleCommentDeleted,
+          handleCommentAdded: jest.fn(),
         }}
       >
         {children}
-      </PostsContext.Provider>
+      </UserContext.Provider>
     )
   }
 

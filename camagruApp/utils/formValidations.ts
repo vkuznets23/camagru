@@ -31,7 +31,7 @@ export function validatePassword(password: string): string | null {
     !/[a-z]/.test(password) ||
     !/[A-Z]/.test(password) ||
     !/[0-9]/.test(password) ||
-    !/[!@#$%^&*]/.test(password)
+    !/[^a-zA-Z0-9]/.test(password) // not its any symbol thats not letter or number
   )
     return 'Password must include uppercase, lowercase, number, and symbol'
   return null
