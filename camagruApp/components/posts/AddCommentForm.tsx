@@ -21,6 +21,8 @@ export default function CommentForm({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
 
+  console.log(newComment)
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   const autoResize = () => {

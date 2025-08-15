@@ -474,3 +474,32 @@
   justify-content: center;
   font-size: 4.5rem;
 }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.postCardWrapper:hover .overlay {
+  opacity: 1;
+  pointer-events: none;
+}
+
+body.modal-open .postCardWrapper:hover .overlay {
+  opacity: 0;
+  pointer-events: none;
+}

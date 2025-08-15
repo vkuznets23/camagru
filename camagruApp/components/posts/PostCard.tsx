@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '@/styles/Profile.module.css'
 import PostModal from '@/components/posts/PostModal'
 import { type Comment } from '@/types/comment'
@@ -24,6 +24,14 @@ export default function PostCard({
 
   const { id, image } = post
 
+  useEffect(() => {
+    if (open) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+  }, [open])
+
   return (
     <>
       <button
@@ -41,6 +49,10 @@ export default function PostCard({
           style={{ objectFit: 'cover' }}
           priority={priority}
         />
+        <div className={styles.overlay}>
+          <span>❤️ {post.likesCount}</span>
+          <span>💬 {post.comments.length}</span>
+        </div>
       </button>
       {open && (
         <PostModal

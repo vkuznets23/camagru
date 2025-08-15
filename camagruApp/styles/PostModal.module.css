@@ -47,6 +47,8 @@
   height: 100%;
   width: 50%;
   color: var(--foreground);
+  margin-right: 15px;
+  margin-left: 5px;
 }
 
 .topContent {
@@ -103,10 +105,12 @@
 }
 
 .postContent {
-  margin: 10px 0;
+  margin: 10px 10px 10px 0px;
   font-size: 16px;
   white-space: pre-wrap;
   color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .postAction {

@@ -46,6 +46,10 @@ export default function PostModal({
   const [isSaving, setIsSaving] = useState(false)
   const [showFullContent, setShowFullContent] = useState(false)
 
+  console.log(editedContent)
+
+  const editTextareaRef = useRef<HTMLTextAreaElement>(null)
+
   const safeContent = content || ''
   const lines = safeContent.split('\n')
 
@@ -128,8 +132,11 @@ export default function PostModal({
   }, [onClose])
 
   const handleSave = async () => {
+    if (!editTextareaRef.current) return
+    const newContent = editTextareaRef.current.value
     setIsSaving(true)
-    await editPost(postId, editedContent)
+    await editPost(postId, newContent)
+    setEditedContent(newContent)
     setIsSaving(false)
     setIsEditing(false)
   }
@@ -236,8 +243,8 @@ export default function PostModal({
                         data-testid="edit-post"
                         onKeyDown={handleKeyDown}
                         className={styles.textarea}
-                        value={editedContent}
-                        onChange={(e) => setEditedContent(e.target.value)}
+                        ref={editTextareaRef}
+                        defaultValue={editedContent}
                       />
                       <div className={styles.editButtons}>
                         <button onClick={handleSave} disabled={isSaving}>

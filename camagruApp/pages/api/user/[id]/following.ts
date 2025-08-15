@@ -10,6 +10,8 @@ export async function getUserFollowings(userId: string) {
             select: {
               id: true,
               username: true,
+              name: true,
+              bio: true,
               image: true,
             },
           },

@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@/styles/FollowersPage.module.css'
@@ -5,6 +7,8 @@ import styles from '@/styles/FollowersPage.module.css'
 export type FollowerPreview = {
   id: string
   username: string
+  name?: string | null
+  bio?: string | null
   image?: string | null
 }
 
@@ -26,7 +30,7 @@ export default function UserList({
       ) : (
         <ul className={styles.list}>
           {users.map((user) => (
-            <li key={user.id}>
+            <li key={user.id} className={styles.userRow}>
               <Link href={`/user/${user.id}`} className={styles.item}>
                 <Image
                   className={styles.image}
@@ -36,7 +40,16 @@ export default function UserList({
                   height={40}
                   priority
                 />
-                <span className={styles.userName}>{user.username}</span>
+                <div className={styles.userInfo}>
+                  <span className={styles.userName}>{user.username}</span>
+                  {user.bio && (
+                    <span className={styles.userBio}>
+                      {user.bio.length > 50
+                        ? user.bio.slice(0, 50) + '…'
+                        : user.bio}
+                    </span>
+                  )}
+                </div>
               </Link>
             </li>
           ))}

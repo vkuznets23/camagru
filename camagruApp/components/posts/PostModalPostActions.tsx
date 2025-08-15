@@ -9,8 +9,8 @@ import { useState } from 'react'
 
 export default function PostActions({
   canEdit,
-  isLiked,
-  likesCount,
+  isLiked: initialLiked,
+  likesCount: initialLikesCount,
   onDelete,
   onEdit,
   onToggleLike,
@@ -23,14 +23,25 @@ export default function PostActions({
   onToggleLike: () => Promise<void>
 }) {
   const [isLiking, setIsLiking] = useState(false)
+  const [isLiked, setIsLiked] = useState(initialLiked)
+  const [likesCount, setLikesCount] = useState(initialLikesCount)
 
   const handleLike = async () => {
     if (isLiking) return
+
+    const previousLiked = isLiked
+    const previousCount = likesCount
+
+    setIsLiked(!previousLiked)
+    setLikesCount(previousLiked ? likesCount - 1 : likesCount + 1)
     setIsLiking(true)
+
     try {
       await onToggleLike()
     } catch (err) {
       console.error('Failed to like', err)
+      setIsLiked(previousLiked)
+      setLikesCount(previousCount)
     } finally {
       setIsLiking(false)
     }
