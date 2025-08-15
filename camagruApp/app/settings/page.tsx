@@ -33,6 +33,37 @@ export default function SettingsPage() {
     return Math.min(score, 4) // 0–4
   }
 
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  // Функция для удаления пользователя
+  const handleDeleteUser = async () => {
+    if (!session?.user?.id) return
+    const confirmed = window.confirm(
+      'Are you sure you want to delete your account? This action cannot be undone.'
+    )
+    if (!confirmed) return
+
+    setIsDeleting(true)
+    try {
+      const res = await fetch(`/api/user/${session.user.id}`, {
+        method: 'DELETE',
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to delete user')
+      }
+      alert('Your account has been deleted.')
+      window.location.href = '/'
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(`Error: ${err.message}`)
+      } else {
+        alert('An unexpected error occurred')
+      }
+      setIsDeleting(false)
+    }
+  }
+
   const { data: session } = useSession()
   const [profileUrl, setProfileUrl] = useState('')
 
@@ -243,6 +274,19 @@ export default function SettingsPage() {
               Update Password
             </button>
           </form>
+        </div>
+        <div className={styles.formBox}>
+          <p className={styles.infoText}>
+            Delete your account. This action is permanent and cannot be undone.
+          </p>
+          <button
+            type="button"
+            className={styles.deleteButton}
+            onClick={handleDeleteUser}
+            disabled={isDeleting}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete Account'}
+          </button>
         </div>
       </div>
     </div>

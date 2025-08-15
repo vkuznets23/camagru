@@ -9,20 +9,6 @@
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-
-  z-index: -1;
-}
-
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 .container {
@@ -38,6 +24,18 @@
   border: 1px solid #dbdbdb;
   text-align: center;
   color: #333;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .logo {

@@ -24,7 +24,7 @@ function ClientSessionHandler({ children }: { children: ReactNode }) {
   const { data: session } = useSession()
 
   useEffect(() => {
-    if (!session?.user) {
+    if (!session?.user?.id) {
       setUser(null)
       setPosts([])
       return
@@ -33,10 +33,20 @@ function ClientSessionHandler({ children }: { children: ReactNode }) {
     const fetchUserAndPosts = async () => {
       try {
         const [userRes, postsRes] = await Promise.all([
-          fetch(`/api/user/${session.user.id}`),
-          fetch(`/api/feed?skip=0&limit=12`),
+          fetch(`/api/user/${session.user.id}`, { credentials: 'include' }),
+          fetch(`/api/feed?skip=0&limit=12`, { credentials: 'include' }),
         ])
-        if (!userRes.ok || !postsRes.ok) throw new Error('Failed to fetch data')
+        if (!userRes.ok) {
+          const text = await userRes.text()
+          console.error('User fetch failed:', userRes.status, text)
+          throw new Error('Failed to fetch user data')
+        }
+
+        if (!postsRes.ok) {
+          const text = await postsRes.text()
+          console.error('Posts fetch failed:', postsRes.status, text)
+          throw new Error('Failed to fetch posts data')
+        }
         const userData = await userRes.json()
         const postsData: Post[] = await postsRes.json()
         setUser(userData)

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 export default function VerifyRequest() {
@@ -13,7 +14,7 @@ export default function VerifyRequest() {
         <>
           <h1>Email verified successfully!</h1>
           <p>
-            You can now <a href="/auth/signin">sign in</a>.
+            You can now <Link href="/auth/signin">sign in</Link>.
           </p>
         </>
       ) : error ? (
