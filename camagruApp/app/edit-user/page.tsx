@@ -63,7 +63,7 @@ export default function SettingsPage() {
     const res = await fetch('/api/user/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, bio, image }),
+      body: JSON.stringify({ name, bio }),
     })
 
     if (res.ok) {
@@ -135,6 +135,9 @@ export default function SettingsPage() {
     }
   }, [bio])
 
+  const hasChanges =
+    name !== (session?.user?.name ?? '') || bio !== (session?.user?.bio ?? '')
+
   if (loading) return <SkeletonLoading />
 
   return (
@@ -163,6 +166,28 @@ export default function SettingsPage() {
               onChange={(e) => setBio(e.target.value)}
               error={errors.bio}
             />
+            <div className={styles.buttonGroup}>
+              <Button
+                id="saving-button"
+                testid="saving-button"
+                text={loading ? 'Saving...' : 'Save'}
+                disabled={loading || !hasChanges}
+              />
+              <button
+                type="button"
+                className={styles.cancelButton}
+                disabled={!hasChanges}
+                onClick={() => {
+                  if (session?.user) {
+                    setName(session.user.name || '')
+                    setBio(session.user.bio || '')
+                    setErrors({})
+                  }
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
         {showCamera && (
@@ -174,13 +199,6 @@ export default function SettingsPage() {
             }}
           />
         )}
-
-        <Button
-          id="saving-button"
-          testid="saving-button"
-          text={loading ? 'Saving...' : 'Save'}
-          disabled={loading}
-        />
       </div>
     </form>
   )

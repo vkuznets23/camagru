@@ -94,6 +94,7 @@
 
   .profileBio input,
   .profileBio textarea {
+    font-size: 16px;
     width: 100%;
   }
 
@@ -287,7 +288,7 @@
 }
 
 .textarea {
-  font-size: 14px;
+  font-size: 16px;
   resize: vertical;
 }
 
@@ -502,4 +503,38 @@
 body.modal-open .postCardWrapper:hover .overlay {
   opacity: 0;
   pointer-events: none;
+}
+
+.buttonGroup {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cancelButton {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.cancelButton:hover {
+  border: 1px solid #fd6767;
+  color: var(--button-text);
+  background-color: #fd6767;
+}
+
+.cancelButton:disabled {
+  border-color: #ccc;
+  color: #999;
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.cancelButton:disabled:hover {
+  border-color: #ccc;
+  color: #999;
+  background-color: transparent;
 }

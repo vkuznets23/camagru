@@ -169,6 +169,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+textarea,
+input,
+select,
+button {
+  font-family: inherit;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

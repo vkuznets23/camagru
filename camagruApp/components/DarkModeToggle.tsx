@@ -1,7 +1,9 @@
 'use client'
 import { useTheme } from '@/context/DarkModeContext'
 import styles from '@/styles/DarkModeToggle.module.css'
-import { AiFillSun } from 'react-icons/ai'
+// import { AiFillSun } from 'react-icons/ai'
+import { IoSunny } from 'react-icons/io5'
+
 import { IoMoon } from 'react-icons/io5'
 
 export default function DarkModeToggle() {
@@ -20,7 +22,7 @@ export default function DarkModeToggle() {
       <span className={styles.track}>
         <span className={styles.ball} aria-hidden="true" />
         <span className={styles.iconSun} aria-hidden="true">
-          <AiFillSun />
+          <IoSunny />
         </span>
         <span className={styles.iconMoon} aria-hidden="true">
           <IoMoon />

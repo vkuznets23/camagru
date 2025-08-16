@@ -46,8 +46,6 @@ export default function PostModal({
   const [isSaving, setIsSaving] = useState(false)
   const [showFullContent, setShowFullContent] = useState(false)
 
-  console.log(editedContent)
-
   const editTextareaRef = useRef<HTMLTextAreaElement>(null)
 
   const safeContent = content || ''
