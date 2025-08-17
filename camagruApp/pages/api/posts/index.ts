@@ -34,6 +34,7 @@ export default async function handler(
             user: true,
             comments: { include: { user: true } },
             likedBy: true,
+            savedBy: true,
           },
         })
 
@@ -42,6 +43,9 @@ export default async function handler(
           likesCount: post.likedBy.length,
           likedByCurrentUser: post.likedBy.some(
             (like) => like.userId === currentUserId
+          ),
+          savedByCurrentUser: post.savedBy.some(
+            (user) => user.id === currentUserId
           ),
         }))
 

@@ -20,6 +20,7 @@ export default function CommentForm({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [isDisabled, setIsDisabled] = useState(true)
 
   const autoResize = useCallback(() => {
     const textarea = textareaRef.current
@@ -40,6 +41,19 @@ export default function CommentForm({
       textarea.style.overflowY = 'hidden'
     }
   }, [])
+
+  const handleInput = useCallback(() => {
+    const textarea = textareaRef.current
+    if (!textarea) return
+
+    if (error) setError('')
+    autoResize()
+
+    const disabled = !textarea.value.trim()
+    if (disabled !== isDisabled) {
+      setIsDisabled(disabled)
+    }
+  }, [error, autoResize, isDisabled])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -71,6 +85,7 @@ export default function CommentForm({
 
         textarea.value = ''
         setError('')
+        setIsDisabled(true)
       } catch (err) {
         console.error('Error posting comment:', err)
         setError('Failed to send comment. Try again.')
@@ -101,10 +116,7 @@ export default function CommentForm({
         <textarea
           ref={textareaRef}
           maxLength={MAX_COMMENT_LENGTH + 100}
-          onInput={() => {
-            if (error) setError('')
-            autoResize()
-          }}
+          onInput={handleInput}
           onKeyDown={handleKeyDown}
           placeholder="Write a comment..."
           rows={1}
@@ -113,7 +125,7 @@ export default function CommentForm({
         {error && <p className={styles.error}>{error}</p>}
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isDisabled}
           className={styles.submitButton}
         >
           <RiSendPlaneFill />

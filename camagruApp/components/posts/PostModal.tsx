@@ -39,6 +39,10 @@ export default function PostModal({
   } = post
 
   const isLiked = post.likedByCurrentUser ?? false
+  const isSaved = post.savedByCurrentUser ?? false
+
+  console.log('post', post)
+
   const canEdit = userID === currentUserId
 
   const [isEditing, setIsEditing] = useState(false)
@@ -64,7 +68,8 @@ export default function PostModal({
     ? truncatedByLines
     : truncatedByChars
 
-  const { editPost, toggleLike, deletePost, deleteComment } = useUser()
+  const { editPost, toggleLike, deletePost, deleteComment, toggleSavePost } =
+    useUser()
 
   const modalRef = useRef<HTMLDivElement>(null)
 
@@ -272,10 +277,12 @@ export default function PostModal({
                       <PostActions
                         canEdit={canEdit}
                         isLiked={isLiked}
+                        isSaved={isSaved}
                         likesCount={likesCount}
                         onDelete={() => deletePost(postId)}
                         onEdit={() => setIsEditing(true)}
                         onToggleLike={() => toggleLike(postId)}
+                        onToggleSave={() => toggleSavePost(post)}
                       />
                     </>
                   )}

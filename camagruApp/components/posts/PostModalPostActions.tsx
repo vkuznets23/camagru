@@ -3,6 +3,8 @@
 import styles from '@/styles/PostModal.module.css'
 import { MdOutlineEdit } from 'react-icons/md'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import { FaRegBookmark, FaBookmark } from 'react-icons/fa'
+
 import { FcLike } from 'react-icons/fc'
 import { FiHeart } from 'react-icons/fi'
 import { useState } from 'react'
@@ -11,20 +13,27 @@ export default function PostActions({
   canEdit,
   isLiked: initialLiked,
   likesCount: initialLikesCount,
+  isSaved: initialSaved,
   onDelete,
   onEdit,
   onToggleLike,
+  onToggleSave,
 }: {
   canEdit: boolean
   isLiked: boolean
+  isSaved: boolean
   likesCount: number
   onDelete: () => void
   onEdit: () => void
   onToggleLike: () => Promise<void>
+  onToggleSave: () => Promise<void>
 }) {
   const [isLiking, setIsLiking] = useState(false)
   const [isLiked, setIsLiked] = useState(initialLiked)
   const [likesCount, setLikesCount] = useState(initialLikesCount)
+
+  const [isSavingPost, setIsSavingPost] = useState(false)
+  const [isSaved, setIsSaved] = useState(initialSaved)
 
   const handleLike = async () => {
     if (isLiking) return
@@ -47,6 +56,25 @@ export default function PostActions({
     }
   }
 
+  const handleSave = async () => {
+    if (isSavingPost) return
+    const previousSaved = isSaved
+    console.log('previous', previousSaved)
+    setIsSaved(!previousSaved)
+    setIsSavingPost(true)
+
+    try {
+      await onToggleSave()
+    } catch (err) {
+      console.error('Failed to save', err)
+      setIsSaved(previousSaved)
+    } finally {
+      setIsSavingPost(false)
+    }
+  }
+
+  console.log(isSaved)
+
   return (
     <div className={styles.postAction}>
       {canEdit && (
@@ -67,6 +95,14 @@ export default function PostActions({
       >
         {isLiked ? <FcLike /> : <FiHeart />}
         <span>{likesCount}</span>
+      </button>
+      <button
+        data-testid="saveBtn"
+        className={styles.saveButton}
+        onClick={handleSave}
+        disabled={isSavingPost}
+      >
+        {isSaved ? <FaBookmark /> : <FaRegBookmark />}
       </button>
     </div>
   )

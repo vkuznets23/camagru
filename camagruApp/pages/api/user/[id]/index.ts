@@ -44,6 +44,26 @@ export default async function handler(
                 },
               },
               likedBy: true,
+              savedBy: true,
+            },
+          },
+          savedPosts: {
+            select: {
+              id: true,
+              content: true,
+              image: true,
+              createdAt: true,
+              user: {
+                select: { id: true, username: true, name: true, image: true },
+              },
+              comments: {
+                orderBy: { createdAt: 'desc' },
+                include: {
+                  user: { select: { id: true, username: true, image: true } },
+                },
+              },
+              likedBy: true,
+              savedBy: true,
             },
           },
         },
@@ -58,9 +78,26 @@ export default async function handler(
         likedByCurrentUser: post.likedBy.some(
           (like) => like.userId === currentUserId
         ),
+        savedByCurrentUser: post.savedBy.some((u) => u.id === currentUserId),
       }))
 
-      return res.status(200).json({ ...user, posts: sanitizedPosts })
+      const sanitizedSavedPosts = (user.savedPosts ?? []).map((post) => ({
+        ...post,
+        comments: Array.isArray(post.comments) ? post.comments : [],
+        likesCount: post.likedBy.length,
+        likedByCurrentUser: post.likedBy.some(
+          (like) => like.userId === currentUserId
+        ),
+        savedByCurrentUser: post.savedBy.some((u) => u.id === currentUserId),
+      }))
+
+      return res
+        .status(200)
+        .json({
+          ...user,
+          posts: sanitizedPosts,
+          savedPosts: sanitizedSavedPosts,
+        })
     }
 
     if (req.method === 'DELETE') {
