@@ -14,7 +14,7 @@ export default function SavedPosts() {
   const isLoadingSession = status === 'loading'
 
   if (!userID || isLoadingSession) return
-  if (!user?.savedPosts || user.posts.length === 0) return <NoPosts />
+  if (!user?.savedPosts || user.savedPosts.length === 0) return <NoPosts />
 
   return (
     <div className={styles.posts}>

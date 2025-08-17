@@ -58,8 +58,8 @@ export default function PostActions({
 
   const handleSave = async () => {
     if (isSavingPost) return
+
     const previousSaved = isSaved
-    console.log('previous', previousSaved)
     setIsSaved(!previousSaved)
     setIsSavingPost(true)
 

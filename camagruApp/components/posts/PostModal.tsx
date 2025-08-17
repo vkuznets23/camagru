@@ -41,7 +41,8 @@ export default function PostModal({
   const isLiked = post.likedByCurrentUser ?? false
   const isSaved = post.savedByCurrentUser ?? false
 
-  console.log('post', post)
+  console.log('whole post', post)
+  console.log('saved', post.savedByCurrentUser)
 
   const canEdit = userID === currentUserId
 

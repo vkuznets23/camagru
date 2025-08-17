@@ -36,48 +36,6 @@ export function UserProvider({
     initialUser?.savedPosts || []
   )
 
-  // const toggleSavePost = async (post: Post) => {
-  //   const isSaved = savedPosts.some((p) => p.id === post.id)
-
-  //   try {
-  //     const res = await fetch(`/api/posts/save`, {
-  //       method: 'PATCH',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       credentials: 'include',
-  //       body: JSON.stringify({ postId: post.id, save: !isSaved }),
-  //     })
-  //     if (!res.ok) throw new Error('Failed to toggle save')
-
-  //     const updatedPost = {
-  //       ...post,
-  //       savedByCurrentUser: !isSaved,
-  //       savedBy: isSaved
-  //         ? (post.savedBy || []).filter((u) => u.id !== user?.id)
-  //         : [...(post.savedBy || []), user!],
-  //     }
-
-  //     setSavedPosts((prev) =>
-  //       isSaved ? prev.filter((p) => p.id !== post.id) : [updatedPost, ...prev]
-  //     )
-
-  //     setPosts((prev) => prev.map((p) => (p.id === post.id ? updatedPost : p)))
-
-  //     setUser((prevUser) => {
-  //       if (!prevUser) return prevUser
-
-  //       const currentSaved = prevUser.savedPosts || []
-
-  //       return {
-  //         ...prevUser,
-  //         savedPosts: isSaved
-  //           ? currentSaved.filter((p) => p.id !== post.id)
-  //           : [updatedPost, ...currentSaved],
-  //       }
-  //     })
-  //   } catch (err) {
-  //     console.error(err)
-  //   }
-  // }
   const toggleSavePost = async (post: Post) => {
     try {
       const res = await fetch(`/api/posts/save`, {
@@ -95,7 +53,11 @@ export function UserProvider({
       const updatedPost: Post = await res.json()
 
       setPosts((prev) =>
-        prev.map((p) => (p.id === updatedPost.id ? updatedPost : p))
+        prev.map((p) =>
+          p.id === updatedPost.id
+            ? { ...p, savedByCurrentUser: updatedPost.savedByCurrentUser }
+            : p
+        )
       )
 
       setSavedPosts((prev) =>
@@ -113,6 +75,11 @@ export function UserProvider({
                 : (prevUser.savedPosts || []).filter(
                     (p) => p.id !== updatedPost.id
                   ),
+              posts: prevUser.posts?.map((p) =>
+                p.id === updatedPost.id
+                  ? { ...p, savedByCurrentUser: updatedPost.savedByCurrentUser }
+                  : p
+              ),
             }
           : prevUser
       )
