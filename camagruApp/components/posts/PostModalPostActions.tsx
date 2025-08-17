@@ -98,11 +98,22 @@ export default function PostActions({
       </button>
       <button
         data-testid="saveBtn"
-        className={styles.saveButton}
+        className={`${styles.saveButton} ${
+          isSaved ? styles.saved : styles.unsaved
+        }`}
         onClick={handleSave}
         disabled={isSavingPost}
+        aria-label={isSaved ? 'Unsave post' : 'Save post'}
       >
-        {isSaved ? <FaBookmark /> : <FaRegBookmark />}
+        {isSaved ? (
+          <>
+            <FaBookmark /> <span>Saved</span>
+          </>
+        ) : (
+          <>
+            <FaRegBookmark /> <span>Save</span>
+          </>
+        )}
       </button>
     </div>
   )
