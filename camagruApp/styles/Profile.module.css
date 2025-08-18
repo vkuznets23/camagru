@@ -77,9 +77,10 @@
   }
 
   .imageContainer {
+    display: flex;
     flex-direction: row;
-    gap: 20px;
-    max-width: 300px;
+    gap: 40px;
+    max-width: 600px;
     width: 100%;
   }
 
@@ -228,8 +229,8 @@
   }
 
   .avatar {
-    width: 100px !important;
-    height: 100px !important;
+    width: 115px !important;
+    height: 115px !important;
   }
 }
 
@@ -344,11 +345,9 @@
 .photoOptionsWrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
   min-height: 120px;
   width: 100%;
-  gap: 5px;
+  gap: 10px;
 }
 
 .editBtnsContainer {
@@ -538,4 +537,50 @@ body.modal-open .postCardWrapper:hover .overlay {
   border-color: #ccc;
   color: #999;
   background-color: transparent;
+}
+
+.avatarWrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+/* spinner */
+.uploadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .secondBtn {
+    display: none;
+  }
+
+  .photoOptionsWrapper {
+    display: flex;
+  }
 }

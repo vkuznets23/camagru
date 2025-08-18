@@ -70,7 +70,6 @@ export default function SettingsPage() {
       const data = await res.json()
       setName(data?.user?.name ?? '')
       setBio(data?.user?.bio ?? '')
-      setImage(data?.user?.image ?? '')
       await update()
       router.push(`/user/${session?.user?.id}`)
     } else {
@@ -98,6 +97,13 @@ export default function SettingsPage() {
       const data = await res.json()
       if (data.secure_url) {
         setImage(data.secure_url)
+
+        await fetch('/api/user/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: data.secure_url }),
+        })
+        await update()
       }
     } catch (err) {
       console.error('Upload failed', err)
@@ -108,6 +114,9 @@ export default function SettingsPage() {
   }
 
   const handleDeleteAvatar = async () => {
+    const confirm = window.confirm('Are you sure ypu wanna delete it?')
+    if (!confirm) return
+
     try {
       const res = await fetch('/api/user/update', {
         method: 'POST',
@@ -119,6 +128,12 @@ export default function SettingsPage() {
         const data = await res.json()
         console.log('Avatar deleted:', data)
         setImage('')
+        await fetch('/api/user/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: data.secure_url }),
+        })
+        await update()
       } else {
         console.error('Failed to delete avatar')
       }
@@ -137,6 +152,20 @@ export default function SettingsPage() {
 
   const hasChanges =
     name !== (session?.user?.name ?? '') || bio !== (session?.user?.bio ?? '')
+
+  // in case user wanna reload page, close it if still there are unsaved data
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        e.preventDefault()
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [hasChanges])
 
   if (loading) return <SkeletonLoading />
 
