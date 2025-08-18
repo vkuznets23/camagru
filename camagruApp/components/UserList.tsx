@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@/styles/FollowersPage.module.css'
+import { useSession } from 'next-auth/react'
 
 export type FollowerPreview = {
   id: string
@@ -27,6 +28,11 @@ export default function UserList({
   noPadding = false,
   onToggleFollow,
 }: UserListProps) {
+  const { data: session } = useSession()
+  const currentUserId = session?.user?.id
+
+  console.log(users)
+
   return (
     <div className={noPadding ? styles.noPaddingContainer : styles.container}>
       {users.length === 0 ? (
@@ -56,12 +62,12 @@ export default function UserList({
                     )}
                   </div>
                 </Link>
-                {onToggleFollow && !user.followsYou && (
+                {onToggleFollow && user.id !== currentUserId && (
                   <button
                     className={styles.unfollowBtn}
                     onClick={() => onToggleFollow(user.id)}
                   >
-                    {user.isFollowing ? 'Follwo' : 'Unfollow'}
+                    {user.isFollowing ? 'Unfollow' : 'Follow'}
                   </button>
                 )}
               </div>

@@ -33,21 +33,49 @@ export default function FollowingPage({
     fetchFollowings()
   }, [id])
 
-  const handleUnfollow = async (userId: string) => {
-    try {
-      const res = await fetch('/api/unfollow', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
-      })
+  // const handleUnfollow = async (userId: string) => {
+  //   try {
+  //     const res = await fetch('/api/unfollow', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ userId }),
+  //     })
 
-      if (res.ok) {
-        setFollowings((prev) => prev.filter((u) => u.id !== userId))
+  //     if (res.ok) {
+  //       setFollowings((prev) => prev.filter((u) => u.id !== userId))
+  //     } else {
+  //       console.error('Failed to unfollow')
+  //     }
+  //   } catch (err) {
+  //     console.error('Error unfollowing', err)
+  //   }
+  // }
+  const toggleFollow = async (userId: string) => {
+    const target = followings.find((u) => u.id === userId)
+    if (!target) return
+
+    try {
+      if (target.isFollowing) {
+        await fetch('/api/unfollow', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }),
+        })
       } else {
-        console.error('Failed to unfollow')
+        await fetch('/api/follow', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }),
+        })
       }
+
+      setFollowings((prev) =>
+        prev.map((u) =>
+          u.id === userId ? { ...u, isFollowing: !u.isFollowing } : u
+        )
+      )
     } catch (err) {
-      console.error('Error unfollowing', err)
+      console.error(err)
     }
   }
 
@@ -59,7 +87,7 @@ export default function FollowingPage({
     <UserList
       users={followings}
       emptyMessage="No following yet."
-      onToggleFollow={handleUnfollow}
+      onToggleFollow={toggleFollow}
     />
   )
 }

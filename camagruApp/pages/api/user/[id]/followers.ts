@@ -1,7 +1,9 @@
 import { prisma } from '@/utils/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { authOptions } from '../../auth/[...nextauth]'
+import { getServerSession } from 'next-auth'
 
-export async function getUserFollowers(userId: string) {
+export async function getUserFollowers(userId: string, currentUserId: string) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: {
@@ -23,7 +25,21 @@ export async function getUserFollowers(userId: string) {
 
   if (!user) return null
 
-  return user.followers.map((f) => f.follower)
+  const result = await Promise.all(
+    user.followers.map(async (f) => {
+      const isFollowing = !!(await prisma.follower.findFirst({
+        where: {
+          followerId: currentUserId,
+          followingId: f.follower.id,
+        },
+      }))
+      return {
+        ...f.follower,
+        isFollowing,
+      }
+    })
+  )
+  return result
 }
 
 export default async function handler(
@@ -40,7 +56,11 @@ export default async function handler(
   }
 
   try {
-    const followers = await getUserFollowers(id as string)
+    const session = await getServerSession(req, res, authOptions)
+    const currentUserId = session?.user?.id
+    if (!currentUserId) return res.status(401).json({ error: 'Unauthorized' })
+
+    const followers = await getUserFollowers(id as string, currentUserId)
     if (!followers) {
       return res.status(404).json({ error: 'User not found' })
     }
