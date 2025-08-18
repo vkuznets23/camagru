@@ -19,26 +19,20 @@ export default function SavedPosts() {
   return (
     <div className={styles.posts}>
       <div className={styles.postsContainer} role="list">
-        {user.savedPosts
-          .slice()
-          .sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
-          .map((post, index) => (
-            <article
-              key={post.id}
-              role="listitem"
-              className={styles.postCardСardWrapper}
-            >
-              <PostCard
-                post={post}
-                onCommentAdded={handleCommentAdded}
-                currentUserId={userID}
-                priority={index < 3}
-              />
-            </article>
-          ))}
+        {user.savedPosts.slice().map((post, index) => (
+          <article
+            key={post.id}
+            role="listitem"
+            className={styles.postCardСardWrapper}
+          >
+            <PostCard
+              post={post}
+              onCommentAdded={handleCommentAdded}
+              currentUserId={userID}
+              priority={index < 3}
+            />
+          </article>
+        ))}
       </div>
     </div>
   )
