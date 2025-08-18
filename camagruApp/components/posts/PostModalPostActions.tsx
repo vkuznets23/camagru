@@ -4,7 +4,6 @@ import styles from '@/styles/PostModal.module.css'
 import { MdOutlineEdit } from 'react-icons/md'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { FaRegBookmark, FaBookmark } from 'react-icons/fa'
-
 import { FcLike } from 'react-icons/fc'
 import { FiHeart } from 'react-icons/fi'
 import { useState } from 'react'
@@ -72,8 +71,6 @@ export default function PostActions({
       setIsSavingPost(false)
     }
   }
-
-  console.log(isSaved)
 
   return (
     <div className={styles.postAction}>

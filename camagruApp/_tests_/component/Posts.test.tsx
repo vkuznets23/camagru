@@ -16,6 +16,7 @@ jest.mock('@/context/userContext', () => ({
 describe('UserPosts', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    window.scrollTo = jest.fn()
   })
 
   const mockUser: User = {
@@ -52,6 +53,7 @@ describe('UserPosts', () => {
         comments: [],
         likedByCurrentUser: false,
         likesCount: 3,
+        savedByCurrentUser: false,
       },
       {
         id: 'post-2',
@@ -72,6 +74,7 @@ describe('UserPosts', () => {
         comments: [],
         likedByCurrentUser: false,
         likesCount: 3,
+        savedByCurrentUser: false,
       },
     ],
   }
