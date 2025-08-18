@@ -16,12 +16,14 @@ type UserListProps = {
   users: FollowerPreview[]
   emptyMessage: string
   noPadding?: boolean
+  onUnfollow?: (userId: string) => void
 }
 
 export default function UserList({
   users,
   emptyMessage,
   noPadding = false,
+  onUnfollow,
 }: UserListProps) {
   return (
     <div className={noPadding ? styles.noPaddingContainer : styles.container}>
@@ -31,26 +33,36 @@ export default function UserList({
         <ul className={styles.list}>
           {users.map((user) => (
             <li key={user.id} className={styles.userRow}>
-              <Link href={`/user/${user.id}`} className={styles.item}>
-                <Image
-                  className={styles.image}
-                  src={user.image || '/default_avatar.png'}
-                  alt={`${user.username}'s avatar`}
-                  width={40}
-                  height={40}
-                  priority
-                />
-                <div className={styles.userInfo}>
-                  <span className={styles.userName}>{user.username}</span>
-                  {user.bio && (
-                    <span className={styles.userBio}>
-                      {user.bio.length > 50
-                        ? user.bio.slice(0, 50) + '…'
-                        : user.bio}
-                    </span>
-                  )}
-                </div>
-              </Link>
+              <div className={styles.item}>
+                <Link href={`/user/${user.id}`} className={styles.itemLink}>
+                  <Image
+                    className={styles.image}
+                    src={user.image || '/default_avatar.png'}
+                    alt={`${user.username}'s avatar`}
+                    width={40}
+                    height={40}
+                    priority
+                  />
+                  <div className={styles.userInfo}>
+                    <span className={styles.userName}>{user.username}</span>
+                    {user.bio && (
+                      <span className={styles.userBio}>
+                        {user.bio.length > 50
+                          ? user.bio.slice(0, 50) + '…'
+                          : user.bio}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+                {onUnfollow && (
+                  <button
+                    className={styles.unfollowBtn}
+                    onClick={() => onUnfollow(user.id)}
+                  >
+                    Unfollow
+                  </button>
+                )}
+              </div>
             </li>
           ))}
         </ul>

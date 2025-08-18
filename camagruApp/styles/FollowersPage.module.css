@@ -46,6 +46,14 @@
   border-radius: 0.5rem;
   color: var(--text-primary);
 }
+
+.itemLink {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+}
 .item:hover {
   background-color: var(--hover-bg-active);
   cursor: pointer;
@@ -71,7 +79,7 @@
 }
 
 .unfollowBtn {
-  background: transparent;
+  background: var(--background);
   border: 1px solid var(--border-alt);
   border-radius: 6px;
   padding: 4px 10px;
@@ -81,5 +89,30 @@
 }
 
 .unfollowBtn:hover {
-  background: var(--hover-bg-active);
+  color: white;
+  background: red;
+}
+
+.skeleton {
+  border-radius: 4px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: var(--skeleton-base);
+  }
+  50% {
+    background-color: var(--skeleton-highlight);
+  }
+  100% {
+    background-color: var(--skeleton-base);
+  }
 }
