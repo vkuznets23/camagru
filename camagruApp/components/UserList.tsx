@@ -10,20 +10,22 @@ export type FollowerPreview = {
   name?: string | null
   bio?: string | null
   image?: string | null
+  isFollowing?: boolean
+  followsYou?: boolean
 }
 
 type UserListProps = {
   users: FollowerPreview[]
   emptyMessage: string
   noPadding?: boolean
-  onUnfollow?: (userId: string) => void
+  onToggleFollow?: (userId: string) => void
 }
 
 export default function UserList({
   users,
   emptyMessage,
   noPadding = false,
-  onUnfollow,
+  onToggleFollow,
 }: UserListProps) {
   return (
     <div className={noPadding ? styles.noPaddingContainer : styles.container}>
@@ -54,12 +56,12 @@ export default function UserList({
                     )}
                   </div>
                 </Link>
-                {onUnfollow && (
+                {onToggleFollow && !user.followsYou && (
                   <button
                     className={styles.unfollowBtn}
-                    onClick={() => onUnfollow(user.id)}
+                    onClick={() => onToggleFollow(user.id)}
                   >
-                    Unfollow
+                    {user.isFollowing ? 'Follwo' : 'Unfollow'}
                   </button>
                 )}
               </div>

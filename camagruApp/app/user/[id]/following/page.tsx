@@ -59,7 +59,7 @@ export default function FollowingPage({
     <UserList
       users={followings}
       emptyMessage="No following yet."
-      onUnfollow={handleUnfollow}
+      onToggleFollow={handleUnfollow}
     />
   )
 }
