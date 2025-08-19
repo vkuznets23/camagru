@@ -2,8 +2,7 @@
 import { useTheme } from '@/context/DarkModeContext'
 import styles from '@/styles/DarkModeToggle.module.css'
 import { IoSunny } from 'react-icons/io5'
-
-import { IoMoon } from 'react-icons/io5'
+import { IoIosMoon } from 'react-icons/io'
 
 export default function DarkModeToggle() {
   const { theme, toggleTheme } = useTheme()
@@ -24,7 +23,7 @@ export default function DarkModeToggle() {
           <IoSunny />
         </span>
         <span className={styles.iconMoon} aria-hidden="true">
-          <IoMoon />
+          <IoIosMoon />
         </span>
       </span>
     </button>

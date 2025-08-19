@@ -99,7 +99,7 @@
   .iconSun,
   .iconMoon {
     display: block;
-    position: absolute;
+    position: flex;
     font-size: 30px;
     pointer-events: none;
     user-select: none;
@@ -111,12 +111,14 @@
   }
   .iconMoon {
     color: #000;
+    transform: translateY(-20px);
     opacity: 1;
   }
   .toggleBtn[aria-checked="true"] .iconSun {
     opacity: 1;
   }
   .toggleBtn[aria-checked="true"] .iconMoon {
+    margin-bottom: 15px;
     opacity: 0;
   }
 }

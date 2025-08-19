@@ -190,7 +190,7 @@
 
 .usernamePanel {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 15px;
 }
 
