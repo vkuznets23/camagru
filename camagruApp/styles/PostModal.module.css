@@ -240,6 +240,39 @@
   text-decoration: underline;
 }
 
+.saveButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  color: inherit;
+}
+
+.saveButton span {
+  color: var(--char-color);
+}
+
+.saveButton.saved {
+  color: rgb(244, 67, 54);
+}
+
+.saveButton.unsaved {
+  color: var(--char-color);
+}
+
+.saveButton:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
+.saveButton:disabled {
+  cursor: not-allowed;
+}
+
 @media (max-width: 800px) {
   .dragHandle {
     display: block;
@@ -279,7 +312,7 @@
 
   .contentWrapper {
     width: 100%;
-    padding: 1rem;
+    padding: 0rem 1rem 1rem 1rem;
     height: 50vh;
     overflow-y: auto;
   }
@@ -303,8 +336,20 @@
     cursor: pointer;
   }
 
+  .saveButton {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    padding-left: 10px;
+    cursor: pointer;
+  }
+
   .deleteButton span,
-  .editButton span {
+  .editButton span,
+  .saveButton span {
     display: none;
   }
 
@@ -331,37 +376,8 @@
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
   }
-}
 
-.saveButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.8rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-  color: inherit;
-}
-
-.saveButton span {
-  color: var(--char-color);
-}
-
-.saveButton.saved {
-  color: rgb(244, 67, 54);
-}
-
-.saveButton.unsaved {
-  color: var(--char-color);
-}
-
-.saveButton:hover {
-  transform: scale(1.05);
-  opacity: 0.85;
-}
-
-.saveButton:disabled {
-  cursor: not-allowed;
+  .contentWrapper {
+    margin: 0px;
+  }
 }

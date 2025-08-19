@@ -74,3 +74,26 @@
     max-height: none;
   }
 }
+@media (max-width: 800px) {
+  .inputWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--textarea-border); /* рамка здесь */
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: var(--textarea-bg);
+  }
+
+  .inputWrapper textarea {
+    flex: 1;
+    border: none; /* рамки у textarea нет */
+    padding: 10px 12px;
+    background: transparent;
+  }
+
+  .submitButton {
+    padding: 0 12px;
+    font-size: 20px;
+  }
+}
