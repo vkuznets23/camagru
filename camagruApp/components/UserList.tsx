@@ -55,8 +55,8 @@ export default function UserList({
                     <span className={styles.userName}>{user.username}</span>
                     {user.bio && (
                       <span className={styles.userBio}>
-                        {user.bio.length > 50
-                          ? user.bio.slice(0, 50) + '…'
+                        {user.bio.length > 30
+                          ? user.bio.slice(0, 30) + '…'
                           : user.bio}
                       </span>
                     )}

@@ -10,7 +10,7 @@ export default function UserListSkeleton({
   return (
     <div className={noPadding ? styles.noPaddingContainer : styles.container}>
       <ul className={styles.list}>
-        {Array.from({ length: 10 }).map((_, i) => (
+        {Array.from({ length: 8 }).map((_, i) => (
           <li key={i} className={styles.userRow}>
             <div className={styles.item}>
               <div className={styles.skeletonAvatar} />

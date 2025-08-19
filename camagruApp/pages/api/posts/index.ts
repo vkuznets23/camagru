@@ -30,7 +30,12 @@ export default async function handler(
     case 'GET': {
       try {
         const posts = await prisma.post.findMany({
-          include: {
+          select: {
+            id: true,
+            content: true,
+            image: true,
+            blurDataURL: true,
+            createdAt: true,
             user: true,
             comments: { include: { user: true } },
             likedBy: true,

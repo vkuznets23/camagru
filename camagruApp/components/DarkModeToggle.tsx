@@ -1,7 +1,6 @@
 'use client'
 import { useTheme } from '@/context/DarkModeContext'
 import styles from '@/styles/DarkModeToggle.module.css'
-// import { AiFillSun } from 'react-icons/ai'
 import { IoSunny } from 'react-icons/io5'
 
 import { IoMoon } from 'react-icons/io5'

@@ -103,7 +103,7 @@
   --skeleton-highlight: #444;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --accent: #339af0;
     --accent-hover: #1c7ed6;
@@ -130,7 +130,6 @@
     --section-color-active-light: #dbdbdb;
     --error-color: red;
 
-    /* ... */
     --button-bg: #3390ff;
     --button-bg-hover: #0070f3;
     --button-text: #fff;
@@ -152,7 +151,7 @@
     --skeleton-base: #555;
     --skeleton-highlight: #444;
   }
-}
+} */
 
 html,
 body {
@@ -187,8 +186,8 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
-}
+} */

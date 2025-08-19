@@ -34,6 +34,7 @@ export default async function handler(
               content: true,
               image: true,
               createdAt: true,
+              blurDataURL: true,
               user: {
                 select: { id: true, username: true, name: true, image: true },
               },
@@ -53,6 +54,7 @@ export default async function handler(
               content: true,
               image: true,
               createdAt: true,
+              blurDataURL: true,
               user: {
                 select: { id: true, username: true, name: true, image: true },
               },
@@ -91,13 +93,11 @@ export default async function handler(
         savedByCurrentUser: post.savedBy.some((u) => u.id === currentUserId),
       }))
 
-      return res
-        .status(200)
-        .json({
-          ...user,
-          posts: sanitizedPosts,
-          savedPosts: sanitizedSavedPosts,
-        })
+      return res.status(200).json({
+        ...user,
+        posts: sanitizedPosts,
+        savedPosts: sanitizedSavedPosts,
+      })
     }
 
     if (req.method === 'DELETE') {
