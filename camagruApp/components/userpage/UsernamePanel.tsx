@@ -1,12 +1,10 @@
-import Link from 'next/link'
 import styles from '@/styles/Profile.module.css'
-import { MdOutlineEdit } from 'react-icons/md'
 import UserStats from './UserStats'
 import UserBio from './UserBio'
 import { useUser } from '@/context/userContext'
+import ProfileActionButton from './ActionButtons'
 
 interface Props {
-  // user: User
   isMyProfile: boolean
   isFollowing?: boolean
   onFollow?: () => void
@@ -15,7 +13,6 @@ interface Props {
 }
 
 export default function UsernamePanel({
-  // user,
   isMyProfile,
   isFollowing,
   onFollow,
@@ -26,41 +23,28 @@ export default function UsernamePanel({
   if (!user) return null
 
   return (
-    <div className={styles.profileInfo}>
-      <div className={styles.usernamePanel}>
-        <h1>{user.username}</h1>
-        {isMyProfile ? (
-          <Link
-            data-testid="edit-user"
-            href="/edit-user"
-            className={styles.navBtn}
-            aria-label="Edit profile"
-          >
-            <MdOutlineEdit aria-hidden="true" />
-          </Link>
-        ) : (
-          <button
-            data-testid="follow-user"
-            className={styles.button}
-            onClick={isFollowing ? onUnfollow : onFollow}
-            aria-label={
-              isFollowing
-                ? `Unfollow ${user.username}`
-                : `Follow ${user.username}`
-            }
-            aria-pressed={isFollowing}
-          >
-            {isFollowing ? 'Unfollow' : 'Follow'}
-          </button>
-        )}
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div className={styles.profileInfo}>
+        <div className={styles.usernamePanel}>
+          <h1>{user.username}</h1>
+          <ProfileActionButton
+            isMyProfile={isMyProfile}
+            isFollowing={isFollowing}
+            onFollow={onFollow}
+            onUnfollow={onUnfollow}
+            username={user.username}
+            classNameEdit={styles.navBtn}
+            classNameFollow={styles.button}
+          />
+        </div>
+        <UserStats
+          userid={user.id}
+          posts={user._count.posts}
+          followers={followersCount ?? user._count.followers}
+          following={user._count.following}
+        />
+        <UserBio name={user.name} bio={user.bio} />
       </div>
-      <UserStats
-        userid={user.id}
-        posts={user._count.posts}
-        followers={followersCount ?? user._count.followers}
-        following={user._count.following}
-      />
-      <UserBio name={user.name} bio={user.bio} />
     </div>
   )
 }

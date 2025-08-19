@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import styles from '@/styles/Profile.module.css'
 
@@ -19,6 +19,14 @@ export default function AvatarUploader({
   onFileChange,
 }: Props) {
   const [showOptions, setShowOptions] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 600)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   return (
     <div className={styles.imageContainer}>
@@ -42,17 +50,19 @@ export default function AvatarUploader({
       </div>
 
       <div className={styles.photoOptionsWrapper}>
-        <button
-          type="button"
-          className={styles.secondBtn}
-          onClick={() => setShowOptions((prev) => !prev)}
-          aria-expanded={showOptions}
-          aria-controls="avatar-options"
-        >
-          {showOptions ? 'Close' : 'Edit photo'}
-        </button>
+        {!isMobile && (
+          <button
+            type="button"
+            className={styles.secondBtn}
+            onClick={() => setShowOptions((prev) => !prev)}
+            aria-expanded={showOptions}
+            aria-controls="avatar-options"
+          >
+            {showOptions ? 'Close' : 'Edit photo'}
+          </button>
+        )}
 
-        {showOptions && (
+        {(showOptions || isMobile) && (
           <div
             id="avatar-options"
             role="menu"

@@ -9,6 +9,7 @@ import UserSkeleton from './UserSkeleton'
 import UsernamePanel from './UsernamePanel'
 import UserContentTabs from '../posts/UserContentTabs'
 import { useSession } from 'next-auth/react'
+import ProfileActionButton from './ActionButtons'
 
 export default function UserProfile() {
   const { user, setUser } = useUser()
@@ -112,6 +113,15 @@ export default function UserProfile() {
           followersCount={followersCount}
         />
       </div>
+      <ProfileActionButton
+        isMyProfile={isMyProfile}
+        isFollowing={isFollowing}
+        onFollow={handleFollow}
+        onUnfollow={handleUnfollow}
+        username={user.username}
+        classNameEdit={styles.buttonMobile}
+        classNameFollow={styles.buttonMobile}
+      />
 
       <UserContentTabs />
     </div>
