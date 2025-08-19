@@ -10,7 +10,7 @@
   --divider: #eaeaea;
   --divider2: #eee;
   --hover-bg: #f5f5f5;
-  --hover-bg-active: #e7e7e7;
+  --hover-bg-active: #f1f1f1;
   --text-primary: #333;
   --icon-border: black;
   --icon-bg: black;
@@ -167,6 +167,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+textarea,
+input,
+select,
+button {
+  font-family: inherit;
 }
 
 * {

@@ -81,6 +81,10 @@
   object-fit: cover;
 }
 
+.activeDropdownItem {
+  background-color: #eee;
+}
+
 .navActions {
   display: flex;
   align-items: center;

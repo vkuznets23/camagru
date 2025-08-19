@@ -63,14 +63,13 @@ export default function SettingsPage() {
     const res = await fetch('/api/user/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, bio, image }),
+      body: JSON.stringify({ name, bio }),
     })
 
     if (res.ok) {
       const data = await res.json()
       setName(data?.user?.name ?? '')
       setBio(data?.user?.bio ?? '')
-      setImage(data?.user?.image ?? '')
       await update()
       router.push(`/user/${session?.user?.id}`)
     } else {
@@ -98,6 +97,13 @@ export default function SettingsPage() {
       const data = await res.json()
       if (data.secure_url) {
         setImage(data.secure_url)
+
+        await fetch('/api/user/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: data.secure_url }),
+        })
+        await update()
       }
     } catch (err) {
       console.error('Upload failed', err)
@@ -108,6 +114,9 @@ export default function SettingsPage() {
   }
 
   const handleDeleteAvatar = async () => {
+    const confirm = window.confirm('Are you sure ypu wanna delete it?')
+    if (!confirm) return
+
     try {
       const res = await fetch('/api/user/update', {
         method: 'POST',
@@ -119,6 +128,12 @@ export default function SettingsPage() {
         const data = await res.json()
         console.log('Avatar deleted:', data)
         setImage('')
+        await fetch('/api/user/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: data.secure_url }),
+        })
+        await update()
       } else {
         console.error('Failed to delete avatar')
       }
@@ -134,6 +149,23 @@ export default function SettingsPage() {
       textarea.style.height = textarea.scrollHeight + 'px'
     }
   }, [bio])
+
+  const hasChanges =
+    name !== (session?.user?.name ?? '') || bio !== (session?.user?.bio ?? '')
+
+  // in case user wanna reload page, close it if still there are unsaved data
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        e.preventDefault()
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [hasChanges])
 
   if (loading) return <SkeletonLoading />
 
@@ -163,6 +195,28 @@ export default function SettingsPage() {
               onChange={(e) => setBio(e.target.value)}
               error={errors.bio}
             />
+            <div className={styles.buttonGroup}>
+              <Button
+                id="saving-button"
+                testid="saving-button"
+                text={loading ? 'Saving...' : 'Save'}
+                disabled={loading || !hasChanges}
+              />
+              <button
+                type="button"
+                className={styles.cancelButton}
+                disabled={!hasChanges}
+                onClick={() => {
+                  if (session?.user) {
+                    setName(session.user.name || '')
+                    setBio(session.user.bio || '')
+                    setErrors({})
+                  }
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
         {showCamera && (
@@ -174,13 +228,6 @@ export default function SettingsPage() {
             }}
           />
         )}
-
-        <Button
-          id="saving-button"
-          testid="saving-button"
-          text={loading ? 'Saving...' : 'Save'}
-          disabled={loading}
-        />
       </div>
     </form>
   )

@@ -10,6 +10,7 @@ type TextInputProps = {
   error?: string
   className?: string
   autoComplete?: string
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 export default function TextInput({
@@ -22,6 +23,7 @@ export default function TextInput({
   error,
   className = '',
   autoComplete,
+  onKeyDown,
 }: TextInputProps) {
   return (
     <label htmlFor={id}>
@@ -34,6 +36,7 @@ export default function TextInput({
         onChange={onChange}
         className={`${className} ${error ? styles.inputError : ''}`}
         autoComplete={autoComplete}
+        onKeyDown={onKeyDown}
       />
       {error && (
         <span data-testid={`${id}-error`} className={styles.error}>

@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/context/DarkModeContext'
 import { User } from '@/types/user'
 import { UserProvider } from '@/context/userContext'
 import { Post } from '@/types/post'
+import { useRouter } from 'next/navigation'
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
@@ -21,12 +22,14 @@ export default function Providers({ children }: { children: ReactNode }) {
 function ClientSessionHandler({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
   useEffect(() => {
+    if (status === 'loading') return
+
     if (!session?.user?.id) {
-      setUser(null)
-      setPosts([])
+      router.push('/')
       return
     }
 
@@ -55,11 +58,12 @@ function ClientSessionHandler({ children }: { children: ReactNode }) {
         console.error(err)
         setUser(null)
         setPosts([])
+        router.push('/')
       }
     }
 
     fetchUserAndPosts()
-  }, [session])
+  }, [session, status, router])
 
   return (
     <UserProvider initialUser={user} initialPosts={posts}>

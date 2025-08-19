@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '@/styles/Profile.module.css'
 import PostModal from '@/components/posts/PostModal'
 import { type Comment } from '@/types/comment'
@@ -24,6 +24,26 @@ export default function PostCard({
 
   const { id, image } = post
 
+  useEffect(() => {
+    if (open) {
+      const scrollY = window.scrollY
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.left = '0'
+      document.body.style.right = '0'
+      document.body.style.width = '100%'
+
+      return () => {
+        document.body.style.position = ''
+        document.body.style.top = ''
+        document.body.style.left = ''
+        document.body.style.right = ''
+        document.body.style.width = ''
+        window.scrollTo(0, scrollY)
+      }
+    }
+  }, [open])
+
   return (
     <>
       <button
@@ -41,6 +61,10 @@ export default function PostCard({
           style={{ objectFit: 'cover' }}
           priority={priority}
         />
+        <div className={styles.overlay}>
+          <span>❤️ {post.likesCount}</span>
+          <span>💬 {post.comments.length}</span>
+        </div>
       </button>
       {open && (
         <PostModal

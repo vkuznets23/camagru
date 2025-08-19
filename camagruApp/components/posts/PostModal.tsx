@@ -39,12 +39,15 @@ export default function PostModal({
   } = post
 
   const isLiked = post.likedByCurrentUser ?? false
+  const isSaved = post.savedByCurrentUser ?? false
   const canEdit = userID === currentUserId
 
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState(content || '')
   const [isSaving, setIsSaving] = useState(false)
   const [showFullContent, setShowFullContent] = useState(false)
+
+  const editTextareaRef = useRef<HTMLTextAreaElement>(null)
 
   const safeContent = content || ''
   const lines = safeContent.split('\n')
@@ -62,7 +65,8 @@ export default function PostModal({
     ? truncatedByLines
     : truncatedByChars
 
-  const { editPost, toggleLike, deletePost, deleteComment } = useUser()
+  const { editPost, toggleLike, deletePost, deleteComment, toggleSavePost } =
+    useUser()
 
   const modalRef = useRef<HTMLDivElement>(null)
 
@@ -128,8 +132,11 @@ export default function PostModal({
   }, [onClose])
 
   const handleSave = async () => {
+    if (!editTextareaRef.current) return
+    const newContent = editTextareaRef.current.value
     setIsSaving(true)
-    await editPost(postId, editedContent)
+    await editPost(postId, newContent)
+    setEditedContent(newContent)
     setIsSaving(false)
     setIsEditing(false)
   }
@@ -236,8 +243,8 @@ export default function PostModal({
                         data-testid="edit-post"
                         onKeyDown={handleKeyDown}
                         className={styles.textarea}
-                        value={editedContent}
-                        onChange={(e) => setEditedContent(e.target.value)}
+                        ref={editTextareaRef}
+                        defaultValue={editedContent}
                       />
                       <div className={styles.editButtons}>
                         <button onClick={handleSave} disabled={isSaving}>
@@ -267,10 +274,12 @@ export default function PostModal({
                       <PostActions
                         canEdit={canEdit}
                         isLiked={isLiked}
+                        isSaved={isSaved}
                         likesCount={likesCount}
                         onDelete={() => deletePost(postId)}
                         onEdit={() => setIsEditing(true)}
                         onToggleLike={() => toggleLike(postId)}
+                        onToggleSave={() => toggleSavePost(post)}
                       />
                     </>
                   )}

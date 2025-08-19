@@ -26,7 +26,11 @@ export default function UserPosts() {
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           )
           .map((post, index) => (
-            <article key={post.id} role="listitem">
+            <article
+              key={post.id}
+              role="listitem"
+              className={styles.postCardСardWrapper}
+            >
               <PostCard
                 post={post}
                 onCommentAdded={handleCommentAdded}

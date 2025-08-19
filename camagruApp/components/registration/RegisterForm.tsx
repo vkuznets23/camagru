@@ -16,7 +16,6 @@ import TextInput from '../TextInput'
 import PasswordInput from '../PasswordInput'
 import RegisterLogo from '../RegisterLogo'
 import { useTheme } from '@/context/DarkModeContext'
-import PasswordRequirements from './PasswordsRequirements'
 
 export default function RegisterForm() {
   const { theme } = useTheme()
@@ -239,7 +238,6 @@ export default function RegisterForm() {
           error={errors.password}
         />
         {password && <PasswordStrengthBar strength={passwordStrength} />}
-        {password && <PasswordRequirements password={password} />}
         <Button
           id="register-button"
           testid="register-button"

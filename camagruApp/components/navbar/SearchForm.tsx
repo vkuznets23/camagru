@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import TextInput from '../TextInput'
 import styles from '@/styles/Navbar.module.css'
 import Link from 'next/link'
@@ -13,6 +13,24 @@ export default function SearchForm() {
   const [search, setSearch] = useState('')
   const [results, setResults] = useState<User[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
+
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false)
+        setActiveIndex(-1)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -22,6 +40,7 @@ export default function SearchForm() {
           .then((data) => {
             setResults(data.users || [])
             setShowDropdown(true)
+            setActiveIndex(-1)
           })
           .catch((err) => {
             console.error('Search error:', err)
@@ -45,8 +64,34 @@ export default function SearchForm() {
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showDropdown) return
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setActiveIndex((prev) => (prev + 1) % results.length)
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActiveIndex((prev) => (prev - 1 + results.length) % results.length)
+    } else if (e.key === 'Enter') {
+      e.preventDefault()
+      if (activeIndex >= 0 && activeIndex < results.length) {
+        const user = results[activeIndex]
+        setShowDropdown(false)
+        setSearch('')
+        router.push(`/user/${user.id}`)
+      } else {
+        handleSubmit(e)
+      }
+    }
+  }
+
   return (
-    <div className={styles.searchWrapper} style={{ position: 'relative' }}>
+    <div
+      ref={dropdownRef}
+      className={styles.searchWrapper}
+      style={{ position: 'relative' }}
+    >
       <form onSubmit={handleSubmit} className={styles.searchForm}>
         <TextInput
           id="search"
@@ -54,6 +99,7 @@ export default function SearchForm() {
           placeholder="Search accounts..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
           autoComplete="off"
         />
       </form>
@@ -61,8 +107,13 @@ export default function SearchForm() {
       {showDropdown && (
         <ul className={styles.searchDropdown}>
           {results.length > 0 ? (
-            results.map((user) => (
-              <li key={user.id} className={styles.searchDropdownItem}>
+            results.map((user, index) => (
+              <li
+                key={user.id}
+                className={`${styles.searchDropdownItem} ${
+                  index === activeIndex ? styles.activeDropdownItem : ''
+                }`}
+              >
                 <Link
                   href={`/user/${user.id}`}
                   onClick={() => {

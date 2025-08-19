@@ -14,7 +14,7 @@
   border: 1px solid var(--card-border);
   padding: 40px 40px 20px 40px;
   width: 100%;
-  max-width: 350px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -44,7 +44,7 @@
 }
 
 .input {
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 0.75rem;
   border: 1px solid var(--input-border);
   border-radius: 3px;
   background: var(--input-bg);
@@ -58,11 +58,13 @@
 .button {
   background-color: var(--accent);
   border: none;
-  padding: 8px;
+  padding: 10px;
   color: white;
+  font-size: 15px;
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .button:disabled {
@@ -96,7 +98,7 @@
 .error {
   color: var(--error-color);
   font-size: 12px;
-  margin-top: 2px;
+  min-height: 10px;
 }
 
 /* password strength */
@@ -143,7 +145,7 @@
 .extraContainer {
   padding: 20px;
   width: 100%;
-  max-width: 350px;
+  max-width: 400px;
   margin-top: 10px;
   text-align: center;
   font-size: 14px;

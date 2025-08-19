@@ -14,6 +14,9 @@ interface UserContextType {
 
   posts: Post[]
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>
+
+  savedPosts: Post[]
+  toggleSavePost: (post: Post) => Promise<void>
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -29,6 +32,61 @@ export function UserProvider({
 }) {
   const [user, setUser] = useState<User | null>(initialUser)
   const [posts, setPosts] = useState<Post[]>(initialPosts)
+  const [savedPosts, setSavedPosts] = useState<Post[]>(
+    initialUser?.savedPosts || []
+  )
+
+  const toggleSavePost = async (post: Post) => {
+    try {
+      const res = await fetch(`/api/posts/save`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          postId: post.id,
+          save: !post.savedByCurrentUser,
+        }),
+      })
+
+      if (!res.ok) throw new Error('Failed to toggle save')
+
+      const updatedPost: Post = await res.json()
+
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === updatedPost.id
+            ? { ...p, savedByCurrentUser: updatedPost.savedByCurrentUser }
+            : p
+        )
+      )
+
+      setSavedPosts((prev) =>
+        updatedPost.savedByCurrentUser
+          ? [updatedPost, ...prev.filter((p) => p.id !== updatedPost.id)]
+          : prev.filter((p) => p.id !== updatedPost.id)
+      )
+
+      setUser((prevUser) =>
+        prevUser
+          ? {
+              ...prevUser,
+              savedPosts: updatedPost.savedByCurrentUser
+                ? [updatedPost, ...(prevUser.savedPosts || [])]
+                : (prevUser.savedPosts || []).filter(
+                    (p) => p.id !== updatedPost.id
+                  ),
+              posts: prevUser.posts?.map((p) =>
+                p.id === updatedPost.id
+                  ? { ...p, savedByCurrentUser: updatedPost.savedByCurrentUser }
+                  : p
+              ),
+            }
+          : prevUser
+      )
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   const editPost = async (postId: string, newContent: string) => {
     const res = await fetch(`/api/posts?postId=${postId}`, {
@@ -180,6 +238,8 @@ export function UserProvider({
         deletePost,
         deleteComment,
         handleCommentAdded,
+        savedPosts,
+        toggleSavePost,
       }}
     >
       {children}
