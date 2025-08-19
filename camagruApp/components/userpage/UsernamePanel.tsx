@@ -4,7 +4,6 @@ import { MdOutlineEdit } from 'react-icons/md'
 import UserStats from './UserStats'
 import UserBio from './UserBio'
 import { useUser } from '@/context/userContext'
-// import { type User } from '@/types/user'
 
 interface Props {
   // user: User
