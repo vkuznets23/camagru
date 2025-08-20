@@ -11,6 +11,7 @@ interface Props {
   username: string
   classNameEdit?: string
   classNameFollow?: string
+  view: string
 }
 
 export default function ProfileActionButton({
@@ -21,11 +22,12 @@ export default function ProfileActionButton({
   username,
   classNameEdit,
   classNameFollow,
+  view,
 }: Props) {
   if (isMyProfile) {
     return (
       <Link
-        data-testid="edit-user"
+        data-testid={`edit-user-${view}`}
         href="/edit-user"
         className={classNameEdit}
         aria-label="Edit profile"
@@ -37,7 +39,7 @@ export default function ProfileActionButton({
 
   return (
     <button
-      data-testid="follow-user"
+      data-testid={`follow-user-${view}`}
       className={classNameFollow}
       onClick={isFollowing ? onUnfollow : onFollow}
       aria-label={isFollowing ? `Unfollow ${username}` : `Follow ${username}`}
