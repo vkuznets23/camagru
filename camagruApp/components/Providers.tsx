@@ -29,7 +29,15 @@ function ClientSessionHandler({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (status === 'loading') return
 
-    const publicPages = ['/auth/signin', '/auth/register']
+    const publicPages = [
+      '/auth/signin',
+      '/auth/register',
+      '/auth/forgot-password',
+      '/auth/notification',
+      '/auth/reset-password',
+      '/auth/verify-email',
+      '/auth/verify-request',
+    ]
     if (publicPages.includes(pathname || '')) return
 
     if (!session?.user?.id) {
