@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/context/DarkModeContext'
 import { User } from '@/types/user'
 import { UserProvider } from '@/context/userContext'
 import { Post } from '@/types/post'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
@@ -24,9 +24,13 @@ function ClientSessionHandler({ children }: { children: ReactNode }) {
   const [posts, setPosts] = useState<Post[]>([])
   const { data: session, status } = useSession()
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     if (status === 'loading') return
+
+    const publicPages = ['/auth/signin', '/auth/register']
+    if (publicPages.includes(pathname || '')) return
 
     if (!session?.user?.id) {
       router.push('/')
@@ -63,7 +67,7 @@ function ClientSessionHandler({ children }: { children: ReactNode }) {
     }
 
     fetchUserAndPosts()
-  }, [session, status, router])
+  }, [session, status, router, pathname])
 
   return (
     <UserProvider initialUser={user} initialPosts={posts}>
