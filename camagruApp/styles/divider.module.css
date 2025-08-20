@@ -5,20 +5,9 @@
   max-width: 840px;
   width: 100%;
   margin: 0 auto;
+  margin-bottom: 15px;
   border-top: 1px solid var(--divider);
   padding-inline: 0;
-}
-
-@media (max-width: 900px) {
-  .divider {
-    width: calc(100% - 64px);
-  }
-}
-
-@media (max-width: 600px) {
-  .divider {
-    width: 100%;
-  }
 }
 
 .sections {
@@ -40,4 +29,20 @@
   gap: 10px;
   padding: 10px;
   color: var(--section-color-inactive-light);
+}
+
+@media (max-width: 900px) {
+  .divider {
+    width: calc(100% - 64px);
+  }
+}
+
+@media (max-width: 600px) {
+  .divider {
+    width: 100%;
+  }
+
+  .section {
+    font-size: 18px;
+  }
 }
