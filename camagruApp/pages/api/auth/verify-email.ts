@@ -22,10 +22,13 @@ export default async function handler(
       return
     }
 
-    const record = await prisma.emailVerificationToken.findUnique({
+    const record = await prisma.emailVerificationToken.findFirst({
       where: { token },
       include: { user: true },
     })
+
+    console.log('Token from query:', token)
+    console.log('Record found:', record)
 
     if (!record) {
       res.writeHead(302, {
