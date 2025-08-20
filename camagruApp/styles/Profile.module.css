@@ -571,7 +571,12 @@ body.modal-open .postCardWrapper:hover .overlay {
 
 @media (max-width: 820px) {
   .notingToSee {
+    margin-top: -50px;
     padding-bottom: 70px;
+  }
+
+  .postsContainer {
+    margin-bottom: 60px;
   }
   .cancelButton {
     height: 40px;
@@ -638,5 +643,8 @@ body.modal-open .postCardWrapper:hover .overlay {
   .avatar {
     width: 120px;
     height: 120px;
+  }
+  .notingToSee {
+    margin-top: -40px;
   }
 }
