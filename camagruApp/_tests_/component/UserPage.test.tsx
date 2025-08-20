@@ -92,7 +92,7 @@ describe('UserProfile with real UserProvider', () => {
       expect(screen.getByLabelText(/John Doe's profile/i)).toBeInTheDocument()
     })
 
-    const followButton = await screen.findByRole('button', { name: /follow/i })
+    const followButton = await screen.findByTestId('follow-user-desktop')
     fireEvent.click(followButton)
 
     await waitFor(() => {

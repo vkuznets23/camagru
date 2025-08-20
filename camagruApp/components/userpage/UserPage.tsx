@@ -121,6 +121,7 @@ export default function UserProfile() {
         username={user.username}
         classNameEdit={styles.buttonMobile}
         classNameFollow={styles.buttonMobile}
+        view="mobile"
       />
 
       <UserContentTabs />

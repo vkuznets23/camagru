@@ -35,6 +35,7 @@ export default function UsernamePanel({
             username={user.username}
             classNameEdit={styles.navBtn}
             classNameFollow={styles.button}
+            view="desktop"
           />
         </div>
         <UserStats
