@@ -22,6 +22,9 @@ export default async function handler(
           contains: query,
           mode: 'insensitive',
         },
+        emailVerified: {
+          not: null,
+        },
       },
       select: {
         id: true,

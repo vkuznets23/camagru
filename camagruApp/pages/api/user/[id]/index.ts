@@ -25,6 +25,7 @@ export default async function handler(
           name: true,
           bio: true,
           image: true,
+          emailVerified: true,
           _count: {
             select: { posts: true, followers: true, following: true },
           },
@@ -71,7 +72,8 @@ export default async function handler(
         },
       })
 
-      if (!user) return res.status(404).json({ error: 'User not found' })
+      if (!user || !user.emailVerified)
+        return res.status(404).json({ error: 'User not found' })
 
       const sanitizedPosts = (user.posts ?? []).map((post) => ({
         ...post,
