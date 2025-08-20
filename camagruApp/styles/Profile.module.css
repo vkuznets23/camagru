@@ -581,6 +581,10 @@ body.modal-open .postCardWrapper:hover .overlay {
     padding: 30px 45px 30px;
   }
 
+  .posts {
+    padding-top: 0px;
+  }
+
   .buttonMobile {
     display: block;
     margin: 0px 20px 30px;

@@ -7,7 +7,7 @@
   --foreground: #171717;
   --border: #ccc;
   --border-alt: #e1e1e1;
-  --divider: #c4c4c4;
+  --divider: #eaeaea;
   --divider2: #eee;
   --hover-bg: #f5f5f5;
   --hover-bg-active: #f1f1f1;
@@ -16,8 +16,8 @@
   --icon-bg: black;
   --icon-color-light: white;
   --dropdown-bg: white;
-  --section-color-inactive-light: #b4b4b4;
-  --section-color-active-light: #1e1e1e;
+  --section-color-inactive-light: #dbdbdb;
+  --section-color-active-light: #262626;
   --error-color: red;
   --delete-hover-color: #d9363e;
 
