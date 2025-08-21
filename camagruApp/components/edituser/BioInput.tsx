@@ -13,10 +13,14 @@ export default function BioInput({ bio, onChange, error }: Props) {
 
   return (
     <>
+      <label htmlFor="textarea" className={styles.srOnly}>
+        Bio
+      </label>
       <textarea
         id={textareaId}
         maxLength={150}
         className={`${styles.textarea} ${error ? styles.inputError : ''}`}
+        placeholder="Write something about you"
         value={bio}
         onChange={onChange}
         aria-invalid={!!error}

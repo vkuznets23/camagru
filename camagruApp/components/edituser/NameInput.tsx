@@ -13,11 +13,15 @@ export default function NameInput({ name, onChange, error }: Props) {
 
   return (
     <>
+      <label htmlFor="input" className={styles.srOnly}>
+        Name
+      </label>
       <input
         id={inputId}
         maxLength={30}
         className={`${styles.input} ${error ? styles.inputError : ''}`}
         value={name}
+        placeholder="Your name"
         onChange={onChange}
         aria-invalid={!!error}
         aria-describedby={`${error ? errorId : ''} ${counterId}`}
