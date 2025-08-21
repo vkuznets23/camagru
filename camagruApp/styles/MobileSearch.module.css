@@ -1,7 +1,7 @@
 .mobileSearchPage {
   max-width: 935px;
   width: 100%;
-  margin: 2rem auto;
+  margin: auto;
   padding: 20px 30px 45px;
   background-color: var(--background);
   color: var(--foreground);
@@ -17,13 +17,31 @@
   margin-bottom: 12px;
 }
 
-.closeButton {
-  font-size: 28px;
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.clearButton {
   background: transparent;
   border: none;
   cursor: pointer;
   color: var(--accent);
-  line-height: 1;
+}
+
+.removeButton {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  color: var(--text-primary);
+  font-weight: 100;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .searchForm {

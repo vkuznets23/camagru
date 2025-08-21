@@ -125,7 +125,7 @@
   text-align: start;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #31a6f5, #81cafa);
+  background: linear-gradient(135deg, var(--banner-bg1), var(--banner-bg2));
   gap: 1rem;
   padding: 30px 60px;
 }

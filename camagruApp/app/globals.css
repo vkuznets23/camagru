@@ -3,6 +3,8 @@
   --bg: #fafafa;
   --card-bg: #ffffff;
   --card-border: #dbdbdb;
+  --banner-bg1: #31a6f5;
+  --banner-bg2: #81cafa;
 
   --foreground: #171717;
   --border: #ccc;
@@ -57,6 +59,8 @@
   --text-muted: #aaa;
   --input-bg: #2a2a2a;
   --input-border: #444;
+  --banner-bg1: #2172a8;
+  --banner-bg2: #5686a6;
 
   --background: #121212;
   --bg: #161616;

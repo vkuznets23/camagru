@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@/styles/FollowersPage.module.css'
 import { useSession } from 'next-auth/react'
+import { HistoryItem } from './navbar/MobileSearchPage'
 
 export type FollowerPreview = {
   id: string
@@ -20,6 +21,8 @@ type UserListProps = {
   emptyMessage: string
   noPadding?: boolean
   onToggleFollow?: (userId: string) => void
+  onUserClick?: (username: FollowerPreview) => void
+  renderExtra?: (user: FollowerPreview | HistoryItem) => React.ReactNode
 }
 
 export default function UserList({
@@ -27,6 +30,8 @@ export default function UserList({
   emptyMessage,
   noPadding = false,
   onToggleFollow,
+  onUserClick,
+  renderExtra,
 }: UserListProps) {
   const { data: session } = useSession()
   const currentUserId = session?.user?.id
@@ -40,7 +45,11 @@ export default function UserList({
       ) : (
         <ul className={styles.list}>
           {users.map((user) => (
-            <li key={user.id} className={styles.userRow}>
+            <li
+              key={user.id}
+              className={styles.userRow}
+              onClick={() => onUserClick && onUserClick(user)}
+            >
               <div className={styles.item}>
                 <Link href={`/user/${user.id}`} className={styles.itemLink}>
                   <Image
@@ -70,6 +79,7 @@ export default function UserList({
                     {user.isFollowing ? 'Unfollow' : 'Follow'}
                   </button>
                 )}
+                {renderExtra && renderExtra(user)}
               </div>
             </li>
           ))}
