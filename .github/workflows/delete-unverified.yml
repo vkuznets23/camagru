@@ -35,5 +35,6 @@ jobs:
             Workflow: Delete unverified users
             Event: ${{ github.event_name }}
             Actor: ${{ github.actor }}
+            Repository: ${{ github.repository }}
             Status: ${{ steps.trigger-api.outputs.status == 'success' && '✅ API call succeeded' || '❌ API call failed' }}
             Response body: ${{ steps.trigger-api.outputs.response_body }}
