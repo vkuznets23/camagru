@@ -48,8 +48,17 @@ jobs:
         with:
           version: 7
 
+      - name: Install Vercel CLI
+        run: pnpm add --global vercel@latest
+        working-directory: camagruApp
+
+      - name: Disable Vercel telemetry
+        run: vercel telemetry disable
+        working-directory: camagruApp
+
       - name: Pull Vercel environment
-        run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: camagruApp
 
   deploy_to_vercel:
     needs: build-and-test
@@ -57,10 +66,12 @@ jobs:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
     steps:
       - name: Build project on Vercel
-        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: camagruApp
 
       - name: Deploy to Vercel
-        run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: camagruApp
 
   tag_release:
     needs: deploy_to_vercel
@@ -71,11 +82,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: ${{ github.event.inputs.bump}}
+          DEFAULT_BUMP: ${{ github.event.inputs.bump }}
           DRY_RUN: false
 
   notify_discord:
