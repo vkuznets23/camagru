@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-test-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,22 +23,6 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: camagruApp
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: camagruApp-build
-          path: camagruApp/.next/**
-
-  deploy-to-vercel:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download build
-        uses: actions/download-artifact@v4
-        with:
-          name: camagruApp-build
-          path: camagruApp/.next
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -50,7 +34,7 @@ jobs:
         working-directory: camagruApp
 
   tag_release:
-    needs: deploy-to-vercel
+    needs: build-test-deploy
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
@@ -67,7 +51,7 @@ jobs:
           DRY_RUN: false
 
   notify_discord:
-    needs: [build-and-test, deploy-to-vercel, tag_release]
+    needs: [build-test-deploy, tag_release]
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord notification
