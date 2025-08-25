@@ -8,56 +8,46 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    outputs:
-      build-status: ${{ steps.build.outcome }}
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
       - name: Install dependencies
         run: npm ci
         working-directory: camagruApp
-
       - name: Generate Prisma client
         run: npx prisma generate
         working-directory: camagruApp
-
       - name: Run tests
         run: npm test
         working-directory: camagruApp
-
       - name: Build
-        id: build
         run: npm run build
         working-directory: camagruApp
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: camagruApp-build
+          path: camagruApp/.next
 
   deploy-to-vercel:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: ${{ needs.build-and-test.result == 'success' }}
     steps:
       - uses: actions/checkout@v3
-
+      - name: Download build
+        uses: actions/download-artifact@v3
+        with:
+          name: camagruApp-build
+          path: camagruApp/.next
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 7
-
       - name: Install Vercel CLI
         run: pnpm add --global vercel@latest
-
-      - name: Pull Vercel environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: camagruApp
-
-      - name: Build project on Vercel
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: camagruApp
-
       - name: Deploy to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: camagruApp
