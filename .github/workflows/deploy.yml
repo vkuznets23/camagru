@@ -69,11 +69,11 @@ jobs:
         uses: rjstone/discord-webhook-notify@v2
         with:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          severity: ${{ needs.build-and-test.result == 'success' && needs.build-test-deployment.result == 'success' && needs.tag_release.result == 'success' && 'info' || 'error' }}
+          severity: ${{ needs.build-test-deployment.result == 'success' && needs.tag_release.result == 'success' && 'info' || 'error' }}
           details: |
             Repository: ${{ github.repository }}
             Workflow: ${{ github.workflow }}
             Event: ${{ github.event_name }}
             Actor: ${{ github.actor }}
             Commit: ${{ github.sha }}
-            Status: ${{ needs.build-and-test.result == 'success' && needs.build-test-deployment.result == 'success' && needs.tag_release.result == 'success' && '✅ All jobs succeeded' || '❌ Some jobs failed' }}
+            Status: ${{ needs.build-test-deployment.result == 'success' && needs.tag_release.result == 'success' && '✅ All jobs succeeded' || '❌ Some jobs failed' }}
