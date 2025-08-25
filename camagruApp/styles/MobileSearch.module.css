@@ -33,6 +33,15 @@
   color: var(--accent);
 }
 
+@media (max-width: 820px) {
+  .header {
+    font-size: 18px;
+  }
+  .clearButton {
+    font-size: 18px;
+  }
+}
+
 .removeButton {
   font-size: 24px;
   width: 40px;
