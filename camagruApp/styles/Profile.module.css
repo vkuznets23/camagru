@@ -191,8 +191,12 @@
 
 .usernamePanel {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 15px;
+}
+
+.usernamePanel a {
+  margin-top: 5px;
 }
 
 .followersContainer strong {
