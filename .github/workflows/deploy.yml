@@ -29,6 +29,9 @@ jobs:
       - name: Debug build output
         run: ls -R camagruApp/.next
 
+      - name: Debug project tree
+        run: ls -R camagruApp
+
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
