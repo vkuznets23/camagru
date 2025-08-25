@@ -10,5 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Next.js API
+        id: trigger-api
         run: |
-          curl -X GET https://camagru-tau.vercel.app/api/deleteUnverified
+          response=$(curl -s -w "%{http_code}" -o /tmp/response.txt -X GET https://camagru-tau.vercel.app/api/deleteUnverified)
+          body=$(cat /tmp/response.txt)
+          echo "response_body=$body" >> $GITHUB_OUTPUT
+          if [[ "$response" -ge 200 && "$response" -lt 300 ]]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "✅ API triggered successfully (HTTP $response)"
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "❌ API call failed with status $response"
+            echo "Response body:"
+            echo "$body"
+            exit 1
+
+      - name: Notify Discord
+        if: always()
+        uses: rjstone/discord-webhook-notify@v2
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          severity: ${{ steps.trigger-api.outputs.status == 'success' && 'info' || 'error' }}
+          details: |
+            Workflow: Delete unverified users
+            Event: ${{ github.event_name }}
+            Actor: ${{ github.actor }}
+            Status: ${{ steps.trigger-api.outputs.status == 'success' && '✅ API call succeeded' || '❌ API call failed' }}
+            Response body: ${{ steps.trigger-api.outputs.response_body }}

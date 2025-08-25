@@ -71,6 +71,7 @@ jobs:
   notify_discord:
     needs: [build-test-deployment, tag_release]
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - name: Send Discord notification
         uses: rjstone/discord-webhook-notify@v2
