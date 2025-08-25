@@ -17,7 +17,7 @@ on:
           - patch
 
 jobs:
-  build-and-test:
+  build-test-deployment:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -42,13 +42,8 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: camagruApp
-
-  deploy_to_vercel:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
-    steps:
-      - name: Setup pnpm
+      
+        - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 7
@@ -66,7 +61,7 @@ jobs:
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   tag_release:
-    needs: deploy_to_vercel
+    needs: build-test-deployment
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
     steps:
@@ -83,18 +78,18 @@ jobs:
           DRY_RUN: false
 
   notify_discord:
-    needs: [build-and-test, deploy_to_vercel, tag_release]
+    needs: [build-test-deployment, tag_release]
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord notification
         uses: rjstone/discord-webhook-notify@v2
         with:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          severity: ${{ needs.build-and-test.result == 'success' && needs.deploy_to_vercel.result == 'success' && needs.tag_release.result == 'success' && 'info' || 'error' }}
+          severity: ${{ needs.build-and-test.result == 'success' && needs.build-test-deployment.result == 'success' && needs.tag_release.result == 'success' && 'info' || 'error' }}
           details: |
             Repository: ${{ github.repository }}
             Workflow: ${{ github.workflow }}
             Event: ${{ github.event_name }}
             Actor: ${{ github.actor }}
             Commit: ${{ github.sha }}
-            Status: ${{ needs.build-and-test.result == 'success' && needs.deploy_to_vercel.result == 'success' && needs.tag_release.result == 'success' && '✅ All jobs succeeded' || '❌ Some jobs failed' }}
+            Status: ${{ needs.build-and-test.result == 'success' && needs.build-test-deployment.result == 'success' && needs.tag_release.result == 'success' && '✅ All jobs succeeded' || '❌ Some jobs failed' }}
