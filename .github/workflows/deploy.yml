@@ -42,8 +42,8 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: camagruApp
-      
-        - name: Setup pnpm
+
+      - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 7
