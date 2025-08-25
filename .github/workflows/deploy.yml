@@ -21,7 +21,7 @@ jobs:
         run: npx prisma generate
         working-directory: camagruApp
       - name: Build
-        run: next build
+        run: npm run build
         working-directory: camagruApp
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
