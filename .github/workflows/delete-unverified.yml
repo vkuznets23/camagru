@@ -24,6 +24,7 @@ jobs:
             echo "Response body:"
             echo "$body"
             exit 1
+          fi  # <- обязательно закрыть if
 
       - name: Notify Discord
         if: always()
