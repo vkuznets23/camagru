@@ -33,26 +33,31 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: camagruApp-build
-          path: camagruApp/.next/**
+          path: camagruApp/.next
+          if-no-files-found: error
 
   deploy-to-vercel:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Download build
         uses: actions/download-artifact@v4
         with:
           name: camagruApp-build
           path: camagruApp/.next
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 7
+
       - name: Install Vercel CLI
         run: pnpm add --global vercel@latest
+
       - name: Deploy to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: camagruApp
 
   tag_release:
