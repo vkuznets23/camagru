@@ -85,7 +85,7 @@ jobs:
           DRY_RUN: false
 
   notify_discord:
-    needs: [build-and-test, deploy-to-vercel, tag_release]
+    needs: [build-and-test, deploy_to_vercel, tag_release]
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord notification
