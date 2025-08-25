@@ -30,7 +30,7 @@ jobs:
         run: ls -R camagruApp/.next
 
       - name: Debug project tree
-        run: ls -R camagru
+        run: ls -R
 
       - name: Upload build
         uses: actions/upload-artifact@v4
