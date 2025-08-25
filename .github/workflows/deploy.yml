@@ -29,19 +29,19 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: camagru/camagruApp
+        working-directory: camagruApp
 
       - name: Generate Prisma client
         run: npx prisma generate
-        working-directory: camagru/camagruApp
+        working-directory: camagruApp
 
       - name: Run tests
         run: npm test
-        working-directory: camagru/camagruApp
+        working-directory: camagruApp
 
       - name: Build
         run: npm run build
-        working-directory: camagru/camagruApp
+        working-directory: camagruApp
 
   deploy_to_vercel:
     needs: build-and-test
