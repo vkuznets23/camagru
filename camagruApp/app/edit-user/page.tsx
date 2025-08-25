@@ -28,10 +28,10 @@ export default function SettingsPage() {
   // utils?
   const formValidation = (name: string, bio: string) => {
     const newErrors: { [key: string]: string } = {}
-    if (name.length > 30 || name.length < 2) {
+    if (name && (name.length > 30 || name.length < 2)) {
       newErrors.name = 'Name should be 2-30 chars'
     }
-    if (bio.length > 150) {
+    if (bio && bio.length > 150) {
       newErrors.bio = 'Bio should be less than 150 char'
     }
     setErrors(newErrors)

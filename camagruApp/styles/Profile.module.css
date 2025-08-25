@@ -191,8 +191,12 @@
 
 .usernamePanel {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 15px;
+}
+
+.usernamePanel a {
+  margin-top: 5px;
 }
 
 .followersContainer strong {
@@ -433,7 +437,11 @@
   border: 1.5px solid black;
   padding: 1rem;
   border-radius: 50%;
+  aspect-ratio: 1 / 1;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .noPostsPic {
