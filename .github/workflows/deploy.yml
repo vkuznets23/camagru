@@ -57,7 +57,7 @@ jobs:
         working-directory: camagruApp
 
       - name: Pull Vercel environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --name camagru
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: camagruApp
 
   deploy_to_vercel:
