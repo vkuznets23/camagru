@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: camagruApp-build
-          path: camagruApp/.next
+          path: camagruApp/.next/**
 
   deploy-to-vercel:
     needs: build-and-test
