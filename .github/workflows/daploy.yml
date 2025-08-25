@@ -4,9 +4,20 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump type"
+        required: true
+        default: patch
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
 
 jobs:
-  build-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
         working-directory: camagruApp
+
+      - name: Check style
+        run: npm run eslint
 
       - name: Generate Prisma client
         run: npx prisma generate
@@ -43,8 +57,46 @@ jobs:
       - name: Pull Vercel environment
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
+  deploy-to_vercel:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+    steps:
       - name: Build project on Vercel
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+  tag_release:
+    needs: deploy_to_vercel
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: ${{ github.event.inputs.bump}}
+          DRY_RUN: false
+
+  notify_discord:
+    needs: [build-and-test, deploy-to-vercel, tag_release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord notification
+        uses: rjstone/discord-webhook-notify@v2
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          severity: ${{ needs.build-and-test.result == 'success' && needs.deploy-to-vercel.result == 'success' && needs.tag_release.result == 'success' && 'info' || 'error' }}
+          details: |
+            Repository: ${{ github.repository }}
+            Workflow: ${{ github.workflow }}
+            Event: ${{ github.event_name }}
+            Actor: ${{ github.actor }}
+            Commit: ${{ github.sha }}
+            Status: ${{ needs.build-and-test.result == 'success' && needs.deploy-to-vercel.result == 'success' && needs.tag_release.result == 'success' && '✅ All jobs succeeded' || '❌ Some jobs failed' }}
