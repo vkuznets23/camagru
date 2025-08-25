@@ -63,7 +63,7 @@ jobs:
         uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: pathch
+          DEFAULT_BUMP: patch
           DRY_RUN: false
 
   notify_discord:
