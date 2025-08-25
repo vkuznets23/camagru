@@ -16,15 +16,18 @@ jobs:
 
       - name: Health check with session
         id: check
+        shell: bash
         run: |
           response=$(curl -b cookies.txt -s -o /tmp/response.txt -w "%{http_code}" https://camagru-tau.vercel.app/feed)
           body=$(cat /tmp/response.txt)
           echo "response_body=$body" >> $GITHUB_OUTPUT
+
           if [[ "$response" -ge 200 && "$response" -lt 300 ]]; then
             echo "✅ Authenticated health check passed"
           else
             echo "❌ Authenticated health check failed (HTTP $response)"
             exit 1
+          fi
 
       - name: Notify Discord if failed
         if: failure()
