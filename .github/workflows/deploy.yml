@@ -4,17 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      bump:
-        description: "Version bump type"
-        required: true
-        default: patch
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
 
 jobs:
   build-test-deployment:
@@ -74,7 +63,7 @@ jobs:
         uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: ${{ github.event.inputs.bump }}
+          DEFAULT_BUMP: pathch
           DRY_RUN: false
 
   notify_discord:
