@@ -8,7 +8,7 @@ const followerFactory_1 = require("./factories/followerFactory");
 const commentFactory_1 = require("./factories/commentFactory");
 async function main() {
     console.log('Start seeding...');
-    const numberOfUsers = 5;
+    const numberOfUsers = 3;
     const users = [];
     // create users
     for (let i = 0; i < numberOfUsers; i++) {

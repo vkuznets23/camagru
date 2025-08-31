@@ -33,5 +33,6 @@ function userFactory() {
         bio: faker_1.faker.lorem.sentence(),
         image: faker_1.faker.image.avatar(),
         createdAt: new Date(),
+        emailVerified: new Date(),
     };
 }

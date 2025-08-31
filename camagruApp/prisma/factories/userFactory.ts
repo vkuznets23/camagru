@@ -32,5 +32,6 @@ export function userFactory() {
     bio: faker.lorem.sentence(),
     image: faker.image.avatar(),
     createdAt: new Date(),
+    emailVerified: new Date(),
   }
 }

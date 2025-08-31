@@ -60,6 +60,7 @@ export default function PostCard({
           blurDataURL={post.blurDataURL ?? undefined}
           style={{ objectFit: 'cover' }}
           priority={priority}
+          unoptimized
         />
         <div className={styles.overlay}>
           <span>❤️ {post.likesCount}</span>
