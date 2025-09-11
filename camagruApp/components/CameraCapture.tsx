@@ -275,7 +275,12 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
         {filterData?.overlay}
       </div>
       <div
-        style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 10 }}
+        style={{
+          marginTop: 10,
+          display: 'grid',
+          gap: 10,
+          gridTemplateColumns: 'repeat(3, 1fr)',
+        }}
       >
         {(Object.keys(filtersWithOverlay) as FilterName[]).map((f) => (
           <button
@@ -297,7 +302,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
               : f === 'grayscale(100%)'
               ? 'Paris'
               : f === 'sanfrancisco'
-              ? 'San Francisco'
+              ? 'SanFr'
               : f.charAt(0).toUpperCase() + f.slice(1)}
           </button>
         ))}
