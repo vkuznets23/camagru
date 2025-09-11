@@ -165,6 +165,7 @@ export function UserProvider({
         ? {
             ...prev,
             posts: prev.posts.filter((p) => p.id !== postId),
+            savedPosts: (prev.savedPosts || []).filter((p) => p.id !== postId),
             _count: { ...prev._count, posts: prev._count.posts - 1 },
           }
         : prev
