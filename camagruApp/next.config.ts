@@ -1,10 +1,16 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-
   images: {
-    domains: ['plus.unsplash.com', 'images.unsplash.com', 'res.cloudinary.com'],
+    domains: [
+      'plus.unsplash.com',
+      'images.unsplash.com',
+      'res.cloudinary.com',
+      'avatars.githubusercontent.com',
+      'loremflickr.com',
+      'source.unsplash.com',
+      'cdn.jsdelivr.net',
+    ],
   },
 }
 

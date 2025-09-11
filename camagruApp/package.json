@@ -2,7 +2,11 @@
   "name": "camagru",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "node prisma/dist/prisma/seed.js"
+  },
   "scripts": {
+    "seed": "tsc -p tsconfig.seed.json && node prisma/dist/prisma/seed.js",
     "build:test": "cross-env NODE_ENV=test next build",
     "dev:test": "cross-env NODE_ENV=test next dev -p 3001",
     "dev": "next dev --turbopack",
@@ -21,6 +25,7 @@
     "bcryptjs": "^3.0.2",
     "cross-fetch": "^4.1.0",
     "date-fns": "^4.1.0",
+    "faker": "^6.6.6",
     "next": "15.3.3",
     "next-auth": "^4.24.11",
     "node-cron": "^4.2.1",
@@ -55,6 +60,6 @@
     "jest-environment-jsdom": "^30.0.0",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }

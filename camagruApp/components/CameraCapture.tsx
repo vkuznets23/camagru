@@ -93,7 +93,6 @@ const filtersWithOverlay: Record<
     ),
   },
   nyc: {
-    // теперь как виньетка
     cssFilter: 'contrast(120%) brightness(90%) saturate(80%)',
     overlay: (
       <div
@@ -166,15 +165,79 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Применяем фильтр для захвата
-    const cssFilter = filtersWithOverlay[filter]?.cssFilter || 'none'
-    ctx.filter =
-      cssFilter === 'vignette'
-        ? 'contrast(120%) brightness(90%) saturate(80%)'
-        : cssFilter
-
+    // Базовый кадр
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
+    // === ФИЛЬТРЫ ===
+    if (filter === 'grayscale(100%)') {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      const data = imgData.data
+      for (let i = 0; i < data.length; i += 4) {
+        const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
+        data[i] = data[i + 1] = data[i + 2] = avg
+      }
+      ctx.putImageData(imgData, 0, 0)
+    }
+
+    if (filter === 'tokyo') {
+      // Синий оверлей
+      ctx.fillStyle = 'rgba(0, 80, 180, 0.2)'
+      ctx.globalCompositeOperation = 'overlay'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // Виньетка
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.3,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.7
+      )
+      gradient.addColorStop(0, 'rgba(0,0,0,0)')
+      gradient.addColorStop(1, 'rgba(0,0,0,0.5)')
+      ctx.fillStyle = gradient
+      ctx.globalCompositeOperation = 'multiply'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    }
+
+    if (filter === 'london') {
+      // Лёгкая виньетка
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.5,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.8
+      )
+      gradient.addColorStop(0, 'rgba(0,0,0,0)')
+      gradient.addColorStop(1, 'rgba(0,0,0,0.25)')
+      ctx.fillStyle = gradient
+      ctx.globalCompositeOperation = 'multiply'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    }
+
+    if (filter === 'nyc') {
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.4,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.8
+      )
+      gradient.addColorStop(0, 'rgba(0,0,0,0)')
+      gradient.addColorStop(1, 'rgba(0,0,0,0.7)')
+      ctx.fillStyle = gradient
+      ctx.globalCompositeOperation = 'multiply'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    }
+
+    // Сброс
+    ctx.globalCompositeOperation = 'source-over'
+
+    // Сохраняем
     canvas.toBlob((blob) => {
       if (blob) {
         const file = new File([blob], 'capture.jpg', { type: 'image/jpeg' })

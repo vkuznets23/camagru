@@ -2,22 +2,23 @@ import { prisma } from '@/utils/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]'
-import sharp from 'sharp'
-import fetch from 'node-fetch'
+import { getBlurDataURL } from '@/utils/blurImage'
+// import sharp from 'sharp'
+// import fetch from 'node-fetch'
 
-async function getBlurDataURL(imageUrl: string) {
-  const response = await fetch(imageUrl)
-  const buffer = await response.buffer()
+// async function getBlurDataURL(imageUrl: string) {
+//   const response = await fetch(imageUrl)
+//   const buffer = await response.buffer()
 
-  const resized = await sharp(buffer)
-    .resize(10, 10)
-    .blur()
-    .jpeg({ quality: 50 })
-    .toBuffer()
+//   const resized = await sharp(buffer)
+//     .resize(10, 10)
+//     .blur()
+//     .jpeg({ quality: 50 })
+//     .toBuffer()
 
-  const base64 = resized.toString('base64')
-  return `data:image/jpeg;base64,${base64}`
-}
+//   const base64 = resized.toString('base64')
+//   return `data:image/jpeg;base64,${base64}`
+// }
 
 export default async function handler(
   req: NextApiRequest,

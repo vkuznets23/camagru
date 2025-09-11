@@ -7,7 +7,7 @@ import styles from '@/styles/MobileNavbar.module.css'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import DarkModeToggle from '../DarkModeToggle'
-import { MdSearch } from 'react-icons/md'
+// import { MdSearch } from 'react-icons/md'
 
 export default function MobileNavbar() {
   const { data: session } = useSession()
@@ -17,7 +17,7 @@ export default function MobileNavbar() {
 
   const isFeedActive = pathname === '/feed'
   const isUserActive = pathname === `/user/${id}`
-  const isSearchActive = pathname === '/search'
+  // const isSearchActive = pathname === '/search'
 
   return (
     <div>
@@ -34,7 +34,7 @@ export default function MobileNavbar() {
               <GoHome className={styles.feedBtn} />
             )}
           </Link>
-          <Link
+          {/* <Link
             href="/search"
             aria-current={isSearchActive ? 'page' : undefined}
           >
@@ -43,7 +43,7 @@ export default function MobileNavbar() {
                 isSearchActive ? styles.searchBtnActive : styles.searchBtn
               }
             />
-          </Link>
+          </Link> */}
           <Link href="/post/create">
             <GrFormAdd className={styles.addBtn} />
           </Link>
