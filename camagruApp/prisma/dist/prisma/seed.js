@@ -76,35 +76,3 @@ main()
     .finally(async () => {
     await prisma_1.prisma.$disconnect();
 });
-// async function main() {
-//   console.log('Start seeding...')
-//   const users = [
-//     {
-//       email: 'alice@test.com',
-//       username: 'alice',
-//       password: 'hashedpassword123',
-//     },
-//     { email: 'bob@test.com', username: 'bob', password: 'hashedpassword123' },
-//     {
-//       email: 'carol@test.com',
-//       username: 'carol',
-//       password: 'hashedpassword123',
-//     },
-//   ]
-//   for (const userData of users) {
-//     const user = await prisma.user.create({
-//       data: userData,
-//     })
-//     console.log('Created user:', user.username)
-//   }
-// }
-// main()
-//   .then(() => {
-//     console.log('✅ Seeding done')
-//   })
-//   .catch((e) => {
-//     console.error(e)
-//   })
-//   .finally(async () => {
-//     await prisma.$disconnect()
-//   })

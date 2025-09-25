@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBlurDataURL = getBlurDataURL;
+exports.fetchUnsplashImage = fetchUnsplashImage;
 exports.postFactory = postFactory;
 const faker_1 = require("@faker-js/faker");
 // model Post {
@@ -39,26 +40,48 @@ async function getBlurDataURL(imageUrl) {
 }
 const ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 async function fetchUnsplashImage(query) {
-    const response = await (0, node_fetch_1.default)(`https://api.unsplash.com/photos/random?query=${query}&client_id=${ACCESS_KEY}`);
-    if (!response.ok)
-        throw new Error(`Unsplash API error: ${response.status}`);
-    const data = await response.json();
-    return {
-        full: data.urls.full,
-        thumb: data.urls.thumb,
-    };
-}
-const postImageCache = {};
-async function postFactory(userId) {
-    const categories = ['nature', 'people', 'animals', 'city'];
-    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-    let imageData = postImageCache[randomCategory];
-    if (!imageData) {
-        const image = await fetchUnsplashImage(randomCategory);
-        const blurDataURL = await getBlurDataURL(image.full);
-        imageData = { full: image.full, blurDataURL };
-        postImageCache[randomCategory] = imageData;
+    // Fallback to unique placeholder images if no API key
+    if (!ACCESS_KEY) {
+        const randomId = Math.floor(Math.random() * 1000) + 1;
+        return {
+            full: `https://picsum.photos/800/800?random=${randomId}`,
+            thumb: `https://picsum.photos/200/200?random=${randomId}`,
+        };
     }
+    try {
+        // Extract base category from unique query
+        const baseCategory = query.split('-')[0];
+        const response = await (0, node_fetch_1.default)(`https://api.unsplash.com/photos/random?query=${baseCategory}&client_id=${ACCESS_KEY}&count=1&w=800&h=800&fit=crop`);
+        if (!response.ok)
+            throw new Error(`Unsplash API error: ${response.status}`);
+        const data = await response.json();
+        return {
+            full: data.urls.full,
+            thumb: data.urls.thumb,
+        };
+    }
+    catch (error) {
+        console.warn(`Unsplash API failed, using unique placeholder: ${error}`);
+        const randomId = Math.floor(Math.random() * 1000) + 1;
+        return {
+            full: `https://picsum.photos/800/800?random=${randomId}`,
+            thumb: `https://picsum.photos/200/200?random=${randomId}`,
+        };
+    }
+}
+// Remove cache to ensure unique images for each post
+// const postImageCache: Record<string, { full: string; blurDataURL: string }> = {}
+async function postFactory(userId) {
+    const categories = ['nature', 'people', 'animals', 'city', 'food', 'studying'];
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    // Fetch unique image for each post (no caching)
+    // Add timestamp and random to ensure uniqueness
+    const uniqueQuery = `${randomCategory}-${Date.now()}-${Math.random()}`;
+    // Small delay to avoid caching issues
+    await new Promise((resolve) => setTimeout(resolve, Math.random() * 100));
+    const image = await fetchUnsplashImage(uniqueQuery);
+    const blurDataURL = await getBlurDataURL(image.full);
+    const imageData = { full: image.full, blurDataURL };
     return {
         content: faker_1.faker.lorem.paragraph(),
         image: imageData.full,
