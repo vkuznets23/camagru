@@ -81,9 +81,14 @@ export async function fetchUnsplashImage(query: string) {
     if (!response.ok) throw new Error(`Unsplash API error: ${response.status}`)
 
     const data = await response.json()
+    // Unsplash returns an array, so we need to get the first element
+    const photo = Array.isArray(data) ? data[0] : data
+    if (!photo || !photo.urls) {
+      throw new Error('Invalid response from Unsplash API')
+    }
     return {
-      full: data.urls.full,
-      thumb: data.urls.thumb,
+      full: photo.urls.full,
+      thumb: photo.urls.thumb,
     }
   } catch (error) {
     console.warn(`Unsplash API failed, using unique placeholder: ${error}`)

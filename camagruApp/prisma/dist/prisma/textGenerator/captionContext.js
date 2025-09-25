@@ -4,6 +4,7 @@ exports.CaptionContext = void 0;
 exports.createCaptionContext = createCaptionContext;
 exports.getRandomStrategyType = getRandomStrategyType;
 const fakerStrategy_1 = require("./fakerStrategy");
+const quoteStrategy_1 = require("./quoteStrategy");
 const templateStrategy_1 = require("./templateStrategy");
 class CaptionContext {
     strategy;
@@ -18,6 +19,8 @@ class CaptionContext {
                 return new fakerStrategy_1.FakerStrategy();
             case 'template':
                 return new templateStrategy_1.TemplateStrategy();
+            case 'quote':
+                return new quoteStrategy_1.QuoteStrategy();
             default:
                 console.warn(`Unknown strategy type: ${strategyType}, falling back to template`);
                 return new templateStrategy_1.TemplateStrategy();
@@ -46,20 +49,21 @@ class CaptionContext {
     }
     // Get available strategy types
     static getAvailableStrategies() {
-        return ['faker', 'template'];
+        return ['faker', 'template', 'quote'];
     }
     // Get strategy description
     static getStrategyDescription(strategyType) {
         const descriptions = {
             faker: 'Uses faker.js to generate random Lorem ipsum text with category-specific emojis',
             template: 'Uses our curated Instagram-style caption corpus with Markov chain generation',
+            quote: 'Uses inspirational quotes and sayings for each category',
         };
         return descriptions[strategyType] || 'Unknown strategy';
     }
 }
 exports.CaptionContext = CaptionContext;
 // Factory function for easy creation
-function createCaptionContext(strategyType = 'template') {
+function createCaptionContext(strategyType) {
     return new CaptionContext(strategyType);
 }
 // Utility function to get random strategy

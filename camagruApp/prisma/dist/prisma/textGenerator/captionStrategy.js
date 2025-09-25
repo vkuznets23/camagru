@@ -4,7 +4,7 @@ exports.createPostWithCaption = createPostWithCaption;
 exports.postFactory = postFactory;
 const captionContext_1 = require("./captionContext");
 // Factory function that uses Strategy Pattern
-function createPostWithCaption(category, strategyType = 'template') {
+function createPostWithCaption(category, strategyType) {
     const context = (0, captionContext_1.createCaptionContext)(strategyType);
     const caption = context.generateCaption(category);
     return {

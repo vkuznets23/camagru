@@ -1,8 +1,9 @@
 import { CaptionStrategy } from './captionStrategy'
 import { FakerStrategy } from './fakerStrategy'
+import { QuoteStrategy } from './quoteStrategy'
 import { TemplateStrategy } from './templateStrategy'
 
-export type StrategyType = 'faker' | 'template'
+export type StrategyType = 'faker' | 'template' | 'quote'
 
 export class CaptionContext {
   private strategy: CaptionStrategy
@@ -19,6 +20,8 @@ export class CaptionContext {
         return new FakerStrategy()
       case 'template':
         return new TemplateStrategy()
+      case 'quote':
+        return new QuoteStrategy()
       default:
         console.warn(
           `Unknown strategy type: ${strategyType}, falling back to template`
@@ -55,7 +58,7 @@ export class CaptionContext {
 
   // Get available strategy types
   static getAvailableStrategies(): StrategyType[] {
-    return ['faker', 'template']
+    return ['faker', 'template', 'quote']
   }
 
   // Get strategy description
@@ -65,6 +68,7 @@ export class CaptionContext {
         'Uses faker.js to generate random Lorem ipsum text with category-specific emojis',
       template:
         'Uses our curated Instagram-style caption corpus with Markov chain generation',
+      quote: 'Uses inspirational quotes and sayings for each category',
     }
     return descriptions[strategyType] || 'Unknown strategy'
   }
@@ -72,7 +76,7 @@ export class CaptionContext {
 
 // Factory function for easy creation
 export function createCaptionContext(
-  strategyType: StrategyType = 'template'
+  strategyType: StrategyType
 ): CaptionContext {
   return new CaptionContext(strategyType)
 }

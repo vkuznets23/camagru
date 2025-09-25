@@ -7,7 +7,7 @@ export interface CaptionStrategy {
 // Factory function that uses Strategy Pattern
 export function createPostWithCaption(
   category: string,
-  strategyType: 'faker' | 'template' = 'template'
+  strategyType: 'faker' | 'template' | 'quote'
 ) {
   const context = createCaptionContext(strategyType)
   const caption = context.generateCaption(category)
