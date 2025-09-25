@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       'loremflickr.com',
       'source.unsplash.com',
       'cdn.jsdelivr.net',
+      'picsum.photos',
     ],
   },
 }

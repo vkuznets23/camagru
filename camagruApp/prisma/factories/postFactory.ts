@@ -43,10 +43,15 @@ const ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY
 export async function fetchUnsplashImage(query: string) {
   // Fallback to unique placeholder images if no API key
   if (!ACCESS_KEY) {
-    const randomId = Math.floor(Math.random() * 1000) + 1
+    // Use a hash of the query to get consistent images
+    const hash = query.split('').reduce((a, b) => {
+      a = (a << 5) - a + b.charCodeAt(0)
+      return a & a
+    }, 0)
+    const imageId = (Math.abs(hash) % 1000) + 1
     return {
-      full: `https://picsum.photos/800/800?random=${randomId}`,
-      thumb: `https://picsum.photos/200/200?random=${randomId}`,
+      full: `https://picsum.photos/id/${imageId}/800/800`,
+      thumb: `https://picsum.photos/id/${imageId}/200/200`,
     }
   }
 
@@ -65,16 +70,18 @@ export async function fetchUnsplashImage(query: string) {
     }
   } catch (error) {
     console.warn(`Unsplash API failed, using unique placeholder: ${error}`)
-    const randomId = Math.floor(Math.random() * 1000) + 1
+    // Use a hash of the query to get consistent images
+    const hash = query.split('').reduce((a, b) => {
+      a = (a << 5) - a + b.charCodeAt(0)
+      return a & a
+    }, 0)
+    const imageId = (Math.abs(hash) % 1000) + 1
     return {
-      full: `https://picsum.photos/800/800?random=${randomId}`,
-      thumb: `https://picsum.photos/200/200?random=${randomId}`,
+      full: `https://picsum.photos/id/${imageId}/800/800`,
+      thumb: `https://picsum.photos/id/${imageId}/200/200`,
     }
   }
 }
-
-// Remove cache to ensure unique images for each post
-// const postImageCache: Record<string, { full: string; blurDataURL: string }> = {}
 
 export async function postFactory(userId: string) {
   const categories = ['nature', 'people', 'animals', 'city', 'food', 'studying']
@@ -82,11 +89,10 @@ export async function postFactory(userId: string) {
     categories[Math.floor(Math.random() * categories.length)]
 
   // Fetch unique image for each post (no caching)
-  // Add timestamp and random to ensure uniqueness
-  const uniqueQuery = `${randomCategory}-${Date.now()}-${Math.random()}`
-
-  // Small delay to avoid caching issues
-  await new Promise((resolve) => setTimeout(resolve, Math.random() * 100))
+  // Create a stable unique query based on category and user
+  const uniqueQuery = `${randomCategory}-${userId}-${Math.random()
+    .toString(36)
+    .substr(2, 9)}`
 
   const image = await fetchUnsplashImage(uniqueQuery)
   const blurDataURL = await getBlurDataURL(image.full)
