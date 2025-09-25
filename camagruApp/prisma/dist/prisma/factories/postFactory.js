@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBlurDataURL = getBlurDataURL;
 exports.fetchUnsplashImage = fetchUnsplashImage;
 exports.postFactory = postFactory;
-const faker_1 = require("@faker-js/faker");
+const captionContext_1 = require("../textGenerator/captionContext");
 // model Post {
 //   id        String    @id @default(cuid())
 //   content   String?
@@ -56,7 +56,18 @@ async function fetchUnsplashImage(query) {
     try {
         // Extract base category from unique query
         const baseCategory = query.split('-')[0];
-        const response = await (0, node_fetch_1.default)(`https://api.unsplash.com/photos/random?query=${baseCategory}&client_id=${ACCESS_KEY}&count=1&w=800&h=800&fit=crop`);
+        // Map categories to more specific Unsplash queries
+        const categoryQueries = {
+            people: 'portrait,person,face,selfie',
+            food: 'food,meal,dish,restaurant',
+            nature: 'landscape,nature,forest,mountain',
+            animals: 'animal,pet,dog,cat,wildlife',
+            city: 'city,urban,architecture,building',
+            studying: 'study,books,education,learning',
+        };
+        const searchQuery = categoryQueries[baseCategory] ||
+            baseCategory;
+        const response = await (0, node_fetch_1.default)(`https://api.unsplash.com/photos/random?query=${searchQuery}&client_id=${ACCESS_KEY}&count=1&w=800&h=800&fit=crop`);
         if (!response.ok)
             throw new Error(`Unsplash API error: ${response.status}`);
         const data = await response.json();
@@ -82,6 +93,11 @@ async function fetchUnsplashImage(query) {
 async function postFactory(userId) {
     const categories = ['nature', 'people', 'animals', 'city', 'food', 'studying'];
     const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    // Create caption context with specified strategy or random
+    const captionStrategy = (0, captionContext_1.getRandomStrategyType)();
+    const captionContext = (0, captionContext_1.createCaptionContext)(captionStrategy);
+    // Generate caption using Strategy Pattern
+    const caption = captionContext.generateCaption(randomCategory);
     // Fetch unique image for each post (no caching)
     // Create a stable unique query based on category and user
     const uniqueQuery = `${randomCategory}-${userId}-${Math.random()
@@ -91,7 +107,7 @@ async function postFactory(userId) {
     const blurDataURL = await getBlurDataURL(image.full);
     const imageData = { full: image.full, blurDataURL };
     return {
-        content: faker_1.faker.lorem.paragraph(),
+        content: caption,
         image: imageData.full,
         blurDataURL: imageData.blurDataURL,
         userId,

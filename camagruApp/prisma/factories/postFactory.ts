@@ -1,4 +1,7 @@
-import { faker } from '@faker-js/faker'
+import {
+  createCaptionContext,
+  getRandomStrategyType,
+} from '../textGenerator/captionContext'
 
 // model Post {
 //   id        String    @id @default(cuid())
@@ -58,8 +61,22 @@ export async function fetchUnsplashImage(query: string) {
   try {
     // Extract base category from unique query
     const baseCategory = query.split('-')[0]
+
+    // Map categories to more specific Unsplash queries
+    const categoryQueries = {
+      people: 'portrait,person,face,selfie',
+      food: 'food,meal,dish,restaurant',
+      nature: 'landscape,nature,forest,mountain',
+      animals: 'animal,pet,dog,cat,wildlife',
+      city: 'city,urban,architecture,building',
+      studying: 'study,books,education,learning',
+    }
+
+    const searchQuery =
+      categoryQueries[baseCategory as keyof typeof categoryQueries] ||
+      baseCategory
     const response = await fetch(
-      `https://api.unsplash.com/photos/random?query=${baseCategory}&client_id=${ACCESS_KEY}&count=1&w=800&h=800&fit=crop`
+      `https://api.unsplash.com/photos/random?query=${searchQuery}&client_id=${ACCESS_KEY}&count=1&w=800&h=800&fit=crop`
     )
     if (!response.ok) throw new Error(`Unsplash API error: ${response.status}`)
 
@@ -88,6 +105,13 @@ export async function postFactory(userId: string) {
   const randomCategory =
     categories[Math.floor(Math.random() * categories.length)]
 
+  // Create caption context with specified strategy or random
+  const captionStrategy = getRandomStrategyType()
+  const captionContext = createCaptionContext(captionStrategy)
+
+  // Generate caption using Strategy Pattern
+  const caption = captionContext.generateCaption(randomCategory)
+
   // Fetch unique image for each post (no caching)
   // Create a stable unique query based on category and user
   const uniqueQuery = `${randomCategory}-${userId}-${Math.random()
@@ -100,7 +124,7 @@ export async function postFactory(userId: string) {
   const imageData = { full: image.full, blurDataURL }
 
   return {
-    content: faker.lorem.paragraph(),
+    content: caption,
     image: imageData.full,
     blurDataURL: imageData.blurDataURL,
     userId,
