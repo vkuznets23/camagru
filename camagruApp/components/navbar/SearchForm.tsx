@@ -169,6 +169,7 @@ export default function SearchForm() {
                 {user.username}
               </Link>
               <button
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
