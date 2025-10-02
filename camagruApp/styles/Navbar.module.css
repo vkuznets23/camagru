@@ -110,7 +110,7 @@
 }
 
 .activeDropdownItem {
-  background-color: #eee;
+  background-color: var(--hover-bg-active);
 }
 
 .navActions {
