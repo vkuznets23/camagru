@@ -17,6 +17,13 @@
   justify-content: flex-end;
 }
 
+.searchWrapper {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  z-index: 1000;
+}
+
 .divider {
   width: 100%;
   height: 1px;
@@ -24,12 +31,16 @@
 }
 
 .searchForm {
-  flex: 1;
   min-width: 200px;
   transition: min-width 0.3s ease;
+  flex-shrink: 0;
 }
 
 .searchForm.expanded {
+  min-width: 500px;
+}
+
+.searchDropdown.expanded {
   min-width: 500px;
 }
 
@@ -47,10 +58,11 @@
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
+  right: auto;
+  width: 100%;
   border: 1px solid var(--border);
   background: var(--dropdown-bg);
-  z-index: 1000;
+  z-index: 1001;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -58,6 +70,7 @@
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+  min-width: 200px;
 }
 
 .searchDropdown li {
@@ -69,6 +82,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  pointer-events: auto;
 }
 
 .searchDropdown li:last-child {
@@ -85,6 +99,8 @@
   text-decoration: none;
   color: var(--text-primary);
   flex: 1;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .searchDropdown li a img {

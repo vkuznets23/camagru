@@ -39,6 +39,7 @@ export default function SearchForm() {
       ) {
         setShowDropdown(false)
         setShowHistory(false)
+        setIsExpanded(false)
         setActiveIndex(-1)
       }
     }
@@ -103,11 +104,7 @@ export default function SearchForm() {
   }
 
   return (
-    <div
-      ref={dropdownRef}
-      className={styles.searchWrapper}
-      style={{ position: 'relative' }}
-    >
+    <div ref={dropdownRef} className={styles.searchWrapper}>
       <form
         onSubmit={handleSubmit}
         className={`${styles.searchForm} ${isExpanded ? styles.expanded : ''}`}
@@ -136,7 +133,11 @@ export default function SearchForm() {
       </form>
 
       {showHistory && history.length > 0 && search.trim() === '' && (
-        <ul className={styles.searchDropdown}>
+        <ul
+          className={`${styles.searchDropdown} ${
+            isExpanded ? styles.expanded : ''
+          }`}
+        >
           <div className={styles.historyHeader}>
             <h3>Recent searches</h3>
             <button onClick={clearHistory} className={styles.clearButton}>
@@ -149,6 +150,8 @@ export default function SearchForm() {
                 href={`/user/${user.id}`}
                 onClick={() => {
                   setShowHistory(false)
+                  setShowDropdown(false)
+                  setIsExpanded(false)
                   setSearch('')
                 }}
                 className={styles.searchDropdownLink}
@@ -178,7 +181,11 @@ export default function SearchForm() {
       )}
 
       {showDropdown && (
-        <ul className={styles.searchDropdown}>
+        <ul
+          className={`${styles.searchDropdown} ${
+            isExpanded ? styles.expanded : ''
+          }`}
+        >
           {results.length > 0 ? (
             results.map((user, index) => (
               <li
