@@ -140,7 +140,11 @@ export default function SearchForm() {
         >
           <div className={styles.historyHeader}>
             <h3>Recent searches</h3>
-            <button onClick={clearHistory} className={styles.clearButton}>
+            <button
+              onClick={clearHistory}
+              onMouseDown={(e) => e.preventDefault()}
+              className={styles.clearButton}
+            >
               Clear All
             </button>
           </div>
