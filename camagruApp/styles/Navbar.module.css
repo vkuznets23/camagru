@@ -54,6 +54,12 @@
   font-size: 14px;
 }
 
+@media (max-width: 820px) {
+  .searchForm input {
+    font-size: 16px;
+  }
+}
+
 .searchDropdown {
   position: absolute;
   top: 100%;
