@@ -12,7 +12,7 @@ type TextInputProps = {
   autoComplete?: string
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   onFocus?: () => void
-  onBlur?: () => void
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
   onClick?: () => void
 }
 

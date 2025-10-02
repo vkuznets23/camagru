@@ -82,6 +82,10 @@ export default function SearchForm() {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab') {
+      return
+    }
+
     if (!showDropdown) return
 
     if (e.key === 'ArrowDown') {
@@ -123,7 +127,13 @@ export default function SearchForm() {
           onKeyDown={handleKeyDown}
           autoComplete="off"
           onFocus={() => setIsExpanded(true)}
-          onBlur={() => setIsExpanded(false)}
+          onBlur={(e) => {
+            const relatedTarget = e.relatedTarget as HTMLElement
+            if (relatedTarget && dropdownRef.current?.contains(relatedTarget)) {
+              return
+            }
+            setIsExpanded(false)
+          }}
           onClick={() => {
             if (history.length > 0 && !search.trim()) {
               setShowHistory(true)
