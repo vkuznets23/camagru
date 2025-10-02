@@ -59,10 +59,10 @@ export default function Navbar() {
         <Link href={`/user/${id}`} aria-label="go to profile page">
           <Logo className={styles.logo} width={134} height={47} mode={theme} />
         </Link>
+        <div className={styles.searchNavbarWrapper}>
+          <SearchForm />
+        </div>
         <div className={styles.navActions}>
-          <div className={styles.searchNavbarWrapper}>
-            <SearchForm />
-          </div>
           <Link
             href="/feed"
             aria-current={isFeedActive ? 'page' : undefined}

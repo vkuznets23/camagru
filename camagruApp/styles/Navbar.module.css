@@ -7,12 +7,14 @@
   justify-content: space-between;
   padding: 40px;
   position: static;
+  gap: 20px;
 }
 
 .searchNavbarWrapper {
   flex: 1;
   max-width: 800px;
-  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .divider {
@@ -23,6 +25,7 @@
 
 .searchForm {
   flex: 1;
+  min-width: 200px;
 }
 
 .searchForm input {
