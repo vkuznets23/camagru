@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { MdHomeFilled } from 'react-icons/md'
 import { GoHome } from 'react-icons/go'
 import { GrFormAdd } from 'react-icons/gr'
+import { IoChatbubbleOutline, IoChatbubble } from 'react-icons/io5'
 import Image from 'next/image'
 import styles from '@/styles/MobileNavbar.module.css'
 import { useSession } from 'next-auth/react'
@@ -17,6 +18,7 @@ export default function MobileNavbar() {
 
   const isFeedActive = pathname === '/feed'
   const isUserActive = pathname === `/user/${id}`
+  const isChatActive = pathname === '/chat'
   // const isSearchActive = pathname === '/search'
 
   return (
@@ -34,18 +36,15 @@ export default function MobileNavbar() {
               <GoHome className={styles.feedBtn} />
             )}
           </Link>
-          {/* <Link
-            href="/search"
-            aria-current={isSearchActive ? 'page' : undefined}
-          >
-            <MdSearch
-              className={
-                isSearchActive ? styles.searchBtnActive : styles.searchBtn
-              }
-            />
-          </Link> */}
           <Link href="/post/create">
             <GrFormAdd className={styles.addBtn} />
+          </Link>
+          <Link href="/chat" aria-current={isChatActive ? 'page' : undefined}>
+            {isChatActive ? (
+              <IoChatbubble className={styles.chatBtn} />
+            ) : (
+              <IoChatbubbleOutline className={styles.chatBtn} />
+            )}
           </Link>
           <DarkModeToggle />
           <Link

@@ -38,7 +38,12 @@
 
   .feedBtn {
     font-size: 2rem;
-    color: var(--text-primary);
+    color: var(--text-secondary);
+  }
+
+  .chatBtn {
+    font-size: 2rem;
+    color: var(--text-secondary);
   }
 
   .avatar {
