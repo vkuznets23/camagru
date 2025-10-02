@@ -254,8 +254,47 @@
   color: var(--background);
 }
 
+.chatBtn,
+.goChatBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+
+.goChatBtn {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.chatLink:hover .goChatBtn {
+  opacity: 1;
+}
+
+.activeChatIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 1.2rem;
+  color: var(--foreground);
+}
+
 .feedLink,
-.addLink {
+.addLink,
+.chatLink {
   position: relative;
   width: 24px;
   height: 24px;

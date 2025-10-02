@@ -4,6 +4,7 @@
 import { GrFormAdd } from 'react-icons/gr'
 import { GoHome } from 'react-icons/go'
 import { GoHomeFill } from 'react-icons/go'
+import { IoChatbubbleOutline, IoChatbubble } from 'react-icons/io5'
 
 // component
 import Logo from '../Logo'
@@ -28,6 +29,7 @@ export default function Navbar() {
 
   const isFeedActive = pathname === '/feed'
   const isCreatePostActive = pathname === '/post/create'
+  const isChatActive = pathname === '/chat'
 
   // feed icons
   const FeedActiveIcon = <GoHomeFill className={styles.activeIcon} role="img" />
@@ -44,6 +46,15 @@ export default function Navbar() {
     <>
       <GrFormAdd className={styles.addBtn} role="img" />
       <GrFormAdd className={styles.goAddBtn} role="img" />
+    </>
+  )
+
+  // chat icons
+  const ChatActiveIcon = <IoChatbubble className={styles.activeChatIcon} />
+  const ChatInactiveIcons = (
+    <>
+      <IoChatbubbleOutline className={styles.chatBtn} role="img" />
+      <IoChatbubbleOutline className={styles.goChatBtn} role="img" />
     </>
   )
 
@@ -88,6 +99,14 @@ export default function Navbar() {
             {isCreatePostActive
               ? CreatePostActiveIcon
               : CreatePostInactiveIcons}
+          </Link>
+          <Link
+            href="/chat"
+            aria-current={isChatActive ? 'page' : undefined}
+            aria-label="chat"
+            className={styles.chatLink}
+          >
+            {isChatActive ? ChatActiveIcon : ChatInactiveIcons}
           </Link>
 
           <DarkModeToggle />

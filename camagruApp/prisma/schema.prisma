@@ -29,6 +29,12 @@ model User {
   posts                   Post[]                   @relation("UserPosts")
   sessions                Session[]
   savedPosts              Post[]                   @relation("SavedPosts")
+  // Chat relations
+  sentMessages            Message[]                @relation("MessageSender")
+  receivedMessages        Message[]                @relation("MessageReceiver")
+  chatParticipants        ChatParticipant[]
+  lastSeen                DateTime?                @default(now())
+  isOnline                Boolean                  @default(false)
 }
 
 model Post {
@@ -99,4 +105,81 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Chat models
+model Chat {
+  id           String             @id @default(cuid())
+  type         ChatType           @default(DIRECT)
+  name         String?            // For group chats
+  description  String?            // For group chats
+  image        String?            // For group chats
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  lastMessageAt DateTime?         // For sorting chats by last activity
+  participants ChatParticipant[]
+  messages     Message[]
+  
+  @@index([lastMessageAt])
+}
+
+model ChatParticipant {
+  id        String   @id @default(cuid())
+  chatId    String
+  userId    String
+  role      ChatRole @default(MEMBER)
+  joinedAt  DateTime @default(now())
+  leftAt    DateTime?             // When user left the chat
+  isActive  Boolean  @default(true)
+  
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([chatId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id          String      @id @default(cuid())
+  chatId      String
+  senderId    String
+  receiverId  String?     // For direct messages
+  content     String
+  type        MessageType @default(TEXT)
+  imageUrl    String?     // For image messages
+  isRead      Boolean     @default(false)
+  isEdited    Boolean     @default(false)
+  isDeleted   Boolean     @default(false)
+  replyToId   String?     // For reply messages
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  chat        Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender      User        @relation("MessageSender", fields: [senderId], references: [id])
+  receiver    User?       @relation("MessageReceiver", fields: [receiverId], references: [id])
+  replyTo     Message?    @relation("MessageReply", fields: [replyToId], references: [id])
+  replies     Message[]   @relation("MessageReply")
+  
+  @@index([chatId, createdAt])
+  @@index([senderId])
+  @@index([receiverId])
+}
+
+// Enums
+enum ChatType {
+  DIRECT
+  GROUP
+}
+
+enum ChatRole {
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
 }
