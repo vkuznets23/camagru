@@ -12,6 +12,7 @@ export default function SearchForm() {
   const router = useRouter()
   const [search, setSearch] = useState('')
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false)
   const [results, setResults] = useState<User[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
@@ -31,6 +32,21 @@ export default function SearchForm() {
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  // Отслеживаем размер экрана
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (window.innerWidth <= 820) {
+        // На мобильных устройствах
+        setIsExpanded(false)
+      }
+    }
+
+    checkScreenSize()
+    window.addEventListener('resize', checkScreenSize)
+
+    return () => window.removeEventListener('resize', checkScreenSize)
+  }, [])
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -40,6 +56,7 @@ export default function SearchForm() {
         setShowDropdown(false)
         setShowHistory(false)
         setIsExpanded(false)
+        setIsMobileExpanded(false)
         setActiveIndex(-1)
       }
     }
@@ -61,7 +78,8 @@ export default function SearchForm() {
           setActiveIndex(-1)
         } catch (err) {
           console.error('Search error:', err)
-          setShowDropdown(false)
+          setResults([])
+          setShowDropdown(true) // Показываем dropdown даже при ошибке
         }
       } else {
         setResults([])
@@ -135,10 +153,17 @@ export default function SearchForm() {
   }
 
   return (
-    <div ref={dropdownRef} className={styles.searchWrapper}>
+    <div
+      ref={dropdownRef}
+      className={`${styles.searchWrapper} ${
+        isMobileExpanded ? styles.mobileExpanded : ''
+      }`}
+    >
       <form
         onSubmit={handleSubmit}
-        className={`${styles.searchForm} ${isExpanded ? styles.expanded : ''}`}
+        className={`${styles.searchForm} ${isExpanded ? styles.expanded : ''} ${
+          isMobileExpanded ? styles.mobileExpanded : ''
+        }`}
       >
         <TextInput
           id="search"
@@ -154,15 +179,28 @@ export default function SearchForm() {
           }}
           onKeyDown={handleKeyDown}
           autoComplete="off"
-          onFocus={() => setIsExpanded(true)}
+          onFocus={() => {
+            if (window.innerWidth > 820) {
+              setIsExpanded(true)
+            } else {
+              setIsMobileExpanded(true)
+            }
+          }}
           onBlur={(e) => {
             const relatedTarget = e.relatedTarget as HTMLElement
             if (relatedTarget && dropdownRef.current?.contains(relatedTarget)) {
               return
             }
-            setIsExpanded(false)
+            if (window.innerWidth > 820) {
+              setIsExpanded(false)
+            } else {
+              setIsMobileExpanded(false)
+            }
           }}
           onClick={() => {
+            if (window.innerWidth <= 820) {
+              setIsMobileExpanded(true)
+            }
             if (history.length > 0 && !search.trim()) {
               setShowHistory(true)
               setActiveIndex(-1)
@@ -175,7 +213,7 @@ export default function SearchForm() {
         <ul
           className={`${styles.searchDropdown} ${
             isExpanded ? styles.expanded : ''
-          }`}
+          } ${isMobileExpanded ? styles.mobileExpanded : ''}`}
         >
           <div className={styles.historyHeader}>
             <h3>Recent searches</h3>
@@ -236,7 +274,7 @@ export default function SearchForm() {
         <ul
           className={`${styles.searchDropdown} ${
             isExpanded ? styles.expanded : ''
-          }`}
+          } ${isMobileExpanded ? styles.mobileExpanded : ''}`}
         >
           {results.length > 0 ? (
             results.map((user, index) => (
@@ -276,7 +314,13 @@ export default function SearchForm() {
               </li>
             ))
           ) : (
-            <p className={styles.noResults}>No results found</p>
+            <p
+              className={`${styles.noResults} ${
+                isMobileExpanded ? styles.mobileExpanded : ''
+              }`}
+            >
+              No results found
+            </p>
           )}
         </ul>
       )}
