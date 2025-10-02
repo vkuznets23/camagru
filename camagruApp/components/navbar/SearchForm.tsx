@@ -148,11 +148,14 @@ export default function SearchForm() {
             <li key={user.id} className={styles.searchDropdownItem}>
               <Link
                 href={`/user/${user.id}`}
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
                   setShowHistory(false)
                   setShowDropdown(false)
                   setIsExpanded(false)
                   setSearch('')
+                  const active = document.activeElement as HTMLElement | null
+                  if (active?.blur) active.blur()
                 }}
                 className={styles.searchDropdownLink}
               >
@@ -196,11 +199,15 @@ export default function SearchForm() {
               >
                 <Link
                   href={`/user/${user.id}`}
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {
                     setHistory([user, ...history])
                     setShowDropdown(false)
                     setShowHistory(false)
+                    setIsExpanded(false)
                     setSearch('')
+                    const active = document.activeElement as HTMLElement | null
+                    if (active?.blur) active.blur()
                   }}
                   className={styles.searchDropdownLink}
                 >
