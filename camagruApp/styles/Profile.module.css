@@ -434,7 +434,7 @@
 }
 
 .noPostsPicWrapper {
-  border: 1.5px solid black;
+  border: 2px solid var(--text-primary);
   padding: 1rem;
   border-radius: 50%;
   aspect-ratio: 1 / 1;
