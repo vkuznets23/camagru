@@ -11,9 +11,23 @@ import { type User } from '@/types/user'
 export default function SearchForm() {
   const router = useRouter()
   const [search, setSearch] = useState('')
+  const [isExpanded, setIsExpanded] = useState(false)
   const [results, setResults] = useState<User[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
+  const [history, setHistory] = useState<User[]>([])
+  const [showHistory, setShowHistory] = useState(false)
+
+  const clearHistory = () => {
+    setHistory([])
+    localStorage.removeItem('searchHistory')
+  }
+
+  const removeFromHistory = (id: string) => {
+    const updated = history.filter((h) => h.id !== id)
+    setHistory(updated)
+    localStorage.setItem('searchHistory', JSON.stringify(updated))
+  }
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -24,6 +38,8 @@ export default function SearchForm() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setShowDropdown(false)
+        setShowHistory(false)
+        setIsExpanded(false)
         setActiveIndex(-1)
       }
     }
@@ -33,19 +49,20 @@ export default function SearchForm() {
   }, [])
 
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
+    const delayDebounce = setTimeout(async () => {
       if (search.trim().length > 1) {
-        fetch(`/api/search-users?query=${encodeURIComponent(search)}`)
-          .then((res) => res.json())
-          .then((data) => {
-            setResults(data.users || [])
-            setShowDropdown(true)
-            setActiveIndex(-1)
-          })
-          .catch((err) => {
-            console.error('Search error:', err)
-            setShowDropdown(false)
-          })
+        try {
+          const res = await fetch(
+            `/api/search-users?query=${encodeURIComponent(search)}`
+          )
+          const data = await res.json()
+          setResults(data.users || [])
+          setShowDropdown(true)
+          setActiveIndex(-1)
+        } catch (err) {
+          console.error('Search error:', err)
+          setShowDropdown(false)
+        }
       } else {
         setResults([])
         setShowDropdown(false)
@@ -65,20 +82,51 @@ export default function SearchForm() {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showDropdown) return
+    if (e.key === 'Tab') {
+      return
+    }
+
+    const currentList = showHistory ? history : results
+    const isHistoryActive = showHistory && history.length > 0
+
+    if (!showDropdown && !isHistoryActive) return
 
     if (e.key === 'ArrowDown') {
       e.preventDefault()
-      setActiveIndex((prev) => (prev + 1) % results.length)
+      if (isHistoryActive) {
+        setActiveIndex((prev) => (prev + 1) % history.length)
+      } else {
+        setActiveIndex((prev) => (prev + 1) % results.length)
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
-      setActiveIndex((prev) => (prev - 1 + results.length) % results.length)
+      if (isHistoryActive) {
+        setActiveIndex((prev) => (prev - 1 + history.length) % history.length)
+      } else {
+        setActiveIndex((prev) => (prev - 1 + results.length) % results.length)
+      }
     } else if (e.key === 'Enter') {
       e.preventDefault()
-      if (activeIndex >= 0 && activeIndex < results.length) {
-        const user = results[activeIndex]
-        setShowDropdown(false)
-        setSearch('')
+      if (activeIndex >= 0 && activeIndex < currentList.length) {
+        const user = currentList[activeIndex]
+        if (isHistoryActive) {
+          setShowHistory(false)
+          setShowDropdown(false)
+          setIsExpanded(false)
+          setSearch('')
+          const active = document.activeElement as HTMLElement | null
+          if (active?.blur) active.blur()
+        } else {
+          setHistory(
+            [...history.filter((h) => h.id !== user.id), user].slice(-10)
+          )
+          setShowDropdown(false)
+          setShowHistory(false)
+          setIsExpanded(false)
+          setSearch('')
+          const active = document.activeElement as HTMLElement | null
+          if (active?.blur) active.blur()
+        }
         router.push(`/user/${user.id}`)
       } else {
         handleSubmit(e)
@@ -87,25 +135,109 @@ export default function SearchForm() {
   }
 
   return (
-    <div
-      ref={dropdownRef}
-      className={styles.searchWrapper}
-      style={{ position: 'relative' }}
-    >
-      <form onSubmit={handleSubmit} className={styles.searchForm}>
+    <div ref={dropdownRef} className={styles.searchWrapper}>
+      <form
+        onSubmit={handleSubmit}
+        className={`${styles.searchForm} ${isExpanded ? styles.expanded : ''}`}
+      >
         <TextInput
           id="search"
           data-testid="search"
           placeholder="Search accounts..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value)
+            if (e.target.value.trim()) {
+              setShowHistory(false)
+              setActiveIndex(-1)
+            }
+          }}
           onKeyDown={handleKeyDown}
           autoComplete="off"
+          onFocus={() => setIsExpanded(true)}
+          onBlur={(e) => {
+            const relatedTarget = e.relatedTarget as HTMLElement
+            if (relatedTarget && dropdownRef.current?.contains(relatedTarget)) {
+              return
+            }
+            setIsExpanded(false)
+          }}
+          onClick={() => {
+            if (history.length > 0 && !search.trim()) {
+              setShowHistory(true)
+              setActiveIndex(-1)
+            }
+          }}
         />
       </form>
 
+      {showHistory && history.length > 0 && search.trim() === '' && (
+        <ul
+          className={`${styles.searchDropdown} ${
+            isExpanded ? styles.expanded : ''
+          }`}
+        >
+          <div className={styles.historyHeader}>
+            <h3>Recent searches</h3>
+            <button
+              onClick={clearHistory}
+              onMouseDown={(e) => e.preventDefault()}
+              className={styles.clearButton}
+            >
+              Clear All
+            </button>
+          </div>
+          {history.map((user, index) => (
+            <li
+              key={user.id}
+              className={`${styles.searchDropdownItem} ${
+                index === activeIndex ? styles.activeDropdownItem : ''
+              }`}
+            >
+              <Link
+                href={`/user/${user.id}`}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setShowHistory(false)
+                  setShowDropdown(false)
+                  setIsExpanded(false)
+                  setSearch('')
+                  const active = document.activeElement as HTMLElement | null
+                  if (active?.blur) active.blur()
+                }}
+                className={styles.searchDropdownLink}
+              >
+                <Image
+                  src={user.image || '/default_avatar.png'}
+                  alt={user.username}
+                  width={24}
+                  height={24}
+                  className={styles.searchAvatar}
+                />
+                {user.username}
+              </Link>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  removeFromHistory(user.id)
+                }}
+                className={styles.removeButton}
+              >
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
       {showDropdown && (
-        <ul className={styles.searchDropdown}>
+        <ul
+          className={`${styles.searchDropdown} ${
+            isExpanded ? styles.expanded : ''
+          }`}
+        >
           {results.length > 0 ? (
             results.map((user, index) => (
               <li
@@ -116,9 +248,19 @@ export default function SearchForm() {
               >
                 <Link
                   href={`/user/${user.id}`}
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {
+                    setHistory(
+                      [...history.filter((h) => h.id !== user.id), user].slice(
+                        -10
+                      )
+                    )
                     setShowDropdown(false)
+                    setShowHistory(false)
+                    setIsExpanded(false)
                     setSearch('')
+                    const active = document.activeElement as HTMLElement | null
+                    if (active?.blur) active.blur()
                   }}
                   className={styles.searchDropdownLink}
                 >

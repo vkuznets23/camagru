@@ -39,7 +39,11 @@ export default function MobileSearchPage() {
   // Redirection on desktop
   useEffect(() => {
     if (window.innerWidth > 820) {
-      router.replace(`/user/${id}`)
+      if (id) {
+        router.replace(`/user/${id}`)
+      } else {
+        router.replace('/feed')
+      }
     }
   }, [id, router])
 

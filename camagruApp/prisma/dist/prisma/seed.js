@@ -69,6 +69,48 @@ async function main() {
             }
         }
     }
+    // create saved posts - ensure each user has at least 1 saved post
+    console.log('Creating saved posts...');
+    for (const user of users) {
+        const availablePosts = posts.filter((p) => p.userId !== user.id); // пользователь не может сохранить свой пост
+        console.log(`User ${user.username} can save from ${availablePosts.length} posts`);
+        if (availablePosts.length === 0) {
+            console.log(`No posts available for ${user.username} to save`);
+            continue;
+        }
+        const shuffledPosts = availablePosts.sort(() => 0.5 - Math.random());
+        // Ensure at least 1 saved post, but allow up to 3
+        const minSavedPosts = 1;
+        const maxSavedPosts = Math.min(shuffledPosts.length, 3);
+        const numSavedPosts = Math.floor(Math.random() * (maxSavedPosts - minSavedPosts + 1)) +
+            minSavedPosts;
+        console.log(`User ${user.username} will save ${numSavedPosts} posts`);
+        for (let i = 0; i < numSavedPosts; i++) {
+            try {
+                await prisma_1.prisma.user.update({
+                    where: { id: user.id },
+                    data: {
+                        savedPosts: {
+                            connect: { id: shuffledPosts[i].id },
+                        },
+                    },
+                });
+                console.log(`✅ User ${user.username} saved post ${shuffledPosts[i].id}`);
+            }
+            catch (err) {
+                console.log(`❌ Error saving post for ${user.username}:`, err);
+            }
+        }
+    }
+    // Verify saved posts were created
+    console.log('Verifying saved posts...');
+    for (const user of users) {
+        const userWithSavedPosts = await prisma_1.prisma.user.findUnique({
+            where: { id: user.id },
+            include: { savedPosts: true },
+        });
+        console.log(`User ${user.username} has ${userWithSavedPosts?.savedPosts.length || 0} saved posts`);
+    }
     console.log('✅ Seeding done');
 }
 main()
@@ -76,35 +118,3 @@ main()
     .finally(async () => {
     await prisma_1.prisma.$disconnect();
 });
-// async function main() {
-//   console.log('Start seeding...')
-//   const users = [
-//     {
-//       email: 'alice@test.com',
-//       username: 'alice',
-//       password: 'hashedpassword123',
-//     },
-//     { email: 'bob@test.com', username: 'bob', password: 'hashedpassword123' },
-//     {
-//       email: 'carol@test.com',
-//       username: 'carol',
-//       password: 'hashedpassword123',
-//     },
-//   ]
-//   for (const userData of users) {
-//     const user = await prisma.user.create({
-//       data: userData,
-//     })
-//     console.log('Created user:', user.username)
-//   }
-// }
-// main()
-//   .then(() => {
-//     console.log('✅ Seeding done')
-//   })
-//   .catch((e) => {
-//     console.error(e)
-//   })
-//   .finally(async () => {
-//     await prisma.$disconnect()
-//   })
