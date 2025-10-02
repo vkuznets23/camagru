@@ -206,7 +206,10 @@ export default function SearchForm() {
                   href={`/user/${user.id}`}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {
-                    setHistory([user, ...history])
+                    setHistory([
+                      user,
+                      ...history.filter((h) => h.id !== user.id),
+                    ])
                     setShowDropdown(false)
                     setShowHistory(false)
                     setIsExpanded(false)
