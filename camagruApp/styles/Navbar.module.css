@@ -316,6 +316,20 @@
 }
 
 @media (max-width: 820px) {
+  /* Отключаем расширение SearchForm на мобильных */
+  .searchForm {
+    min-width: 200px !important;
+    transition: none !important;
+  }
+
+  .searchForm.expanded {
+    min-width: 200px !important;
+  }
+
+  .searchDropdown.expanded {
+    min-width: 200px !important;
+  }
+
   .navActions {
     display: none !important;
   }
