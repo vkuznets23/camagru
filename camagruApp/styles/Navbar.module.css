@@ -26,6 +26,11 @@
 .searchForm {
   flex: 1;
   min-width: 200px;
+  transition: min-width 0.3s ease;
+}
+
+.searchForm.expanded {
+  min-width: 500px;
 }
 
 .searchForm input {

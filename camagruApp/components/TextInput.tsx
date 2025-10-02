@@ -11,6 +11,8 @@ type TextInputProps = {
   className?: string
   autoComplete?: string
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  onFocus?: () => void
+  onBlur?: () => void
 }
 
 export default function TextInput({
@@ -24,6 +26,8 @@ export default function TextInput({
   className = '',
   autoComplete,
   onKeyDown,
+  onFocus,
+  onBlur,
 }: TextInputProps) {
   return (
     <label htmlFor={id}>
@@ -37,6 +41,8 @@ export default function TextInput({
         className={`${className} ${error ? styles.inputError : ''}`}
         autoComplete={autoComplete}
         onKeyDown={onKeyDown}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       {error && (
         <span data-testid={`${id}-error`} className={styles.error}>

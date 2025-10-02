@@ -11,6 +11,7 @@ import { type User } from '@/types/user'
 export default function SearchForm() {
   const router = useRouter()
   const [search, setSearch] = useState('')
+  const [isExpanded, setIsExpanded] = useState(false)
   const [results, setResults] = useState<User[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
@@ -92,7 +93,10 @@ export default function SearchForm() {
       className={styles.searchWrapper}
       style={{ position: 'relative' }}
     >
-      <form onSubmit={handleSubmit} className={styles.searchForm}>
+      <form
+        onSubmit={handleSubmit}
+        className={`${styles.searchForm} ${isExpanded ? styles.expanded : ''}`}
+      >
         <TextInput
           id="search"
           data-testid="search"
@@ -101,6 +105,8 @@ export default function SearchForm() {
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleKeyDown}
           autoComplete="off"
+          onFocus={() => setIsExpanded(true)}
+          onBlur={() => setIsExpanded(false)}
         />
       </form>
 
