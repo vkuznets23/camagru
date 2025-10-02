@@ -34,19 +34,20 @@ export default function SearchForm() {
   }, [])
 
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
+    const delayDebounce = setTimeout(async () => {
       if (search.trim().length > 1) {
-        fetch(`/api/search-users?query=${encodeURIComponent(search)}`)
-          .then((res) => res.json())
-          .then((data) => {
-            setResults(data.users || [])
-            setShowDropdown(true)
-            setActiveIndex(-1)
-          })
-          .catch((err) => {
-            console.error('Search error:', err)
-            setShowDropdown(false)
-          })
+        try {
+          const res = await fetch(
+            `/api/search-users?query=${encodeURIComponent(search)}`
+          )
+          const data = await res.json()
+          setResults(data.users || [])
+          setShowDropdown(true)
+          setActiveIndex(-1)
+        } catch (err) {
+          console.error('Search error:', err)
+          setShowDropdown(false)
+        }
       } else {
         setResults([])
         setShowDropdown(false)
