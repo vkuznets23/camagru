@@ -5,6 +5,7 @@ import Link from 'next/link'
 import styles from '@/styles/FollowersPage.module.css'
 import { useSession } from 'next-auth/react'
 import { HistoryItem } from './navbar/MobileSearchPage'
+import { useRouter } from 'next/navigation'
 
 export type FollowerPreview = {
   id: string
@@ -34,7 +35,32 @@ export default function UserList({
   renderExtra,
 }: UserListProps) {
   const { data: session } = useSession()
+  const router = useRouter()
   const currentUserId = session?.user?.id
+
+  const handleSendMessage = async (userId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+
+    try {
+      const response = await fetch('/api/chats/direct', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      })
+
+      if (response.ok) {
+        const { chat } = await response.json()
+        router.push(`/chat/${chat.id}`)
+      } else {
+        console.error('Failed to create chat')
+      }
+    } catch (error) {
+      console.error('Error creating chat:', error)
+    }
+  }
 
   console.log(users)
 
@@ -71,15 +97,26 @@ export default function UserList({
                     )}
                   </div>
                 </Link>
-                {onToggleFollow && user.id !== currentUserId && (
-                  <button
-                    className={styles.unfollowBtn}
-                    onClick={() => onToggleFollow(user.id)}
-                  >
-                    {user.isFollowing ? 'Unfollow' : 'Follow'}
-                  </button>
-                )}
-                {renderExtra && renderExtra(user)}
+                <div className={styles.actions}>
+                  {user.id !== currentUserId && (
+                    <button
+                      className={styles.messageBtn}
+                      onClick={(e) => handleSendMessage(user.id, e)}
+                      title="Send message"
+                    >
+                      💬
+                    </button>
+                  )}
+                  {onToggleFollow && user.id !== currentUserId && (
+                    <button
+                      className={styles.unfollowBtn}
+                      onClick={() => onToggleFollow(user.id)}
+                    >
+                      {user.isFollowing ? 'Unfollow' : 'Follow'}
+                    </button>
+                  )}
+                  {renderExtra && renderExtra(user)}
+                </div>
               </div>
             </li>
           ))}

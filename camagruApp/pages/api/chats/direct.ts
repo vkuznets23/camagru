@@ -40,7 +40,6 @@ export default async function handler(
       // find existing direct chat between users
       const existingChat = await prisma.chat.findFirst({
         where: {
-          type: 'DIRECT',
           participants: {
             every: {
               userId: {
@@ -92,16 +91,13 @@ export default async function handler(
       // create new direct chat
       const newChat = await prisma.chat.create({
         data: {
-          type: 'DIRECT',
           participants: {
             create: [
               {
                 userId: session.user.id,
-                role: 'MEMBER',
               },
               {
                 userId: userId,
-                role: 'MEMBER',
               },
             ],
           },

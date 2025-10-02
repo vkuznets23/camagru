@@ -31,9 +31,7 @@ export interface Message {
 
 export interface Chat {
   id: string
-  type: 'DIRECT' | 'GROUP'
-  name?: string
-  description?: string
+  name: string
   image?: string
   createdAt: string
   updatedAt: string
@@ -47,7 +45,6 @@ export interface ChatParticipant {
   id: string
   chatId: string
   userId: string
-  role: 'ADMIN' | 'MODERATOR' | 'MEMBER'
   joinedAt: string
   leftAt?: string
   isActive: boolean

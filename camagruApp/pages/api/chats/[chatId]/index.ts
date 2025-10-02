@@ -38,6 +38,9 @@ export default async function handler(
         },
         include: {
           participants: {
+            where: {
+              isActive: true,
+            },
             include: {
               user: {
                 select: {
@@ -58,7 +61,31 @@ export default async function handler(
         return res.status(404).json({ error: 'Chat not found' })
       }
 
-      res.status(200).json({ chat })
+      // Format data for frontend
+      const otherParticipants = chat.participants
+        .filter((p) => p.userId !== session.user.id)
+        .map((p) => p.user)
+
+      const formattedChat = {
+        id: chat.id,
+        name:
+          otherParticipants[0]?.name ||
+          otherParticipants[0]?.username ||
+          'Unknown User',
+        image: otherParticipants[0]?.image || null,
+        participants: chat.participants.map((p) => ({
+          id: p.user.id,
+          username: p.user.username,
+          name: p.user.name,
+          image: p.user.image,
+          isOnline: p.user.isOnline,
+          lastSeen: p.user.lastSeen,
+        })),
+        createdAt: chat.createdAt,
+        updatedAt: chat.updatedAt,
+      }
+
+      res.status(200).json({ chat: formattedChat })
     } catch (error) {
       console.error('Error fetching chat:', error)
       res.status(500).json({ error: 'Failed to fetch chat' })
