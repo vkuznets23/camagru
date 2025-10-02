@@ -54,7 +54,7 @@ export default function Navbar() {
   const ChatInactiveIcons = (
     <>
       <IoChatbubbleOutline className={styles.chatBtn} role="img" />
-      <IoChatbubbleOutline className={styles.goChatBtn} role="img" />
+      <IoChatbubble className={styles.goChatBtn} role="img" />
     </>
   )
 

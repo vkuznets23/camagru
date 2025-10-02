@@ -31,9 +31,6 @@ export default function ChatPage() {
     <div className={styles.chatLayout}>
       {/* Chat List Sidebar */}
       <div className={styles.chatSidebar}>
-        <div className={styles.sidebarHeader}>
-          <h1 className={styles.sidebarTitle}>💬 Messages</h1>
-        </div>
         <ChatList />
       </div>
 
