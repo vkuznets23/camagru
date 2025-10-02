@@ -47,6 +47,9 @@ export default function Navbar() {
     </>
   )
 
+  const width = window.innerWidth > 820 ? 134 : 100
+  const height = window.innerWidth > 820 ? 47 : 36
+
   return (
     <>
       <nav
@@ -57,7 +60,12 @@ export default function Navbar() {
         aria-label="main navigation"
       >
         <Link href={`/user/${id}`} aria-label="go to profile page">
-          <Logo className={styles.logo} width={134} height={47} mode={theme} />
+          <Logo
+            className={styles.logo}
+            width={width}
+            height={height}
+            mode={theme}
+          />
         </Link>
         <div className={styles.searchNavbarWrapper}>
           <SearchForm />

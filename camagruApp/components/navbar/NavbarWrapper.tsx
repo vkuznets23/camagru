@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import Navbar from './Navbar'
 import MobileNavbar from './NavbarMobile'
-import MobileTopbar from './MobileTopNavbar'
+// import MobileTopbar from './MobileTopNavbar'
 
 export default function NavbarWrapper() {
   const pathName = usePathname()
@@ -23,7 +23,7 @@ export default function NavbarWrapper() {
   return (
     <div>
       {!shouldHideNavbar && <Navbar />}
-      {!shouldHideNavbar && <MobileTopbar />}
+      {/* {!shouldHideNavbar && <MobileTopbar />} */}
       {!shouldHideNavbar && <MobileNavbar />}
     </div>
   )
