@@ -1,5 +1,6 @@
 'use client'
 
+import ChatList from '@/components/chat/ChatList'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -46,6 +47,7 @@ export default function ChatPage() {
       >
         💬 Chat
       </h1>
+      <ChatList />
     </div>
   )
 }
