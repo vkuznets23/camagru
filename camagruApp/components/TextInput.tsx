@@ -13,6 +13,7 @@ type TextInputProps = {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   onFocus?: () => void
   onBlur?: () => void
+  onClick?: () => void
 }
 
 export default function TextInput({
@@ -28,6 +29,7 @@ export default function TextInput({
   onKeyDown,
   onFocus,
   onBlur,
+  onClick,
 }: TextInputProps) {
   return (
     <label htmlFor={id}>
@@ -43,6 +45,7 @@ export default function TextInput({
         onKeyDown={onKeyDown}
         onFocus={onFocus}
         onBlur={onBlur}
+        onClick={onClick}
       />
       {error && (
         <span data-testid={`${id}-error`} className={styles.error}>

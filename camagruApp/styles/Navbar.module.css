@@ -66,6 +66,9 @@
   color: var(--text-primary);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .searchDropdown li:last-child {
@@ -81,6 +84,7 @@
   align-items: center;
   text-decoration: none;
   color: var(--text-primary);
+  flex: 1;
 }
 
 .searchDropdown li a img {
@@ -349,4 +353,57 @@
   .avatarActive {
     display: none !important;
   }
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  margin-left: auto;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.removeButton:hover {
+  opacity: 1;
+  color: var(--error-color, #ff4444);
+}
+
+.clearHistoryItem {
+  border-top: 1px solid var(--divider);
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.clearButton:hover {
+  color: var(--error-color, #ff4444);
+}
+
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: var(--hover-bg);
+  border-bottom: 1px solid var(--divider);
+}
+
+.historyHeader h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
 }

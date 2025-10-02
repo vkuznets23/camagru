@@ -15,6 +15,19 @@ export default function SearchForm() {
   const [results, setResults] = useState<User[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
+  const [history, setHistory] = useState<User[]>([])
+  const [showHistory, setShowHistory] = useState(false)
+
+  const clearHistory = () => {
+    setHistory([])
+    localStorage.removeItem('searchHistory')
+  }
+
+  const removeFromHistory = (id: string) => {
+    const updated = history.filter((h) => h.id !== id)
+    setHistory(updated)
+    localStorage.setItem('searchHistory', JSON.stringify(updated))
+  }
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -25,6 +38,7 @@ export default function SearchForm() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setShowDropdown(false)
+        setShowHistory(false)
         setActiveIndex(-1)
       }
     }
@@ -103,13 +117,65 @@ export default function SearchForm() {
           data-testid="search"
           placeholder="Search accounts..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value)
+            if (e.target.value.trim()) {
+              setShowHistory(false)
+            }
+          }}
           onKeyDown={handleKeyDown}
           autoComplete="off"
           onFocus={() => setIsExpanded(true)}
           onBlur={() => setIsExpanded(false)}
+          onClick={() => {
+            if (history.length > 0 && !search.trim()) {
+              setShowHistory(true)
+            }
+          }}
         />
       </form>
+
+      {showHistory && history.length > 0 && search.trim() === '' && (
+        <ul className={styles.searchDropdown}>
+          <div className={styles.historyHeader}>
+            <h3>Recent searches</h3>
+            <button onClick={clearHistory} className={styles.clearButton}>
+              Clear All
+            </button>
+          </div>
+          {history.map((user) => (
+            <li key={user.id} className={styles.searchDropdownItem}>
+              <Link
+                href={`/user/${user.id}`}
+                onClick={() => {
+                  setShowHistory(false)
+                  setSearch('')
+                }}
+                className={styles.searchDropdownLink}
+              >
+                <Image
+                  src={user.image || '/default_avatar.png'}
+                  alt={user.username}
+                  width={24}
+                  height={24}
+                  className={styles.searchAvatar}
+                />
+                {user.username}
+              </Link>
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  removeFromHistory(user.id)
+                }}
+                className={styles.removeButton}
+              >
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {showDropdown && (
         <ul className={styles.searchDropdown}>
@@ -124,7 +190,9 @@ export default function SearchForm() {
                 <Link
                   href={`/user/${user.id}`}
                   onClick={() => {
+                    setHistory([user, ...history])
                     setShowDropdown(false)
+                    setShowHistory(false)
                     setSearch('')
                   }}
                   className={styles.searchDropdownLink}
