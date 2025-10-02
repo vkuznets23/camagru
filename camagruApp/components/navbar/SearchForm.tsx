@@ -86,20 +86,47 @@ export default function SearchForm() {
       return
     }
 
-    if (!showDropdown) return
+    const currentList = showHistory ? history : results
+    const isHistoryActive = showHistory && history.length > 0
+
+    if (!showDropdown && !isHistoryActive) return
 
     if (e.key === 'ArrowDown') {
       e.preventDefault()
-      setActiveIndex((prev) => (prev + 1) % results.length)
+      if (isHistoryActive) {
+        setActiveIndex((prev) => (prev + 1) % history.length)
+      } else {
+        setActiveIndex((prev) => (prev + 1) % results.length)
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
-      setActiveIndex((prev) => (prev - 1 + results.length) % results.length)
+      if (isHistoryActive) {
+        setActiveIndex((prev) => (prev - 1 + history.length) % history.length)
+      } else {
+        setActiveIndex((prev) => (prev - 1 + results.length) % results.length)
+      }
     } else if (e.key === 'Enter') {
       e.preventDefault()
-      if (activeIndex >= 0 && activeIndex < results.length) {
-        const user = results[activeIndex]
-        setShowDropdown(false)
-        setSearch('')
+      if (activeIndex >= 0 && activeIndex < currentList.length) {
+        const user = currentList[activeIndex]
+        if (isHistoryActive) {
+          setShowHistory(false)
+          setShowDropdown(false)
+          setIsExpanded(false)
+          setSearch('')
+          const active = document.activeElement as HTMLElement | null
+          if (active?.blur) active.blur()
+        } else {
+          setHistory(
+            [...history.filter((h) => h.id !== user.id), user].slice(-10)
+          )
+          setShowDropdown(false)
+          setShowHistory(false)
+          setIsExpanded(false)
+          setSearch('')
+          const active = document.activeElement as HTMLElement | null
+          if (active?.blur) active.blur()
+        }
         router.push(`/user/${user.id}`)
       } else {
         handleSubmit(e)
@@ -122,6 +149,7 @@ export default function SearchForm() {
             setSearch(e.target.value)
             if (e.target.value.trim()) {
               setShowHistory(false)
+              setActiveIndex(-1)
             }
           }}
           onKeyDown={handleKeyDown}
@@ -137,6 +165,7 @@ export default function SearchForm() {
           onClick={() => {
             if (history.length > 0 && !search.trim()) {
               setShowHistory(true)
+              setActiveIndex(-1)
             }
           }}
         />
@@ -158,8 +187,13 @@ export default function SearchForm() {
               Clear All
             </button>
           </div>
-          {history.map((user) => (
-            <li key={user.id} className={styles.searchDropdownItem}>
+          {history.map((user, index) => (
+            <li
+              key={user.id}
+              className={`${styles.searchDropdownItem} ${
+                index === activeIndex ? styles.activeDropdownItem : ''
+              }`}
+            >
               <Link
                 href={`/user/${user.id}`}
                 onMouseDown={(e) => e.preventDefault()}
