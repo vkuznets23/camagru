@@ -75,31 +75,7 @@
   height: 25px;
 }
 
-/* Attachment Button */
-.attachmentButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 50%;
-  background-color: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.attachmentButton:hover {
-  background-color: var(--hover-bg);
-  color: var(--text-primary);
-}
-
-.attachmentButton svg {
-  width: 20px;
-  height: 20px;
-}
+/* Attachment button removed */
 
 /* Character Count */
 .characterCount {
@@ -166,8 +142,7 @@
     font-size: 16px; /* Prevent zoom on iOS */
   }
 
-  .sendButton,
-  .attachmentButton {
+  .sendButton {
     width: 32px;
     height: 32px;
   }
@@ -175,11 +150,6 @@
   .sendButton svg {
     width: 16px;
     height: 16px;
-  }
-
-  .attachmentButton svg {
-    width: 18px;
-    height: 18px;
   }
 }
 

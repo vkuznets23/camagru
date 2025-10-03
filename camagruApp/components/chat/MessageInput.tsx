@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { RiSendPlaneFill } from 'react-icons/ri'
-import { IoAttach } from 'react-icons/io5'
 import styles from '@/styles/MessageInput.module.css'
 
 interface MessageInputProps {
@@ -82,27 +81,12 @@ export default function MessageInput({
     }
   }
 
-  const handleAttachment = () => {
-    // TODO: Implement file attachment
-    console.log('Attachment clicked')
-  }
-
   const isMessageEmpty = !message.trim()
   const isNearLimit = message.length > maxLength * 0.8
   const isAtLimit = message.length >= maxLength
 
   return (
     <div className={styles.inputContainer}>
-      <button
-        onClick={handleAttachment}
-        className={styles.attachmentButton}
-        type="button"
-        aria-label="Attach file"
-        disabled={disabled}
-      >
-        <IoAttach />
-      </button>
-
       <div className={styles.inputWrapper}>
         <textarea
           ref={textareaRef}
