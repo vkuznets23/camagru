@@ -37,7 +37,7 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
         <div className={styles.messageWithAvatar}>
           <Image
             src={message.sender.image || '/default_avatar.png'}
-            alt={message.sender.name}
+            alt={'User avatar'}
             width={32}
             height={32}
             className={styles.messageAvatar}
