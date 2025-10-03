@@ -1,11 +1,19 @@
 /* Chat Layout */
 .chatLayout {
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 80px); /* Match navbar height exactly */
   max-width: 935px;
   margin: 0 auto;
   background-color: var(--background);
   color: var(--text-primary);
+  overflow: hidden; /* Prevent layout from overflowing */
+  box-sizing: border-box;
+}
+
+@supports (height: 100dvh) {
+  .chatLayout {
+    height: calc(100dvh - 80px);
+  }
 }
 
 /* Chat List Sidebar */
@@ -33,6 +41,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--background);
+  min-height: 0; /* Allow flex item to shrink */
 }
 
 .chatHeader {
@@ -69,9 +78,25 @@
   flex: 1;
   padding: 20px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-secondary);
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0; /* Allow flex item to shrink */
+}
+
+.messagesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+.messageInputContainer {
+  border-top: 1px solid var(--border);
+  background-color: var(--background);
+  flex-shrink: 0; /* Prevent input from shrinking */
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 
 .placeholderContent {
@@ -179,9 +204,21 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .chatLayout {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .chatSidebar {
+    width: 300px; /* Slightly smaller on tablets */
+  }
+}
+
 @media (max-width: 768px) {
   .chatLayout {
     flex-direction: column;
+    height: calc(100vh - 60px); /* Keep consistent with desktop */
   }
 
   .chatSidebar {
@@ -189,9 +226,24 @@
     height: 200px;
     border-right: none;
     border-bottom: 1px solid var(--border);
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
   }
 
   .chatArea {
-    height: calc(100vh - 200px);
+    flex: 1;
+    min-height: 0; /* Allow flex item to shrink below content size */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .messagesArea {
+    flex: 1;
+    min-height: 0; /* Allow messages area to scroll */
+  }
+
+  .messageInputContainer {
+    position: sticky;
+    bottom: 0;
+    padding: 15px 20px; /* Slightly smaller padding on mobile */
   }
 }
