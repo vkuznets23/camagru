@@ -34,8 +34,6 @@ export default async function handler(
                   username: true,
                   name: true,
                   image: true,
-                  isOnline: true,
-                  lastSeen: true,
                 },
               },
             },
@@ -78,14 +76,9 @@ export default async function handler(
           lastMessage: chat.messages[0] || null,
           participants: chat.participants.map((p) => ({
             id: p.user.id,
-            username: p.user.username,
-            name: p.user.name,
+            name: p.user.name || p.user.username,
             image: p.user.image,
-            isOnline: p.user.isOnline,
-            lastSeen: p.user.lastSeen,
           })),
-          unreadCount: 0, // TODO: Implement unread count
-          updatedAt: chat.updatedAt,
         }
       })
 
@@ -134,8 +127,6 @@ export default async function handler(
                   username: true,
                   name: true,
                   image: true,
-                  isOnline: true,
-                  lastSeen: true,
                 },
               },
             },

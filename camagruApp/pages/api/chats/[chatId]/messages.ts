@@ -37,60 +37,30 @@ export default async function handler(
 
   if (req.method === 'GET') {
     try {
-      const { page = '1', limit = '50' } = req.query
-      const pageNum = parseInt(page as string)
-      const limitNum = parseInt(limit as string)
-      const skip = (pageNum - 1) * limitNum
-
       const messages = await prisma.message.findMany({
         where: {
           chatId,
-          isDeleted: false,
         },
-        include: {
+        select: {
+          id: true,
+          content: true,
+          senderId: true,
+          createdAt: true,
           sender: {
             select: {
-              id: true,
               username: true,
               name: true,
               image: true,
-            },
-          },
-          replyTo: {
-            include: {
-              sender: {
-                select: {
-                  id: true,
-                  username: true,
-                  name: true,
-                },
-              },
             },
           },
         },
         orderBy: {
           createdAt: 'desc',
         },
-        skip,
-        take: limitNum,
-      })
-
-      // mark messages as read
-      await prisma.message.updateMany({
-        where: {
-          chatId,
-          receiverId: session.user.id,
-          isRead: false,
-        },
-        data: {
-          isRead: true,
-        },
       })
 
       res.status(200).json({
         messages: messages.reverse(), // return in chronological order
-        hasMore: messages.length === limitNum,
-        page: pageNum,
       })
     } catch (error) {
       console.error('Error fetching messages:', error)
@@ -98,9 +68,9 @@ export default async function handler(
     }
   } else if (req.method === 'POST') {
     try {
-      const { content, type = 'TEXT', replyToId, imageUrl } = req.body
+      const { content } = req.body
 
-      if (!content && !imageUrl) {
+      if (!content) {
         return res.status(400).json({ error: 'Message content is required' })
       }
 
@@ -109,38 +79,21 @@ export default async function handler(
         data: {
           chatId,
           senderId: session.user.id,
-          content: content || '',
-          type,
-          imageUrl: imageUrl || null,
-          replyToId: replyToId || null,
+          content,
         },
-        include: {
+        select: {
+          id: true,
+          content: true,
+          senderId: true,
+          createdAt: true,
           sender: {
             select: {
-              id: true,
               username: true,
               name: true,
               image: true,
             },
           },
-          replyTo: {
-            include: {
-              sender: {
-                select: {
-                  id: true,
-                  username: true,
-                  name: true,
-                },
-              },
-            },
-          },
         },
-      })
-
-      // update last message time in chat
-      await prisma.chat.update({
-        where: { id: chatId },
-        data: { lastMessageAt: new Date() },
       })
 
       res.status(201).json({ message })

@@ -7,7 +7,8 @@ export interface Message {
   senderId: string
   createdAt: string
   sender: {
-    name: string
+    username: string
+    name?: string
     image?: string
   }
 }

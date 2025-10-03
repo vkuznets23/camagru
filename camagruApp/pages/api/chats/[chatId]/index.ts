@@ -48,8 +48,6 @@ export default async function handler(
                   username: true,
                   name: true,
                   image: true,
-                  isOnline: true,
-                  lastSeen: true,
                 },
               },
             },
@@ -75,14 +73,9 @@ export default async function handler(
         image: otherParticipants[0]?.image || null,
         participants: chat.participants.map((p) => ({
           id: p.user.id,
-          username: p.user.username,
-          name: p.user.name,
+          name: p.user.name || p.user.username,
           image: p.user.image,
-          isOnline: p.user.isOnline,
-          lastSeen: p.user.lastSeen,
         })),
-        createdAt: chat.createdAt,
-        updatedAt: chat.updatedAt,
       }
 
       res.status(200).json({ chat: formattedChat })
@@ -124,8 +117,6 @@ export default async function handler(
                   username: true,
                   name: true,
                   image: true,
-                  isOnline: true,
-                  lastSeen: true,
                 },
               },
             },

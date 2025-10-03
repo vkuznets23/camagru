@@ -15,10 +15,8 @@ interface Chat {
   image?: string
   participants: Array<{
     id: string
-    username: string
-    name?: string
+    name: string
     image?: string
-    isOnline: boolean
   }>
 }
 
