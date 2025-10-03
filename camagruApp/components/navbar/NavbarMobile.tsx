@@ -20,7 +20,8 @@ export default function MobileNavbar() {
 
   const isFeedActive = pathname === '/feed'
   const isUserActive = pathname === `/user/${id}`
-  const isChatActive = pathname === '/chat'
+  const isChatActive =
+    pathname === '/chat' || (pathname && pathname.startsWith('/chat/'))
   // const isSearchActive = pathname === '/search'
 
   return (

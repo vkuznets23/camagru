@@ -31,7 +31,8 @@ export default function Navbar() {
 
   const isFeedActive = pathname === '/feed'
   const isCreatePostActive = pathname === '/post/create'
-  const isChatActive = pathname === '/chat'
+  const isChatActive =
+    pathname === '/chat' || (pathname && pathname.startsWith('/chat/'))
 
   // feed icons
   const FeedActiveIcon = <GoHomeFill className={styles.activeIcon} role="img" />
