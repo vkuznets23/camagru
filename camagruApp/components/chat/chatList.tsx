@@ -1,55 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useChatContext } from '@/contexts/ChatContext'
 import styles from '@/styles/Chat.module.css'
 
-interface Chat {
-  id: string
-  name: string
-  image: string | null
-  lastMessage: LastMessage | string | null
-  participants: Participant[]
-}
-
-interface Participant {
-  id: string
-  name: string
-  image: string
-}
-
-interface LastMessage {
-  id?: string
-  content?: string
-  text?: string
-  createdAt?: string
-  sender?: {
-    id: string
-    name?: string | null
-    username?: string | null
-    image?: string | null
-  }
-}
-
 export default function ChatList() {
-  const [chats, setChats] = useState<Chat[]>([])
+  const { chats, refreshChats } = useChatContext()
   const router = useRouter()
 
   useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        const response = await fetch('/api/chats')
-        const data = await response.json()
-        // API returns { chats: [...] }
-        const items: Chat[] = Array.isArray(data?.chats) ? data.chats : []
-        setChats(items)
-        return items
-      } catch (error) {
-        console.error(error)
-        return []
-      }
-    }
-    fetchChats()
-  }, [])
+    refreshChats()
+  }, [refreshChats])
 
   return (
     <div className={styles.chatList}>

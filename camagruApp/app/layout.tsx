@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Providers from '@/components/Providers'
 import NavbarWrapper from '@/components/navbar/NavbarWrapper'
+import { ChatProvider } from '@/contexts/ChatContext'
 
 export const metadata: Metadata = {
   title: 'Camagru',
@@ -27,8 +28,10 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
-          <NavbarWrapper />
-          <main>{children}</main>
+          <ChatProvider>
+            <NavbarWrapper />
+            <main>{children}</main>
+          </ChatProvider>
         </Providers>
       </body>
     </html>

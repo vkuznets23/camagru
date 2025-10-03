@@ -6,6 +6,7 @@ import { useEffect, useState, use } from 'react'
 import ChatList from '@/components/chat/chatList'
 import MessageBubble, { Message } from '@/components/chat/messageBubble'
 import MessageInput from '@/components/chat/MessageInput'
+import { useChatContext } from '@/contexts/ChatContext'
 import styles from '@/styles/Chat.module.css'
 
 interface Chat {
@@ -28,6 +29,7 @@ export default function ChatPage({
 }) {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const { updateChatLastMessage } = useChatContext()
   const [chat, setChat] = useState<Chat | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
@@ -91,7 +93,16 @@ export default function ChatPage({
 
       if (response.ok) {
         const data = await response.json()
-        setMessages((prev) => [...prev, data.message])
+        const newMessage = data.message
+        setMessages((prev) => [...prev, newMessage])
+
+        // Update last message in chat list
+        updateChatLastMessage(chatId, {
+          id: newMessage.id,
+          content: newMessage.content,
+          createdAt: newMessage.createdAt,
+          sender: newMessage.sender,
+        })
       } else {
         console.error('Failed to send message')
       }
