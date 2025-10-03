@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, memo } from 'react'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useChatContext } from '@/contexts/ChatContext'
 import { useChatSidebar } from '@/contexts/ChatSidebarContext'
 import styles from '@/styles/Chat.module.css'
 
-export default function ChatList() {
+function ChatList() {
   const { chats, refreshChats } = useChatContext()
   const { selectChat } = useChatSidebar()
   const pathname = usePathname()
@@ -55,3 +55,5 @@ export default function ChatList() {
     </div>
   )
 }
+
+export default memo(ChatList)

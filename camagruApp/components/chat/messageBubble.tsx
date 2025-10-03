@@ -1,5 +1,6 @@
 import styles from '@/styles/MessageBubble.module.css'
 import Image from 'next/image'
+import { memo, useMemo } from 'react'
 
 export interface Message {
   id: string
@@ -18,15 +19,15 @@ interface MessageBubbleProps {
   isOwn: boolean
 }
 
-export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString)
+function MessageBubble({ message, isOwn }: MessageBubbleProps) {
+  const formattedTime = useMemo(() => {
+    const date = new Date(message.createdAt)
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
     })
-  }
+  }, [message.createdAt])
 
   return (
     <div
@@ -63,9 +64,11 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
             isOwn ? styles.own : styles.other
           }`}
         >
-          {formatTime(message.createdAt)}
+          {formattedTime}
         </div>
       </div>
     </div>
   )
 }
+
+export default memo(MessageBubble)

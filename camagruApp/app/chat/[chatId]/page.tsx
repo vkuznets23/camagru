@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState, use, useMemo, useCallback } from 'react'
 import ChatList from '@/components/chat/chatList'
 import MessageBubble, { Message } from '@/components/chat/messageBubble'
 import MessageInput from '@/components/chat/MessageInput'
@@ -37,6 +37,9 @@ export default function ChatPage({
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const { chatId } = use(params)
+
+  // Memoize current user ID to prevent unnecessary re-renders
+  const currentUserId = useMemo(() => session?.user?.id, [session?.user?.id])
 
   useEffect(() => {
     if (status === 'loading') return
@@ -89,42 +92,45 @@ export default function ChatPage({
     fetchChat()
   }, [session, status, router, chatId])
 
-  const handleSendMessage = async (message: string) => {
-    if (!session?.user?.id || !chat) return
+  const handleSendMessage = useCallback(
+    async (message: string) => {
+      if (!session?.user?.id || !chat) return
 
-    setSending(true)
-    try {
-      const response = await fetch(`/api/chats/${chatId}/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: message,
-        }),
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        const newMessage = data.message
-        setMessages((prev) => [...prev, newMessage])
-
-        // Update last message in chat list
-        updateChatLastMessage(chatId, {
-          id: newMessage.id,
-          content: newMessage.content,
-          createdAt: newMessage.createdAt,
-          sender: newMessage.sender,
+      setSending(true)
+      try {
+        const response = await fetch(`/api/chats/${chatId}/messages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: message,
+          }),
         })
-      } else {
-        console.error('Failed to send message')
+
+        if (response.ok) {
+          const data = await response.json()
+          const newMessage = data.message
+          setMessages((prev) => [...prev, newMessage])
+
+          // Update last message in chat list
+          updateChatLastMessage(chatId, {
+            id: newMessage.id,
+            content: newMessage.content,
+            createdAt: newMessage.createdAt,
+            sender: newMessage.sender,
+          })
+        } else {
+          console.error('Failed to send message')
+        }
+      } catch (error) {
+        console.error('Error sending message:', error)
+      } finally {
+        setSending(false)
       }
-    } catch (error) {
-      console.error('Error sending message:', error)
-    } finally {
-      setSending(false)
-    }
-  }
+    },
+    [session?.user?.id, chat, chatId, updateChatLastMessage]
+  )
 
   if (status === 'loading' || loading) {
     return (
@@ -176,7 +182,7 @@ export default function ChatPage({
                 <MessageBubble
                   key={message.id || `message-${index}`}
                   message={message}
-                  isOwn={message.senderId === session?.user?.id}
+                  isOwn={message.senderId === currentUserId}
                 />
               ))}
             </div>

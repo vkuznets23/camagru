@@ -1,6 +1,12 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+} from 'react'
 import { useUnreadCount } from './UnreadCountContext'
 
 interface Chat {
@@ -44,17 +50,20 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [chats, setChats] = useState<Chat[]>([])
   const { refreshUnreadCount } = useUnreadCount()
 
-  const updateChatLastMessage = (chatId: string, message: LastMessage) => {
-    setChats((prevChats) =>
-      prevChats.map((chat) =>
-        chat.id === chatId ? { ...chat, lastMessage: message } : chat
+  const updateChatLastMessage = useCallback(
+    (chatId: string, message: LastMessage) => {
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.id === chatId ? { ...chat, lastMessage: message } : chat
+        )
       )
-    )
-    // Refresh unread count when a new message is sent
-    refreshUnreadCount()
-  }
+      // Refresh unread count when a new message is sent
+      refreshUnreadCount()
+    },
+    [refreshUnreadCount]
+  )
 
-  const refreshChats = async () => {
+  const refreshChats = useCallback(async () => {
     try {
       const response = await fetch('/api/chats')
       const data = await response.json()
@@ -63,7 +72,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Error refreshing chats:', error)
     }
-  }
+  }, [])
 
   return (
     <ChatContext.Provider

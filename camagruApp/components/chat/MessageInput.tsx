@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, memo, useCallback } from 'react'
 import { RiSendPlaneFill } from 'react-icons/ri'
 import styles from '@/styles/MessageInput.module.css'
 
@@ -12,7 +12,7 @@ interface MessageInputProps {
   maxLength?: number
 }
 
-export default function MessageInput({
+function MessageInput({
   onSendMessage,
   onTyping,
   disabled = false,
@@ -56,14 +56,17 @@ export default function MessageInput({
     }
   }, [message, onTyping])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value
-    if (value.length <= maxLength) {
-      setMessage(value)
-    }
-  }
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const value = e.target.value
+      if (value.length <= maxLength) {
+        setMessage(value)
+      }
+    },
+    [maxLength]
+  )
 
-  const handleSend = () => {
+  const handleSend = useCallback(() => {
     const trimmedMessage = message.trim()
     if (trimmedMessage && !disabled) {
       onSendMessage(trimmedMessage)
@@ -72,14 +75,17 @@ export default function MessageInput({
         textareaRef.current.style.height = 'auto'
       }
     }
-  }
+  }, [message, disabled, onSendMessage])
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
-    }
-  }
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault()
+        handleSend()
+      }
+    },
+    [handleSend]
+  )
 
   const isMessageEmpty = !message.trim()
   const isNearLimit = message.length > maxLength * 0.8
@@ -122,3 +128,5 @@ export default function MessageInput({
     </div>
   )
 }
+
+export default memo(MessageInput)

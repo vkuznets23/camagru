@@ -43,8 +43,10 @@ export function UnreadCountProvider({ children }: { children: ReactNode }) {
   }, [session?.user?.id])
 
   useEffect(() => {
-    refreshUnreadCount()
-  }, [refreshUnreadCount])
+    if (session?.user?.id) {
+      refreshUnreadCount()
+    }
+  }, [session?.user?.id]) // Remove refreshUnreadCount from dependencies
 
   // Listen for new messages via WebSocket to update unread count
   useEffect(() => {
@@ -67,7 +69,7 @@ export function UnreadCountProvider({ children }: { children: ReactNode }) {
     return () => {
       socket.off('new-message', handleNewMessage)
     }
-  }, [socket, session?.user?.id, refreshUnreadCount])
+  }, [socket, session?.user?.id]) // Remove refreshUnreadCount from dependencies
 
   // Refresh on visibility/focus change for instant badge updates
   useEffect(() => {
@@ -82,7 +84,7 @@ export function UnreadCountProvider({ children }: { children: ReactNode }) {
       window.removeEventListener('focus', refreshUnreadCount)
       document.removeEventListener('visibilitychange', handleVisibility)
     }
-  }, [refreshUnreadCount])
+  }, []) // Remove refreshUnreadCount from dependencies
 
   return (
     <UnreadCountContext.Provider
