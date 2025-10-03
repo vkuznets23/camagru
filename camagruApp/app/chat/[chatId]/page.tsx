@@ -7,6 +7,7 @@ import ChatList from '@/components/chat/chatList'
 import MessageBubble, { Message } from '@/components/chat/messageBubble'
 import MessageInput from '@/components/chat/MessageInput'
 import { useChatContext } from '@/contexts/ChatContext'
+import { useUnreadCount } from '@/contexts/UnreadCountContext'
 import styles from '@/styles/Chat.module.css'
 
 interface Chat {
@@ -28,6 +29,7 @@ export default function ChatPage({
   const { data: session, status } = useSession()
   const router = useRouter()
   const { updateChatLastMessage } = useChatContext()
+  const { refreshUnreadCount } = useUnreadCount()
   const [chat, setChat] = useState<Chat | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
@@ -62,6 +64,17 @@ export default function ChatPage({
           const messagesData = await messagesResponse.json()
           console.log('Messages data:', messagesData)
           setMessages(messagesData.messages || [])
+
+          // Mark messages as read
+          try {
+            await fetch(`/api/chats/${chatId}/mark-read`, {
+              method: 'POST',
+            })
+            // Refresh unread count after marking as read
+            refreshUnreadCount()
+          } catch (error) {
+            console.error('Error marking messages as read:', error)
+          }
         }
       } catch (error) {
         console.error('Error fetching chat:', error)

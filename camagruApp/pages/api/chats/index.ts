@@ -61,26 +61,38 @@ export default async function handler(
       })
 
       // format data for frontend
-      const formattedChats = chats.map((chat) => {
-        const otherParticipants = chat.participants
-          .filter((p) => p.userId !== session.user.id)
-          .map((p) => p.user)
+      const formattedChats = await Promise.all(
+        chats.map(async (chat) => {
+          const otherParticipants = chat.participants
+            .filter((p) => p.userId !== session.user.id)
+            .map((p) => p.user)
 
-        return {
-          id: chat.id,
-          name:
-            otherParticipants[0]?.name ||
-            otherParticipants[0]?.username ||
-            'Unknown User',
-          image: otherParticipants[0]?.image || null,
-          lastMessage: chat.messages[0] || null,
-          participants: chat.participants.map((p) => ({
-            id: p.user.id,
-            name: p.user.name || p.user.username,
-            image: p.user.image,
-          })),
-        }
-      })
+          // count unread messages per chat
+          const unreadCount = await prisma.message.count({
+            where: {
+              chatId: chat.id,
+              senderId: { not: session.user.id },
+              isRead: false,
+            },
+          })
+
+          return {
+            id: chat.id,
+            name:
+              otherParticipants[0]?.name ||
+              otherParticipants[0]?.username ||
+              'Unknown User',
+            image: otherParticipants[0]?.image || null,
+            lastMessage: chat.messages[0] || null,
+            participants: chat.participants.map((p) => ({
+              id: p.user.id,
+              name: p.user.name || p.user.username,
+              image: p.user.image,
+            })),
+            unreadCount,
+          }
+        })
+      )
 
       res.status(200).json({ chats: formattedChats })
     } catch (error) {

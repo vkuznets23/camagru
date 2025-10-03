@@ -18,12 +18,14 @@ import DarkModeToggle from '../DarkModeToggle'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { useTheme } from '@/context/DarkModeContext'
+import { useUnreadCount } from '@/contexts/UnreadCountContext'
 
 export default function Navbar() {
   const { theme } = useTheme()
 
   const { data: session } = useSession()
   const id = session?.user?.id
+  const { unreadCount } = useUnreadCount()
 
   const pathname = usePathname()
 
@@ -107,6 +109,11 @@ export default function Navbar() {
             className={styles.chatLink}
           >
             {isChatActive ? ChatActiveIcon : ChatInactiveIcons}
+            {unreadCount > 0 && (
+              <span className={styles.unreadBadge}>
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
           </Link>
 
           <DarkModeToggle />

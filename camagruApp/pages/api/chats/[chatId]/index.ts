@@ -64,6 +64,15 @@ export default async function handler(
         .filter((p) => p.userId !== session.user.id)
         .map((p) => p.user)
 
+      // count unread messages for this chat
+      const unreadCount = await prisma.message.count({
+        where: {
+          chatId,
+          senderId: { not: session.user.id },
+          isRead: false,
+        },
+      })
+
       const formattedChat = {
         id: chat.id,
         name:
@@ -76,6 +85,7 @@ export default async function handler(
           name: p.user.name || p.user.username,
           image: p.user.image,
         })),
+        unreadCount,
       }
 
       res.status(200).json({ chat: formattedChat })

@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, ReactNode } from 'react'
+import { useUnreadCount } from './UnreadCountContext'
 
 interface Chat {
   id: string
@@ -8,6 +9,7 @@ interface Chat {
   image: string | null
   lastMessage: LastMessage | string | null
   participants: Participant[]
+  unreadCount?: number
 }
 
 interface Participant {
@@ -40,6 +42,7 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined)
 
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [chats, setChats] = useState<Chat[]>([])
+  const { refreshUnreadCount } = useUnreadCount()
 
   const updateChatLastMessage = (chatId: string, message: LastMessage) => {
     setChats((prevChats) =>
@@ -47,6 +50,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         chat.id === chatId ? { ...chat, lastMessage: message } : chat
       )
     )
+    // Refresh unread count when a new message is sent
+    refreshUnreadCount()
   }
 
   const refreshChats = async () => {

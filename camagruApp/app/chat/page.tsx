@@ -3,15 +3,14 @@
 import ChatList from '@/components/chat/chatList'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import styles from '@/styles/Chat.module.css'
 import { useChatContext } from '@/contexts/ChatContext'
 
 export default function ChatPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const { chats, refreshChats } = useChatContext()
-  const didRedirectRef = useRef(false)
+  const { refreshChats } = useChatContext()
 
   useEffect(() => {
     if (status === 'loading') return
@@ -23,19 +22,9 @@ export default function ChatPage() {
     refreshChats()
   }, [session, status, router, refreshChats])
 
-  // redirect to first chat when available
-  useEffect(() => {
-    if (!session || status !== 'authenticated') return
-    if (didRedirectRef.current) return
-    if (Array.isArray(chats) && chats.length > 0) {
-      didRedirectRef.current = true
-      router.replace(`/chat/${chats[0].id}`)
-    }
-  }, [chats, session, status, router])
-
   // Render nothing until redirect decision is made to avoid flicker
-  if (status === 'loading' || !session || !didRedirectRef.current) {
-    return null
+  if (status === 'loading') {
+    return 'Loading...'
   }
 
   return (
@@ -47,7 +36,14 @@ export default function ChatPage() {
 
       {/* Chat Area */}
       <div className={styles.chatArea}>
-        <div className={styles.messagesArea}></div>
+        <div className={styles.messagesArea}>
+          <div className={styles.emptyState}>
+            <h2 className={styles.emptyStateTitle}>Select a chat</h2>
+            <p className={styles.emptyStateText}>
+              Choose a conversation from the list
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )

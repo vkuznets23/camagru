@@ -39,6 +39,11 @@ export default function ChatList() {
                 : 'No messages yet'}
             </p>
           </div>
+          {chat.unreadCount ? (
+            <span className={styles.chatUnreadBadge}>
+              {chat.unreadCount > 99 ? '99+' : chat.unreadCount}
+            </span>
+          ) : null}
         </div>
       ))}
     </div>

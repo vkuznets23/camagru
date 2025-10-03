@@ -1,14 +1,15 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest } from 'next'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]'
 import { prisma } from '@/utils/prisma'
+import { NextApiResponseServerIO } from '../../socketio'
 
 // get messages
 // create message
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponseServerIO
 ) {
   const session = await getServerSession(req, res, authOptions)
 
@@ -95,6 +96,28 @@ export default async function handler(
           },
         },
       })
+
+      // Send WebSocket event for real-time updates
+      if (res.socket.server.io) {
+        res.socket.server.io.to(`chat-${chatId}`).emit('new-message', {
+          id: message.id,
+          chatId: chatId,
+          content: message.content,
+          senderId: message.senderId,
+          createdAt: message.createdAt,
+          sender: {
+            name: message.sender.name,
+            username: message.sender.username,
+            image: message.sender.image,
+          },
+        })
+
+        // Also emit a global event so other tabs (not joined to the room) can update unread badge
+        res.socket.server.io.emit('new-message', {
+          chatId: chatId,
+          senderId: message.senderId,
+        })
+      }
 
       res.status(201).json({ message })
     } catch (error) {

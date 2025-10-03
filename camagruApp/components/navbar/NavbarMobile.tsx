@@ -8,11 +8,13 @@ import styles from '@/styles/MobileNavbar.module.css'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import DarkModeToggle from '../DarkModeToggle'
+import { useUnreadCount } from '@/contexts/UnreadCountContext'
 // import { MdSearch } from 'react-icons/md'
 
 export default function MobileNavbar() {
   const { data: session } = useSession()
   const id = session?.user.id
+  const { unreadCount } = useUnreadCount()
 
   const pathname = usePathname()
 
@@ -44,6 +46,11 @@ export default function MobileNavbar() {
               <IoChatbubble className={styles.chatBtn} />
             ) : (
               <IoChatbubbleOutline className={styles.chatBtn} />
+            )}
+            {unreadCount > 0 && (
+              <span className={styles.unreadBadge}>
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
             )}
           </Link>
           <DarkModeToggle />
