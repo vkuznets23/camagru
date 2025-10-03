@@ -189,3 +189,14 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 768px) {
+  .inputContainer {
+    padding: 16px 25px;
+  }
+
+  .sendButton svg {
+    width: 30px;
+    height: 30px;
+  }
+}

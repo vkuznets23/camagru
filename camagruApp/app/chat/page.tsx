@@ -6,11 +6,13 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import styles from '@/styles/Chat.module.css'
 import { useChatContext } from '@/contexts/ChatContext'
+import { useChatSidebar } from '@/contexts/ChatSidebarContext'
 
 export default function ChatPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const { refreshChats } = useChatContext()
+  const { isSidebarOpen, closeSidebar } = useChatSidebar()
 
   useEffect(() => {
     if (status === 'loading') return
@@ -29,8 +31,17 @@ export default function ChatPage() {
 
   return (
     <div className={styles.chatLayout}>
+      {/* Backdrop for mobile */}
+      {isSidebarOpen && (
+        <div className={styles.sidebarBackdrop} onClick={closeSidebar} />
+      )}
+
       {/* Chat List Sidebar */}
-      <div className={styles.chatSidebar}>
+      <div
+        className={`${styles.chatSidebar} ${
+          isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
+        }`}
+      >
         <ChatList />
       </div>
 

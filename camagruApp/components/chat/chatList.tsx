@@ -1,12 +1,15 @@
 import { useEffect } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useChatContext } from '@/contexts/ChatContext'
+import { useChatSidebar } from '@/contexts/ChatSidebarContext'
 import styles from '@/styles/Chat.module.css'
 
 export default function ChatList() {
   const { chats, refreshChats } = useChatContext()
-  const router = useRouter()
+  const { selectChat } = useChatSidebar()
+  const pathname = usePathname()
+  const activeChatId = pathname?.split('/').pop()
 
   useEffect(() => {
     refreshChats()
@@ -17,8 +20,11 @@ export default function ChatList() {
       {chats.map((chat) => (
         <div
           key={chat.id}
-          onClick={() => router.push(`/chat/${chat.id}`)}
-          className={styles.chatItem}
+          onClick={() => selectChat(chat.id)}
+          className={`${styles.chatItem} ${
+            activeChatId === chat.id ? styles.active : ''
+          }`}
+          aria-current={activeChatId === chat.id ? 'page' : undefined}
         >
           <Image
             src={chat.image || '/default_avatar.png'}

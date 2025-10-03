@@ -8,6 +8,7 @@ import MessageBubble, { Message } from '@/components/chat/messageBubble'
 import MessageInput from '@/components/chat/MessageInput'
 import { useChatContext } from '@/contexts/ChatContext'
 import { useUnreadCount } from '@/contexts/UnreadCountContext'
+import { useChatSidebar } from '@/contexts/ChatSidebarContext'
 import styles from '@/styles/Chat.module.css'
 
 interface Chat {
@@ -30,6 +31,7 @@ export default function ChatPage({
   const router = useRouter()
   const { updateChatLastMessage } = useChatContext()
   const { refreshUnreadCount } = useUnreadCount()
+  const { isSidebarOpen, closeSidebar } = useChatSidebar()
   const [chat, setChat] = useState<Chat | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
@@ -150,8 +152,17 @@ export default function ChatPage({
 
   return (
     <div className={styles.chatLayout}>
+      {/* Backdrop for mobile */}
+      {isSidebarOpen && (
+        <div className={styles.sidebarBackdrop} onClick={closeSidebar} />
+      )}
+
       {/* Chat List Sidebar */}
-      <div className={styles.chatSidebar}>
+      <div
+        className={`${styles.chatSidebar} ${
+          isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
+        }`}
+      >
         <ChatList />
       </div>
 
