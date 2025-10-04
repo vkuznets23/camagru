@@ -1,0 +1,125 @@
+/* Message Container */
+.messageContainer {
+  display: flex;
+  margin-bottom: 12px;
+  padding: 0 20px;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.messageContainer.own {
+  justify-content: flex-end;
+}
+
+.messageContainer.other {
+  justify-content: flex-start;
+}
+
+/* Message Bubble */
+.messageBubble {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  position: relative;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.messageBubble.own {
+  background-color: var(--primary-color, #007bff);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.messageBubble.other {
+  background-color: var(--message-bg, var(--input-bg));
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+}
+
+/* Message Content */
+.messageContent {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap; /* preserve newlines and wrap */
+  overflow-wrap: break-word; /* wrap long words */
+  word-break: break-word;
+}
+
+/* Message Time */
+.messageTime {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-top: 4px;
+  text-align: right;
+}
+
+.messageTime.other {
+  text-align: left;
+}
+
+/* Message with Avatar */
+.messageWithAvatar {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.messageAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.messageAvatarEmpty {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .messageBubble.other {
+    background-color: var(--message-bg-dark, #2d2d2d);
+    color: var(--text-primary);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .messageBubble {
+    max-width: 85%;
+    padding: 10px 14px;
+  }
+
+  .messageContainer {
+    padding: 0 16px;
+  }
+
+  .messageAvatar {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Animation for new messages */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.messageBubble.new {
+  animation: slideIn 0.3s ease-out;
+}

@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Providers from '@/components/Providers'
 import NavbarWrapper from '@/components/navbar/NavbarWrapper'
+import { ChatProvider } from '@/contexts/ChatContext'
+import { UnreadCountProvider } from '@/contexts/UnreadCountContext'
+import { ChatSidebarProvider } from '@/contexts/ChatSidebarContext'
 
 export const metadata: Metadata = {
   title: 'Camagru',
@@ -27,8 +30,14 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
-          <NavbarWrapper />
-          <main>{children}</main>
+          <UnreadCountProvider>
+            <ChatProvider>
+              <ChatSidebarProvider>
+                <NavbarWrapper />
+                <main>{children}</main>
+              </ChatSidebarProvider>
+            </ChatProvider>
+          </UnreadCountProvider>
         </Providers>
       </body>
     </html>

@@ -4,6 +4,7 @@
 import { GrFormAdd } from 'react-icons/gr'
 import { GoHome } from 'react-icons/go'
 import { GoHomeFill } from 'react-icons/go'
+import { IoChatbubbleOutline, IoChatbubble } from 'react-icons/io5'
 
 // component
 import Logo from '../Logo'
@@ -17,17 +18,21 @@ import DarkModeToggle from '../DarkModeToggle'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { useTheme } from '@/context/DarkModeContext'
+import { useUnreadCount } from '@/contexts/UnreadCountContext'
 
 export default function Navbar() {
   const { theme } = useTheme()
 
   const { data: session } = useSession()
   const id = session?.user?.id
+  const { unreadCount } = useUnreadCount()
 
   const pathname = usePathname()
 
   const isFeedActive = pathname === '/feed'
   const isCreatePostActive = pathname === '/post/create'
+  const isChatActive =
+    pathname === '/chat' || (pathname && pathname.startsWith('/chat/'))
 
   // feed icons
   const FeedActiveIcon = <GoHomeFill className={styles.activeIcon} role="img" />
@@ -44,6 +49,15 @@ export default function Navbar() {
     <>
       <GrFormAdd className={styles.addBtn} role="img" />
       <GrFormAdd className={styles.goAddBtn} role="img" />
+    </>
+  )
+
+  // chat icons
+  const ChatActiveIcon = <IoChatbubble className={styles.activeChatIcon} />
+  const ChatInactiveIcons = (
+    <>
+      <IoChatbubbleOutline className={styles.chatBtn} role="img" />
+      <IoChatbubble className={styles.goChatBtn} role="img" />
     </>
   )
 
@@ -88,6 +102,19 @@ export default function Navbar() {
             {isCreatePostActive
               ? CreatePostActiveIcon
               : CreatePostInactiveIcons}
+          </Link>
+          <Link
+            href="/chat"
+            aria-current={isChatActive ? 'page' : undefined}
+            aria-label="chat"
+            className={styles.chatLink}
+          >
+            {isChatActive ? ChatActiveIcon : ChatInactiveIcons}
+            {unreadCount > 0 && (
+              <span className={styles.unreadBadge}>
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
           </Link>
 
           <DarkModeToggle />
