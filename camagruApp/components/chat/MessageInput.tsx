@@ -103,13 +103,18 @@ function MessageInput({
           className={styles.messageTextarea}
           disabled={disabled}
           rows={1}
+          aria-label="Message input"
+          aria-describedby={isNearLimit ? 'char-count' : undefined}
         />
 
         {isNearLimit && (
           <div
+            id="char-count"
             className={`${styles.characterCount} ${
               isAtLimit ? styles.error : styles.warning
             }`}
+            role="status"
+            aria-live="polite"
           >
             {message.length}/{maxLength}
           </div>

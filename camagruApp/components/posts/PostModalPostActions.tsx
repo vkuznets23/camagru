@@ -76,10 +76,18 @@ export default function PostActions({
     <div className={styles.postAction}>
       {canEdit && (
         <>
-          <button className={styles.deleteButton} onClick={onDelete}>
+          <button
+            className={styles.deleteButton}
+            onClick={onDelete}
+            aria-label="Delete post"
+          >
             <RiDeleteBin6Line /> <span>Delete</span>
           </button>
-          <button className={styles.editButton} onClick={onEdit}>
+          <button
+            className={styles.editButton}
+            onClick={onEdit}
+            aria-label="Edit post"
+          >
             <MdOutlineEdit /> <span>Edit</span>
           </button>
         </>
@@ -89,6 +97,11 @@ export default function PostActions({
         className={styles.likeButton}
         onClick={handleLike}
         disabled={isLiking}
+        aria-label={
+          isLiked
+            ? `Unlike post (${likesCount} likes)`
+            : `Like post (${likesCount} likes)`
+        }
       >
         {isLiked ? <FcLike /> : <FiHeart />}
         <span>{likesCount}</span>

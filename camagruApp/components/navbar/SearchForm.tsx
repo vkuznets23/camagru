@@ -179,6 +179,7 @@ export default function SearchForm() {
           }}
           onKeyDown={handleKeyDown}
           autoComplete="off"
+          aria-label="Search for users"
           onFocus={() => {
             if (window.innerWidth > 820) {
               setIsExpanded(true)

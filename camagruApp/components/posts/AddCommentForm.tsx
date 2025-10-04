@@ -121,12 +121,14 @@ export default function CommentForm({
           placeholder="Write a comment..."
           rows={1}
           required
+          aria-label="Write a comment"
         />
         {error && <p className={styles.error}>{error}</p>}
         <button
           type="submit"
           disabled={isSubmitting || isDisabled}
           className={styles.submitButton}
+          aria-label={isSubmitting ? 'Posting comment...' : 'Post comment'}
         >
           <RiSendPlaneFill />
         </button>

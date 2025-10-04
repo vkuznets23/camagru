@@ -208,6 +208,7 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
               accept="image/*"
               onChange={handleFileChange}
               className={styles.visuallyHidden}
+              aria-label="Upload image file"
             />
             <button
               type="button"
@@ -231,6 +232,7 @@ export default function AddPost({ onPostAdded }: { onPostAdded?: () => void }) {
             <textarea
               ref={textareaRef}
               aria-describedby="caption-desc"
+              aria-label="Post caption"
               placeholder="Add a caption..."
               value={content}
               onChange={(e) => setContent(e.target.value)}

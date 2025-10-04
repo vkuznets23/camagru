@@ -14,6 +14,8 @@ type TextInputProps = {
   onFocus?: () => void
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
   onClick?: () => void
+  'aria-label'?: string
+  'aria-describedby'?: string
 }
 
 export default function TextInput({
@@ -30,6 +32,8 @@ export default function TextInput({
   onFocus,
   onBlur,
   onClick,
+  'aria-label': ariaLabel,
+  'aria-describedby': ariaDescribedBy,
 }: TextInputProps) {
   return (
     <label htmlFor={id}>
@@ -46,6 +50,11 @@ export default function TextInput({
         onFocus={onFocus}
         onBlur={onBlur}
         onClick={onClick}
+        aria-label={ariaLabel}
+        aria-describedby={
+          ariaDescribedBy || (error ? `${id}-error` : undefined)
+        }
+        aria-invalid={!!error}
       />
       {error && (
         <span data-testid={`${id}-error`} className={styles.error}>

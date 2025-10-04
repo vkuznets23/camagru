@@ -32,24 +32,37 @@ export default function MobileNavbar() {
         className={styles.mobileNavbar}
       >
         <div className={styles.navActions}>
-          <Link href="/feed" aria-current={isFeedActive ? 'page' : undefined}>
+          <Link
+            href="/feed"
+            aria-current={isFeedActive ? 'page' : undefined}
+            aria-label="Go to feed"
+          >
             {isFeedActive ? (
               <MdHomeFilled className={styles.feedBtn} />
             ) : (
               <GoHome className={styles.feedBtn} />
             )}
           </Link>
-          <Link href="/post/create">
+          <Link href="/post/create" aria-label="Create new post">
             <GrFormAdd className={styles.addBtn} />
           </Link>
-          <Link href="/chat" aria-current={isChatActive ? 'page' : undefined}>
+          <Link
+            href="/chat"
+            aria-current={isChatActive ? 'page' : undefined}
+            aria-label={`Go to chat${
+              unreadCount > 0 ? ` (${unreadCount} unread messages)` : ''
+            }`}
+          >
             {isChatActive ? (
               <IoChatbubble className={styles.chatBtn} />
             ) : (
               <IoChatbubbleOutline className={styles.chatBtn} />
             )}
             {unreadCount > 0 && (
-              <span className={styles.unreadBadge}>
+              <span
+                className={styles.unreadBadge}
+                aria-label={`${unreadCount} unread messages`}
+              >
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}
@@ -58,6 +71,7 @@ export default function MobileNavbar() {
           <Link
             href={`/user/${id}`}
             aria-current={isUserActive ? 'page' : undefined}
+            aria-label="Go to profile"
           >
             <div className={isUserActive ? styles.avatarWrapper : ''}>
               <Image

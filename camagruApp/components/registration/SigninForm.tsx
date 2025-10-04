@@ -90,6 +90,7 @@ export default function SignInForm() {
           error={errors.login}
           className={styles.input}
           autoComplete="username"
+          aria-label="Email or username"
         />
 
         <div className={styles.passwordWrapper}>
@@ -102,6 +103,7 @@ export default function SignInForm() {
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
             error={errors.password}
+            aria-label="Password"
           />
         </div>
         {errors.auth && <p className={styles.error}>{errors.auth}</p>}
