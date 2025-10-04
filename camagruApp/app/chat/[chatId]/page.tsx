@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, use, useMemo, useCallback } from 'react'
+import { useEffect, useState, use, useMemo, useCallback, useRef } from 'react'
 import Image from 'next/image'
 import ChatList from '@/components/chat/chatList'
 import MessageBubble, { Message } from '@/components/chat/messageBubble'
@@ -10,7 +10,6 @@ import MessageInput from '@/components/chat/MessageInput'
 import { useChatContext } from '@/contexts/ChatContext'
 import { useUnreadCount } from '@/contexts/UnreadCountContext'
 import { useChatSidebar } from '@/contexts/ChatSidebarContext'
-import { IoIosArrowBack } from 'react-icons/io'
 
 import styles from '@/styles/Chat.module.css'
 
@@ -34,7 +33,7 @@ export default function ChatPage({
   const router = useRouter()
   const { updateChatLastMessage } = useChatContext()
   const { refreshUnreadCount } = useUnreadCount()
-  const { isSidebarOpen, closeSidebar, toggleSidebar } = useChatSidebar()
+  const { isSidebarOpen, closeSidebar } = useChatSidebar()
   const [chat, setChat] = useState<Chat | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
@@ -43,6 +42,9 @@ export default function ChatPage({
 
   // Memoize current user ID to prevent unnecessary re-renders
   const currentUserId = useMemo(() => session?.user?.id, [session?.user?.id])
+
+  // Ref for messages container to scroll to bottom
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (status === 'loading') return
@@ -135,6 +137,15 @@ export default function ChatPage({
     [session?.user?.id, chat, chatId, updateChatLastMessage]
   )
 
+  // Scroll to bottom when messages change
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, scrollToBottom])
+
   if (status === 'loading' || loading) {
     return (
       <div
@@ -179,13 +190,6 @@ export default function ChatPage({
       <div className={styles.chatArea}>
         {/* Chat Header - Mobile Only */}
         <div className={styles.chatHeaderMobile}>
-          <button
-            className={styles.menuButton}
-            onClick={toggleSidebar}
-            aria-label="Toggle chat list"
-          >
-            <IoIosArrowBack />
-          </button>
           <div className={styles.chatHeaderInfo}>
             <Image
               src={chat.image || '/default_avatar.png'}
@@ -209,6 +213,7 @@ export default function ChatPage({
                   isOwn={message.senderId === currentUserId}
                 />
               ))}
+              <div ref={messagesEndRef} />
             </div>
           ) : (
             <div className={styles.emptyState}>

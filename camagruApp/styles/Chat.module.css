@@ -95,23 +95,6 @@
   font-weight: 600;
 }
 
-.menuButton {
-  display: none; /* Hidden on desktop */
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: var(--text-primary);
-  padding: 4px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-  transform: translateY(2px);
-}
-
-.menuButton:hover {
-  background-color: var(--hover-bg);
-}
-
 /* Mobile Chat Header */
 .chatHeaderMobile {
   display: none; /* Hidden on desktop */
@@ -329,10 +312,6 @@
     transform: translateX(-100%);
   }
 
-  .menuButton {
-    display: block; /* Show menu button on tablets */
-  }
-
   .chatHeaderMobile {
     display: flex; /* Show mobile header on tablets */
   }
@@ -379,10 +358,6 @@
   .messageInputContainer {
     position: sticky;
     bottom: 0;
-  }
-
-  .menuButton {
-    display: block; /* Show menu button on mobile */
   }
 
   .chatHeaderMobile {
