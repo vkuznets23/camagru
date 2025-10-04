@@ -95,7 +95,7 @@ export default function ChatPage({
     }
 
     fetchChat()
-  }, [session, status, router, chatId])
+  }, [session, status, router, chatId, refreshUnreadCount])
 
   const handleSendMessage = useCallback(
     async (message: string) => {

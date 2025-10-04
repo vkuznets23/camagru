@@ -95,7 +95,7 @@ export default async function handler(
     }
   } else if (req.method === 'PUT') {
     try {
-      const { name, description, image } = req.body
+      // No body parameters needed for chat update
 
       // check if user is a participant of the chat
       const participant = await prisma.chatParticipant.findFirst({
@@ -110,13 +110,11 @@ export default async function handler(
         return res.status(403).json({ error: 'Access denied' })
       }
 
-      // update chat
+      // update chat (only update lastMessageAt for now)
       const updatedChat = await prisma.chat.update({
         where: { id: chatId },
         data: {
-          name: name || undefined,
-          description: description || undefined,
-          image: image || undefined,
+          lastMessageAt: new Date(),
         },
         include: {
           participants: {
