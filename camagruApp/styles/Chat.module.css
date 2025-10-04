@@ -172,6 +172,11 @@
   background-color: var(--hover-bg);
 }
 
+.chatItem.active {
+  background-color: var(--hover-bg-active);
+  border-left: 3px solid var(--button-bg);
+}
+
 .chatItem:last-child {
   border-bottom: none;
 }

@@ -3,6 +3,8 @@
   display: flex;
   margin-bottom: 12px;
   padding: 0 20px;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .messageContainer.own {
@@ -30,7 +32,7 @@
 }
 
 .messageBubble.other {
-  background-color: var(--message-bg, #f1f3f4);
+  background-color: var(--message-bg, var(--input-bg));
   color: var(--text-primary);
   border-bottom-left-radius: 4px;
 }
@@ -79,37 +81,6 @@
   border: 1px solid var(--border);
   object-fit: cover;
   flex-shrink: 0;
-}
-
-/* Message Status */
-.messageStatus {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-top: 2px;
-  justify-content: flex-end;
-}
-
-.messageStatus.other {
-  justify-content: flex-start;
-}
-
-.statusIcon {
-  font-size: 12px;
-  opacity: 0.6;
-}
-
-.statusIcon.delivered {
-  color: #4caf50;
-}
-
-.statusIcon.read {
-  color: #2196f3;
-}
-
-/* Hover Effects */
-.messageBubble:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Dark Mode Adjustments */
