@@ -4,6 +4,34 @@ import { authOptions } from '../../auth/[...nextauth]'
 import { prisma } from '@/utils/prisma'
 import { NextApiResponseServerIO } from '../../socketio'
 
+// Constants
+const MAX_MESSAGE_LENGTH = 1000
+
+// Validation functions
+function validateMessageContent(content: string): string | null {
+  if (!content) return 'Message content is required'
+
+  const trimmedContent = content.trim()
+  if (!trimmedContent) return 'Message cannot be empty'
+
+  if (trimmedContent.length > MAX_MESSAGE_LENGTH) {
+    return `Message too long (max ${MAX_MESSAGE_LENGTH} characters)`
+  }
+
+  // Basic XSS protection - remove script tags and dangerous HTML
+  const sanitizedContent = trimmedContent
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+    .replace(/javascript:/gi, '')
+    .replace(/on\w+\s*=/gi, '')
+
+  if (sanitizedContent !== trimmedContent) {
+    return 'Message contains invalid characters'
+  }
+
+  return null
+}
+
 // get messages
 // create message
 
@@ -71,16 +99,21 @@ export default async function handler(
     try {
       const { content } = req.body
 
-      if (!content) {
-        return res.status(400).json({ error: 'Message content is required' })
+      // Validate content
+      const contentError = validateMessageContent(content)
+      if (contentError) {
+        return res.status(400).json({ error: contentError })
       }
+
+      // Sanitize content
+      const sanitizedContent = content.trim()
 
       // create message
       const message = await prisma.message.create({
         data: {
           chatId,
           senderId: session.user.id,
-          content,
+          content: sanitizedContent,
         },
         select: {
           id: true,
