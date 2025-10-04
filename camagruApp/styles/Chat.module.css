@@ -105,10 +105,43 @@
   padding: 4px;
   border-radius: 4px;
   transition: background-color 0.2s;
+  transform: translateY(2px);
 }
 
 .menuButton:hover {
   background-color: var(--hover-bg);
+}
+
+/* Mobile Chat Header */
+.chatHeaderMobile {
+  display: none; /* Hidden on desktop */
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+  align-items: center;
+  gap: 12px;
+}
+
+.chatHeaderInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.chatHeaderAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.chatHeaderTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 /* Chat Messages Area */
@@ -300,6 +333,10 @@
     display: block; /* Show menu button on tablets */
   }
 
+  .chatHeaderMobile {
+    display: flex; /* Show mobile header on tablets */
+  }
+
   .sidebarBackdrop {
     display: block; /* Show backdrop on tablets when sidebar is open */
     background-color: rgba(0, 0, 0, 0.3); /* Lighter backdrop for tablets */
@@ -346,6 +383,10 @@
 
   .menuButton {
     display: block; /* Show menu button on mobile */
+  }
+
+  .chatHeaderMobile {
+    display: flex; /* Show mobile header on mobile */
   }
 
   .sidebarBackdrop {

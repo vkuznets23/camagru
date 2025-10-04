@@ -3,12 +3,15 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, use, useMemo, useCallback } from 'react'
+import Image from 'next/image'
 import ChatList from '@/components/chat/chatList'
 import MessageBubble, { Message } from '@/components/chat/messageBubble'
 import MessageInput from '@/components/chat/MessageInput'
 import { useChatContext } from '@/contexts/ChatContext'
 import { useUnreadCount } from '@/contexts/UnreadCountContext'
 import { useChatSidebar } from '@/contexts/ChatSidebarContext'
+import { IoIosArrowBack } from 'react-icons/io'
+
 import styles from '@/styles/Chat.module.css'
 
 interface Chat {
@@ -31,7 +34,7 @@ export default function ChatPage({
   const router = useRouter()
   const { updateChatLastMessage } = useChatContext()
   const { refreshUnreadCount } = useUnreadCount()
-  const { isSidebarOpen, closeSidebar } = useChatSidebar()
+  const { isSidebarOpen, closeSidebar, toggleSidebar } = useChatSidebar()
   const [chat, setChat] = useState<Chat | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
@@ -174,6 +177,27 @@ export default function ChatPage({
 
       {/* Chat Area */}
       <div className={styles.chatArea}>
+        {/* Chat Header - Mobile Only */}
+        <div className={styles.chatHeaderMobile}>
+          <button
+            className={styles.menuButton}
+            onClick={toggleSidebar}
+            aria-label="Toggle chat list"
+          >
+            <IoIosArrowBack />
+          </button>
+          <div className={styles.chatHeaderInfo}>
+            <Image
+              src={chat.image || '/default_avatar.png'}
+              alt={chat.name}
+              width={32}
+              height={32}
+              className={styles.chatHeaderAvatar}
+            />
+            <h1 className={styles.chatHeaderTitle}>{chat.name}</h1>
+          </div>
+        </div>
+
         {/* Chat Messages Area */}
         <div className={styles.messagesArea}>
           {messages.length > 0 ? (
