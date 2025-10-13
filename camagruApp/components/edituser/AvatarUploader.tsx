@@ -57,6 +57,7 @@ export default function AvatarUploader({
             onClick={() => setShowOptions((prev) => !prev)}
             aria-expanded={showOptions}
             aria-controls="avatar-options"
+            aria-label={showOptions ? 'Close photo options' : 'Edit photo'}
           >
             {showOptions ? 'Close' : 'Edit photo'}
           </button>

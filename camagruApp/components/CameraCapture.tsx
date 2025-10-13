@@ -119,6 +119,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState<FilterName>('none')
 
   useEffect(() => {
@@ -153,6 +154,62 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       }
     }
   }, [])
+
+  // Focus trap for keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+        return
+      }
+
+      if (e.key === 'Tab') {
+        if (!modalRef.current) return
+
+        const focusableElements =
+          modalRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+        const focusable = Array.from(focusableElements).filter(
+          (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+        )
+        if (focusable.length === 0) return
+
+        const firstElement = focusable[0]
+        const lastElement = focusable[focusable.length - 1]
+        const isShift = e.shiftKey
+        const active = document.activeElement
+
+        if (isShift && active === firstElement) {
+          e.preventDefault()
+          lastElement.focus()
+        } else if (!isShift && active === lastElement) {
+          e.preventDefault()
+          firstElement.focus()
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    // Focus first element when modal opens
+    if (modalRef.current) {
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+      const focusable = Array.from(focusableElements).filter(
+        (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+      )
+      if (focusable.length > 0) {
+        focusable[0].focus()
+      }
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onClose])
 
   const handleCapture = () => {
     const video = videoRef.current
@@ -249,7 +306,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
   const filterData = filtersWithOverlay[filter]
 
   return (
-    <div>
+    <div ref={modalRef}>
       <div
         style={{
           position: 'relative',
@@ -287,6 +344,16 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
             type="button"
             key={f}
             onClick={() => setFilter(f)}
+            aria-label={`Apply ${
+              f === 'none'
+                ? 'no filter'
+                : f === 'grayscale(100%)'
+                ? 'Paris filter'
+                : f === 'sanfrancisco'
+                ? 'San Francisco filter'
+                : f
+            } filter`}
+            aria-pressed={filter === f}
             style={{
               padding: '6px 12px',
               borderRadius: 4,
@@ -313,6 +380,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           onClick={handleCapture}
           className={styles.takePictureBtn}
           style={{ marginTop: 12 }}
+          aria-label="Take picture"
         >
           📸 Capture
         </button>
@@ -320,6 +388,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           type="button"
           onClick={() => onClose && onClose()}
           className={styles.closeBtn}
+          aria-label="Close camera"
         >
           Close
         </button>
