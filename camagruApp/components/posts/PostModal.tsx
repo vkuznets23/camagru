@@ -222,6 +222,8 @@ export default function PostModal({
             alt="Post"
             fill
             sizes="(max-width: 900px) 100vw, 50vw"
+            placeholder={post.blurDataURL ? 'blur' : undefined}
+            blurDataURL={post.blurDataURL ?? undefined}
             className={styles.imageWrapperImg}
           />
         </div>
