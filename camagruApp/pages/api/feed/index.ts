@@ -28,18 +28,46 @@ export default async function handler(
       take: limitNum,
       orderBy: { createdAt: 'desc' },
       include: {
-        user: true,
-        comments: { include: { user: true } },
-        likedBy: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            image: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+            likedBy: true,
+          },
+        },
       },
     })
 
+    const postIds = posts.map((p) => p.id)
+
+    const userLikes = currentUserId
+      ? await prisma.like.findMany({
+          where: {
+            userId: currentUserId,
+            postId: { in: postIds },
+          },
+          select: {
+            postId: true,
+          },
+        })
+      : []
+
+    const likedPostIds = new Set(userLikes.map((like) => like.postId))
+
     const formattedPosts = posts.map((post) => ({
       ...post,
-      likesCount: post.likedBy.length,
-      likedByCurrentUser: currentUserId
-        ? post.likedBy.some((like) => like.userId === currentUserId)
-        : false,
+      comments: [],
+      likedBy: [],
+      likesCount: post._count.likedBy,
+      commentsCount: post._count.comments,
+      likedByCurrentUser: likedPostIds.has(post.id),
     }))
 
     return res.status(200).json(formattedPosts)

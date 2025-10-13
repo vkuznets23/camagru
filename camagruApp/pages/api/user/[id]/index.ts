@@ -36,18 +36,19 @@ export default async function handler(
               image: true,
               createdAt: true,
               blurDataURL: true,
+              userId: true,
               user: {
                 select: { id: true, username: true, name: true, image: true },
               },
-              comments: {
-                orderBy: { createdAt: 'desc' },
-                include: {
-                  user: { select: { id: true, username: true, image: true } },
+              _count: {
+                select: {
+                  comments: true,
+                  likedBy: true,
+                  savedBy: true,
                 },
               },
-              likedBy: true,
-              savedBy: true,
             },
+            orderBy: { createdAt: 'desc' },
           },
           savedPosts: {
             select: {
@@ -56,18 +57,19 @@ export default async function handler(
               image: true,
               createdAt: true,
               blurDataURL: true,
+              userId: true,
               user: {
                 select: { id: true, username: true, name: true, image: true },
               },
-              comments: {
-                orderBy: { createdAt: 'desc' },
-                include: {
-                  user: { select: { id: true, username: true, image: true } },
+              _count: {
+                select: {
+                  comments: true,
+                  likedBy: true,
+                  savedBy: true,
                 },
               },
-              likedBy: true,
-              savedBy: true,
             },
+            orderBy: { createdAt: 'desc' },
           },
         },
       })
@@ -75,24 +77,55 @@ export default async function handler(
       if (!user || !user.emailVerified)
         return res.status(404).json({ error: 'User not found' })
 
-      const sanitizedPosts = (user.posts ?? []).map((post) => ({
+      const allPostIds = [
+        ...user.posts.map((p) => p.id),
+        ...user.savedPosts.map((p) => p.id),
+      ]
+
+      const [userLikes, userSaves] = await Promise.all([
+        prisma.like.findMany({
+          where: {
+            userId: currentUserId,
+            postId: { in: allPostIds },
+          },
+          select: { postId: true },
+        }),
+        prisma.user.findUnique({
+          where: { id: currentUserId },
+          select: {
+            savedPosts: {
+              where: { id: { in: allPostIds } },
+              select: { id: true },
+            },
+          },
+        }),
+      ])
+
+      const likedPostIds = new Set(userLikes.map((like) => like.postId))
+      const savedPostIds = new Set(
+        userSaves?.savedPosts.map((post) => post.id) || []
+      )
+
+      const sanitizedPosts = user.posts.map((post) => ({
         ...post,
-        comments: Array.isArray(post.comments) ? post.comments : [],
-        likesCount: post.likedBy.length,
-        likedByCurrentUser: post.likedBy.some(
-          (like) => like.userId === currentUserId
-        ),
-        savedByCurrentUser: post.savedBy.some((u) => u.id === currentUserId),
+        comments: [],
+        likedBy: [],
+        savedBy: [],
+        likesCount: post._count.likedBy,
+        commentsCount: post._count.comments,
+        likedByCurrentUser: likedPostIds.has(post.id),
+        savedByCurrentUser: savedPostIds.has(post.id),
       }))
 
-      const sanitizedSavedPosts = (user.savedPosts ?? []).map((post) => ({
+      const sanitizedSavedPosts = user.savedPosts.map((post) => ({
         ...post,
-        comments: Array.isArray(post.comments) ? post.comments : [],
-        likesCount: post.likedBy.length,
-        likedByCurrentUser: post.likedBy.some(
-          (like) => like.userId === currentUserId
-        ),
-        savedByCurrentUser: post.savedBy.some((u) => u.id === currentUserId),
+        comments: [],
+        likedBy: [],
+        savedBy: [],
+        likesCount: post._count.likedBy,
+        commentsCount: post._count.comments,
+        likedByCurrentUser: likedPostIds.has(post.id),
+        savedByCurrentUser: savedPostIds.has(post.id),
       }))
 
       return res.status(200).json({
