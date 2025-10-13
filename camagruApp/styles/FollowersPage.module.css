@@ -92,26 +92,6 @@
 }
 
 /* --- Buttons --- */
-.messageBtn {
-  background: var(--background);
-  border: 1px solid var(--border-alt);
-  border-radius: 6px;
-  padding: 6px 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  height: 32px;
-}
-
-.messageBtn:hover {
-  background: var(--hover-bg-active);
-  border-color: var(--primary-color);
-}
-
 .unfollowBtn {
   background: var(--background);
   border: 1px solid var(--border-alt);
