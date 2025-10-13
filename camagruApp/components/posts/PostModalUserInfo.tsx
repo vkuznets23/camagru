@@ -18,12 +18,12 @@ export default function UserInfo({
   userID: string
 }) {
   return (
-    <div className={styles.usernamePanel}>
-      <Link href={`/user/${userID}`}>
+    <div className={styles.usernamePanel} id="post-author">
+      <Link href={`/user/${userID}`} aria-label={`View ${username}'s profile`}>
         <Image
           className={styles.avatar}
           src={avatar || '/default_avatar.png'}
-          alt="avatar"
+          alt={`${username}'s avatar`}
           width={32}
           height={32}
           placeholder={avatarBlurDataURL ? 'blur' : undefined}
@@ -31,10 +31,16 @@ export default function UserInfo({
         />
       </Link>
       <div className={styles.postMeta}>
-        <Link href={`/user/${userID}`}>
+        <Link
+          href={`/user/${userID}`}
+          aria-label={`View ${username}'s profile`}
+        >
           <p className={styles.username}>{username}</p>
         </Link>
-        <small className={styles.postDate}>
+        <small
+          className={styles.postDate}
+          aria-label={`Posted on ${new Date(createdAt).toLocaleString()}`}
+        >
           {new Date(createdAt).toLocaleString()}
         </small>
       </div>

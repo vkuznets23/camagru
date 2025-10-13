@@ -236,18 +236,25 @@ export default function PostModal({
   }
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="post-author"
+      aria-describedby="post-content"
+    >
       <div
         ref={modalRef}
         tabIndex={-1}
         className={styles.modal}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className={styles.dragHandle} />
+        <div className={styles.dragHandle} aria-hidden="true" />
         <div className={styles.imageWrapper}>
           <Image
             src={image}
-            alt="Post"
+            alt={`Post by ${username}`}
             fill
             sizes="(max-width: 900px) 100vw, 50vw"
             placeholder={post.blurDataURL ? 'blur' : undefined}
@@ -267,7 +274,7 @@ export default function PostModal({
                   userID={userID}
                 />
 
-                <div>
+                <div id="post-content">
                   {isEditing ? (
                     <div className={styles.editSection}>
                       <textarea
@@ -276,14 +283,20 @@ export default function PostModal({
                         className={styles.textarea}
                         ref={editTextareaRef}
                         defaultValue={editedContent}
+                        aria-label="Edit post content"
                       />
                       <div className={styles.editButtons}>
-                        <button onClick={handleSave} disabled={isSaving}>
+                        <button
+                          onClick={handleSave}
+                          disabled={isSaving}
+                          aria-label="Save post changes"
+                        >
                           {isSaving ? 'Saving...' : 'Save'}
                         </button>
                         <button
                           onClick={() => setIsEditing(false)}
                           disabled={isSaving}
+                          aria-label="Cancel editing"
                         >
                           Cancel
                         </button>
@@ -297,6 +310,7 @@ export default function PostModal({
                           <button
                             className={styles.showMoreButton}
                             onClick={() => setShowFullContent(true)}
+                            aria-label="Show full post content"
                           >
                             ...show all
                           </button>
@@ -316,22 +330,28 @@ export default function PostModal({
                   )}
                 </div>
               </div>
-              {loadingComments ? (
-                <CommentsSkeleton />
-              ) : (
-                <CommentList
-                  currentUserId={currentUserId}
-                  comments={comments}
-                  onCommentDeleted={(commentId) => {
-                    setComments(comments.filter((c) => c.id !== commentId))
-                    deleteComment(postId, commentId)
-                  }}
-                  postAuthorId={userID}
-                />
-              )}
+              <section aria-label="Comments">
+                {loadingComments ? (
+                  <CommentsSkeleton />
+                ) : (
+                  <CommentList
+                    currentUserId={currentUserId}
+                    comments={comments}
+                    onCommentDeleted={(commentId) => {
+                      setComments(comments.filter((c) => c.id !== commentId))
+                      deleteComment(postId, commentId)
+                    }}
+                    postAuthorId={userID}
+                  />
+                )}
+              </section>
             </div>
           </div>
-          <div className={styles.commentForm}>
+          <div
+            className={styles.commentForm}
+            role="form"
+            aria-label="Add a comment"
+          >
             <CommentForm
               postId={postId}
               onCommentAdded={(newComment) => {
@@ -342,7 +362,11 @@ export default function PostModal({
           </div>
         </div>
 
-        <button onClick={onClose} className={styles.closeBtn}>
+        <button
+          onClick={onClose}
+          className={styles.closeBtn}
+          aria-label="Close post modal"
+        >
           ×
         </button>
       </div>
