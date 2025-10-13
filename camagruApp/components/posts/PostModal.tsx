@@ -5,6 +5,7 @@ import styles from '@/styles/PostModal.module.css'
 import { type Comment } from '@/types/comment'
 import CommentForm from '@/components/posts/AddCommentForm'
 import CommentList from '@/components/posts/CommentsList'
+import CommentsSkeleton from '@/components/posts/CommentsSkeleton'
 import { useEffect, useRef, useState } from 'react'
 import { type Post } from '@/types/post'
 import UserInfo from '@/components/posts/PostModalUserInfo'
@@ -33,9 +34,9 @@ export default function PostModal({
     id: postId,
     content,
     createdAt,
-    user: { username, image: avatar, id: userID },
+    user: { username, image: avatar, avatarBlurDataURL, id: userID },
     likesCount,
-    comments,
+    commentsCount,
   } = post
 
   const isLiked = post.likedByCurrentUser ?? false
@@ -46,6 +47,8 @@ export default function PostModal({
   const [editedContent, setEditedContent] = useState(content || '')
   const [isSaving, setIsSaving] = useState(false)
   const [showFullContent, setShowFullContent] = useState(false)
+  const [comments, setComments] = useState<Comment[]>([])
+  const [loadingComments, setLoadingComments] = useState(true)
 
   const editTextareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -69,6 +72,31 @@ export default function PostModal({
     useUser()
 
   const modalRef = useRef<HTMLDivElement>(null)
+
+  // Load comments when modal is opened
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (commentsCount === 0) {
+        setComments([])
+        setLoadingComments(false)
+        return
+      }
+
+      try {
+        const response = await fetch(`/api/comments/by-post/${postId}`)
+        if (response.ok) {
+          const data = await response.json()
+          setComments(data)
+        }
+      } catch (error) {
+        console.error('Error loading comments:', error)
+      } finally {
+        setLoadingComments(false)
+      }
+    }
+
+    fetchComments()
+  }, [postId, commentsCount])
 
   useEffect(() => {
     if (window.innerWidth > 820) return
@@ -222,6 +250,8 @@ export default function PostModal({
             alt="Post"
             fill
             sizes="(max-width: 900px) 100vw, 50vw"
+            placeholder={post.blurDataURL ? 'blur' : undefined}
+            blurDataURL={post.blurDataURL ?? undefined}
             className={styles.imageWrapperImg}
           />
         </div>
@@ -232,6 +262,7 @@ export default function PostModal({
                 <UserInfo
                   username={username}
                   avatar={avatar}
+                  avatarBlurDataURL={avatarBlurDataURL}
                   createdAt={createdAt}
                   userID={userID}
                 />
@@ -285,18 +316,29 @@ export default function PostModal({
                   )}
                 </div>
               </div>
-              <CommentList
-                currentUserId={currentUserId}
-                comments={comments}
-                onCommentDeleted={(commentId) =>
-                  deleteComment(postId, commentId)
-                }
-                postAuthorId={userID}
-              />
+              {loadingComments ? (
+                <CommentsSkeleton />
+              ) : (
+                <CommentList
+                  currentUserId={currentUserId}
+                  comments={comments}
+                  onCommentDeleted={(commentId) => {
+                    setComments(comments.filter((c) => c.id !== commentId))
+                    deleteComment(postId, commentId)
+                  }}
+                  postAuthorId={userID}
+                />
+              )}
             </div>
           </div>
           <div className={styles.commentForm}>
-            <CommentForm postId={postId} onCommentAdded={onCommentAdded} />
+            <CommentForm
+              postId={postId}
+              onCommentAdded={(newComment) => {
+                setComments([newComment, ...comments])
+                onCommentAdded(newComment)
+              }}
+            />
           </div>
         </div>
 

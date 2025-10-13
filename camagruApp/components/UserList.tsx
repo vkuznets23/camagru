@@ -12,6 +12,7 @@ export type FollowerPreview = {
   name?: string | null
   bio?: string | null
   image?: string | null
+  avatarBlurDataURL?: string | null
   isFollowing?: boolean
   followsYou?: boolean
 }
@@ -58,6 +59,8 @@ export default function UserList({
                     alt={`${user.username}'s avatar`}
                     width={40}
                     height={40}
+                    placeholder={user.avatarBlurDataURL ? 'blur' : undefined}
+                    blurDataURL={user.avatarBlurDataURL ?? undefined}
                     priority
                   />
                   <div className={styles.userInfo}>

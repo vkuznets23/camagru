@@ -7,6 +7,7 @@ export type User = {
   username: string
   bio?: string
   image?: string
+  avatarBlurDataURL?: string
   posts: Post[]
   _count: {
     posts: number

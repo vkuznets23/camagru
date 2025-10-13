@@ -13,6 +13,7 @@ export async function getUserFollowings(userId: string, currentUserId: string) {
               name: true,
               bio: true,
               image: true,
+              avatarBlurDataURL: true,
             },
           },
         },
@@ -22,20 +23,37 @@ export async function getUserFollowings(userId: string, currentUserId: string) {
 
   if (!user) return null
 
-  const result = await Promise.all(
-    user.following.map(async (f) => {
-      const isFollowing = !!(await prisma.follower.findFirst({
-        where: {
-          followerId: currentUserId,
-          followingId: f.following.id,
-        },
-      }))
-      return {
-        ...f.following,
-        isFollowing,
-      }
-    })
-  )
+  const followingIds = user.following.map((f) => f.following.id)
+
+  const currentUserFollowing = await prisma.follower.findMany({
+    where: {
+      followerId: currentUserId,
+      followingId: { in: followingIds },
+    },
+    select: {
+      followingId: true,
+    },
+  })
+
+  const followsYouRelations = await prisma.follower.findMany({
+    where: {
+      followerId: { in: followingIds },
+      followingId: currentUserId,
+    },
+    select: {
+      followerId: true,
+    },
+  })
+
+  const followingSet = new Set(currentUserFollowing.map((f) => f.followingId))
+  const followsYouSet = new Set(followsYouRelations.map((f) => f.followerId))
+
+  const result = user.following.map((f) => ({
+    ...f.following,
+    isFollowing: followingSet.has(f.following.id),
+    followsYou: followsYouSet.has(f.following.id),
+  }))
+
   return result
 }
 

@@ -84,29 +84,76 @@ export default async function handler(
   switch (req.method) {
     case 'GET': {
       try {
+        const { userId } = req.query
+
         const posts = await prisma.post.findMany({
+          where: userId ? { userId: userId as string } : undefined,
           select: {
             id: true,
             content: true,
             image: true,
             blurDataURL: true,
             createdAt: true,
-            user: true,
-            comments: { include: { user: true } },
-            likedBy: true,
-            savedBy: true,
+            userId: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                image: true,
+                avatarBlurDataURL: true,
+              },
+            },
+            _count: {
+              select: {
+                comments: true,
+                likedBy: true,
+                savedBy: true,
+              },
+            },
           },
+          orderBy: { createdAt: 'desc' },
         })
+
+        const postIds = posts.map((p) => p.id)
+
+        const [userLikes, userSaves] = await Promise.all([
+          currentUserId
+            ? prisma.like.findMany({
+                where: {
+                  userId: currentUserId,
+                  postId: { in: postIds },
+                },
+                select: { postId: true },
+              })
+            : [],
+          currentUserId
+            ? prisma.user.findUnique({
+                where: { id: currentUserId },
+                select: {
+                  savedPosts: {
+                    where: { id: { in: postIds } },
+                    select: { id: true },
+                  },
+                },
+              })
+            : null,
+        ])
+
+        const likedPostIds = new Set(userLikes.map((like) => like.postId))
+        const savedPostIds = new Set(
+          userSaves?.savedPosts.map((post) => post.id) || []
+        )
 
         const formattedPosts = posts.map((post) => ({
           ...post,
-          likesCount: post.likedBy.length,
-          likedByCurrentUser: post.likedBy.some(
-            (like) => like.userId === currentUserId
-          ),
-          savedByCurrentUser: post.savedBy.some(
-            (user) => user.id === currentUserId
-          ),
+          comments: [],
+          likedBy: [],
+          savedBy: [],
+          likesCount: post._count.likedBy,
+          commentsCount: post._count.comments,
+          likedByCurrentUser: likedPostIds.has(post.id),
+          savedByCurrentUser: savedPostIds.has(post.id),
         }))
 
         return res.status(200).json(formattedPosts)

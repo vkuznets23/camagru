@@ -123,3 +123,24 @@
   text-align: center;
   color: var(--text-primary);
 }
+
+/* Skeleton */
+.skeleton {
+  background: var(--skeleton-base);
+}
+
+.skeletonAvatar {
+  background: var(--skeleton-base);
+}
+
+@keyframes pulse {
+  0% {
+    background-color: var(--skeleton-base);
+  }
+  50% {
+    background-color: var(--skeleton-highlight);
+  }
+  100% {
+    background-color: var(--skeleton-base);
+  }
+}
