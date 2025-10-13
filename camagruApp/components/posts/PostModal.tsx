@@ -5,6 +5,7 @@ import styles from '@/styles/PostModal.module.css'
 import { type Comment } from '@/types/comment'
 import CommentForm from '@/components/posts/AddCommentForm'
 import CommentList from '@/components/posts/CommentsList'
+import CommentsSkeleton from '@/components/posts/CommentsSkeleton'
 import { useEffect, useRef, useState } from 'react'
 import { type Post } from '@/types/post'
 import UserInfo from '@/components/posts/PostModalUserInfo'
@@ -35,6 +36,7 @@ export default function PostModal({
     createdAt,
     user: { username, image: avatar, avatarBlurDataURL, id: userID },
     likesCount,
+    commentsCount,
   } = post
 
   const isLiked = post.likedByCurrentUser ?? false
@@ -71,9 +73,15 @@ export default function PostModal({
 
   const modalRef = useRef<HTMLDivElement>(null)
 
-  // Загружаем комментарии при открытии модалки
+  // Load comments when modal is opened
   useEffect(() => {
     const fetchComments = async () => {
+      if (commentsCount === 0) {
+        setComments([])
+        setLoadingComments(false)
+        return
+      }
+
       try {
         const response = await fetch(`/api/comments/by-post/${postId}`)
         if (response.ok) {
@@ -88,7 +96,7 @@ export default function PostModal({
     }
 
     fetchComments()
-  }, [postId])
+  }, [postId, commentsCount])
 
   useEffect(() => {
     if (window.innerWidth > 820) return
@@ -309,9 +317,7 @@ export default function PostModal({
                 </div>
               </div>
               {loadingComments ? (
-                <div style={{ padding: '20px', textAlign: 'center' }}>
-                  Loading comments...
-                </div>
+                <CommentsSkeleton />
               ) : (
                 <CommentList
                   currentUserId={currentUserId}
