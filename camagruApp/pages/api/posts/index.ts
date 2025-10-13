@@ -101,6 +101,7 @@ export default async function handler(
                 username: true,
                 name: true,
                 image: true,
+                avatarBlurDataURL: true,
               },
             },
             _count: {

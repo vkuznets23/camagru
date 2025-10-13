@@ -23,6 +23,7 @@ export default async function handler(
             id: true,
             username: true,
             image: true,
+            avatarBlurDataURL: true,
           },
         },
       },

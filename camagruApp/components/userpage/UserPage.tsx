@@ -102,6 +102,8 @@ export default function UserProfile() {
           alt={`${user.name || 'User'}'s profile picture`}
           className={styles.avatar}
           priority
+          placeholder={user.avatarBlurDataURL ? 'blur' : undefined}
+          blurDataURL={user.avatarBlurDataURL ?? undefined}
           onError={(e) => (e.currentTarget.src = '/default_avatar.png')}
         />
 

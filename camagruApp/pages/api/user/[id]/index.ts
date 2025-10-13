@@ -25,6 +25,7 @@ export default async function handler(
           name: true,
           bio: true,
           image: true,
+          avatarBlurDataURL: true,
           emailVerified: true,
           _count: {
             select: { posts: true, followers: true, following: true },
@@ -38,7 +39,13 @@ export default async function handler(
               blurDataURL: true,
               userId: true,
               user: {
-                select: { id: true, username: true, name: true, image: true },
+                select: {
+                  id: true,
+                  username: true,
+                  name: true,
+                  image: true,
+                  avatarBlurDataURL: true,
+                },
               },
               _count: {
                 select: {
@@ -59,7 +66,13 @@ export default async function handler(
               blurDataURL: true,
               userId: true,
               user: {
-                select: { id: true, username: true, name: true, image: true },
+                select: {
+                  id: true,
+                  username: true,
+                  name: true,
+                  image: true,
+                  avatarBlurDataURL: true,
+                },
               },
               _count: {
                 select: {

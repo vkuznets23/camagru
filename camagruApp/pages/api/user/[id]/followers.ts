@@ -16,6 +16,7 @@ export async function getUserFollowers(userId: string, currentUserId: string) {
               name: true,
               bio: true,
               image: true,
+              avatarBlurDataURL: true,
             },
           },
         },

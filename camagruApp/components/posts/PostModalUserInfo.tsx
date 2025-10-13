@@ -7,11 +7,13 @@ import Link from 'next/link'
 export default function UserInfo({
   username,
   avatar,
+  avatarBlurDataURL,
   createdAt,
   userID,
 }: {
   username: string
   avatar: string | undefined
+  avatarBlurDataURL?: string | undefined
   createdAt: string
   userID: string
 }) {
@@ -24,6 +26,8 @@ export default function UserInfo({
           alt="avatar"
           width={32}
           height={32}
+          placeholder={avatarBlurDataURL ? 'blur' : undefined}
+          blurDataURL={avatarBlurDataURL ?? undefined}
         />
       </Link>
       <div className={styles.postMeta}>

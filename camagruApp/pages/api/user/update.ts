@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]'
 import { prisma } from '@/utils/prisma'
+import { getBlurDataURL } from '@/utils/blurImage'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
@@ -27,18 +28,30 @@ export default async function handler(
         where: { id: session.user.id },
         data: {
           image: null,
+          avatarBlurDataURL: null,
         },
       })
       return res
         .status(200)
         .json({ message: 'Avatar deleted', user: updatedUser })
     }
+
+    let avatarBlurDataURL = undefined
+    if (image) {
+      try {
+        avatarBlurDataURL = await getBlurDataURL(image)
+      } catch (error) {
+        console.error('Failed to generate blur URL for avatar:', error)
+      }
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
       data: {
         name,
         bio,
         image,
+        ...(avatarBlurDataURL && { avatarBlurDataURL }),
       },
     })
 
