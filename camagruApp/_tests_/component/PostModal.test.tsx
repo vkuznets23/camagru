@@ -216,6 +216,7 @@ describe('PostModal', () => {
       savedPosts: [],
     },
     comments: [mockComment],
+    commentsCount: 1,
     likedByCurrentUser: false,
     savedByCurrentUser: false,
     likesCount: 5,
@@ -224,6 +225,13 @@ describe('PostModal', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([]),
+      })
+    ) as jest.Mock
     ;(useUser as jest.Mock).mockReturnValue({
       editPost: mockEditPost,
       toggleLike: mockToggleLike,
@@ -244,10 +252,13 @@ describe('PostModal', () => {
       />
     )
 
-    expect(screen.getByAltText('Post')).toBeInTheDocument()
+    expect(screen.getByAltText('Post by johndoe')).toBeInTheDocument()
     expect(screen.getByTestId('user-info')).toBeInTheDocument()
     expect(screen.getByTestId('post-actions')).toBeInTheDocument()
-    expect(screen.getByTestId('comments-list')).toBeInTheDocument()
+    // Wait for comments to load
+    waitFor(() => {
+      expect(screen.getByTestId('comments-list')).toBeInTheDocument()
+    })
     expect(screen.getByTestId('comment-form')).toBeInTheDocument()
     expect(
       screen.getByText('This is a test post with some content')
@@ -586,7 +597,14 @@ describe('PostModal', () => {
     expect(screen.getByText(longContentPost.content)).toBeInTheDocument()
   })
 
-  it('handles comment deletion', () => {
+  it('handles comment deletion', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([mockComment]),
+      })
+    ) as jest.Mock
+
     render(
       <PostModal
         post={mockPost}
@@ -597,7 +615,9 @@ describe('PostModal', () => {
       />
     )
 
-    const deleteCommentButton = screen.getByTestId('delete-comment-comment-1')
+    const deleteCommentButton = await screen.findByTestId(
+      'delete-comment-comment-1'
+    )
     fireEvent.click(deleteCommentButton)
 
     expect(mockDeleteComment).toHaveBeenCalledWith('post-1', 'comment-1')
