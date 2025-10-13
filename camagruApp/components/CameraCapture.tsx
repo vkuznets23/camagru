@@ -121,6 +121,18 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
   const streamRef = useRef<MediaStream | null>(null)
   const modalRef = useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState<FilterName>('none')
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 500)
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const initCamera = async () => {
@@ -317,6 +329,37 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           overflow: 'hidden',
         }}
       >
+        <button
+          type="button"
+          onClick={() => onClose && onClose()}
+          aria-label="Close camera"
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+            border: 'none',
+            background: 'rgba(0, 0, 0, 0.6)',
+            color: 'white',
+            fontSize: 20,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+            transition: 'background 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)'
+          }}
+        >
+          ✕
+        </button>
         <video
           ref={videoRef}
           autoPlay
@@ -334,9 +377,9 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       <div
         style={{
           marginTop: 10,
-          display: 'grid',
+          display: 'flex',
           gap: 10,
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          flexWrap: 'wrap',
         }}
       >
         {(Object.keys(filtersWithOverlay) as FilterName[]).map((f) => (
@@ -360,7 +403,8 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
               border: filter === f ? '2px solid #007aff' : '1px solid #ccc',
               background: filter === f ? '#e6f0ff' : 'white',
               cursor: 'pointer',
-              minWidth: 90,
+              flex: isMobile ? '1 1 calc(50% - 5px)' : '1',
+              minWidth: isMobile ? 'calc(50% - 5px)' : 'auto',
               fontSize: 14,
             }}
           >
@@ -379,18 +423,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           type="button"
           onClick={handleCapture}
           className={styles.takePictureBtn}
-          style={{ marginTop: 12 }}
+          style={{ marginTop: 12, width: '100%' }}
           aria-label="Take picture"
         >
-          📸 Capture
-        </button>
-        <button
-          type="button"
-          onClick={() => onClose && onClose()}
-          className={styles.closeBtn}
-          aria-label="Close camera"
-        >
-          Close
+          Capture
         </button>
       </div>
     </div>
