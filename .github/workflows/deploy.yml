@@ -8,80 +8,111 @@ on:
 permissions:
   contents: write
 
+env:
+  NODE_VERSION: "20"
+  WORKING_DIR: "camagruApp"
+
 jobs:
   build-test-deployment:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 🔧 Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm ci
-        working-directory: camagruApp
+        working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Generate Prisma client
+      - name: 🔨 Generate Prisma client
         run: npx prisma generate
-        working-directory: camagruApp
+        working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Run tests
+      - name: 🧪 Run tests
         run: npm test
-        working-directory: camagruApp
+        working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Build
+      - name: 🔍 Run linter
+        run: npm run lint
+        working-directory: ${{ env.WORKING_DIR }}
+        continue-on-error: true # do not fail the whole pipeline due to lint errors
+
+      - name: 🏗️ Build
         run: npm run build
-        working-directory: camagruApp
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 7
 
-      - name: Install Vercel CLI
+      - name: 📦 Install Vercel CLI
         run: pnpm add --global vercel@latest
+        working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Pull Vercel environment
+      - name: 🔄 Pull Vercel environment
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Build project on Vercel
+      - name: 🏗️ Build project on Vercel
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Deploy to Vercel
+      - name: 🚀 Deploy to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ${{ env.WORKING_DIR }}
 
-  tag_release:
+  create-release:
+    name: Create Release Tag
     needs: build-test-deployment
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Bump version and push tag
+
+      - name: 🏷️ Bump version and create tag
         uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+          WITH_V: true
+          RELEASE_BRANCHES: main
           DRY_RUN: false
 
-  notify_discord:
-    needs: [build-test-deployment, tag_release]
+  notify:
+    name: Send Notification
+    needs: [build-test-deployment, create-release]
     runs-on: ubuntu-latest
     if: always()
+
     steps:
-      - name: Send Discord notification
-        uses: rjstone/discord-webhook-notify@v2
+      - name: 💬 Send Discord notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          severity: ${{ needs.build-test-deployment.result == 'success' && needs.tag_release.result == 'success' && 'info' || 'error' }}
-          details: |
-            Repository: ${{ github.repository }}
-            Workflow: ${{ github.workflow }}
-            Event: ${{ github.event_name }}
-            Actor: ${{ github.actor }}
-            Commit: ${{ github.sha }}
-            Status: ${{ needs.build-test-deployment.result == 'success' && needs.tag_release.result == 'success' && '✅ All jobs succeeded' || '❌ Some jobs failed' }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          status: ${{ job.status }}
+          title: "🚀 Camagru Deployment"
+          description: |
+            **Repository:** ${{ github.repository }}
+            **Branch:** ${{ github.ref_name }}
+            **Commit:** `${{ github.sha }}`
+            **Author:** ${{ github.actor }}
+
+            **📊 Results:**
+            • Build/Test/Deploy: ${{ needs.build-test-deployment.result }}
+            • Release: ${{ needs.create-release.result }}
+
+            **🔗 Links:**
+            [View Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          color: 0x00ff00
+          username: GitHub Actions Bot
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png

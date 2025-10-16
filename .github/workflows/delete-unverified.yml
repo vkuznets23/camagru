@@ -15,19 +15,30 @@ jobs:
           response=$(curl -s -w "%{http_code}" -o /tmp/response.txt -X GET https://camagru-tau.vercel.app/api/deleteUnverified)
           body=$(cat /tmp/response.txt)
           echo "response_body=$body" >> $GITHUB_OUTPUT
+
           if [[ "$response" -ge 200 && "$response" -lt 300 ]]; then
             echo "status=success" >> $GITHUB_OUTPUT
-            echo "✅ DELETED SUCCESSFULLY: API triggered successfully (HTTP $response)"
+            echo "✅ API call successful (HTTP $response)"
+            
+            # Check if any users were actually deleted
+            if echo "$body" | grep -q "deleted" || echo "$body" | grep -q "removed" || echo "$body" | grep -qE "[0-9]+.*user"; then
+              echo "users_deleted=true" >> $GITHUB_OUTPUT
+              echo "📧 Users were deleted - notification will be sent"
+            else
+              echo "users_deleted=false" >> $GITHUB_OUTPUT
+              echo "ℹ️ No users to delete - no notification needed"
+            fi
           else
             echo "status=failure" >> $GITHUB_OUTPUT
+            echo "users_deleted=false" >> $GITHUB_OUTPUT
             echo "❌ DELETE FAILED: API call failed with status $response"
             echo "Response body:"
             echo "$body"
             exit 1
-          fi  # <- обязательно закрыть if
+          fi
 
       - name: Notify Discord
-        if: always()
+        if: steps.trigger-api.outputs.users_deleted == 'true' || steps.trigger-api.outputs.status == 'failure'
         uses: rjstone/discord-webhook-notify@v2
         with:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -37,5 +48,5 @@ jobs:
             Event: ${{ github.event_name }}
             Actor: ${{ github.actor }}
             Repository: ${{ github.repository }}
-            Status: ${{ steps.trigger-api.outputs.status == 'success' && '✅ API call succeeded' || '❌ API call failed' }}
+            Status: ${{ steps.trigger-api.outputs.status == 'success' && '✅ Users deleted successfully' || '❌ API call failed' }}
             Response body: ${{ steps.trigger-api.outputs.response_body }}
