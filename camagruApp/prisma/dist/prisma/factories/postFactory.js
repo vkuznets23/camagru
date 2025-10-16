@@ -42,19 +42,21 @@ const ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 async function fetchUnsplashImage(query) {
     // Fallback to unique placeholder images if no API key
     if (!ACCESS_KEY) {
-        // Use a hash of the query to get consistent images
-        const hash = query.split('').reduce((a, b) => {
+        // Use a stable seed from the full unique query to avoid collisions
+        const seed = encodeURIComponent(query
+            .split('')
+            .reduce((a, b) => {
             a = (a << 5) - a + b.charCodeAt(0);
             return a & a;
-        }, 0);
-        const imageId = (Math.abs(hash) % 1000) + 1;
+        }, 0)
+            .toString());
         return {
-            full: `https://picsum.photos/id/${imageId}/800/800`,
-            thumb: `https://picsum.photos/id/${imageId}/200/200`,
+            full: `https://picsum.photos/seed/${seed}/800/800`,
+            thumb: `https://picsum.photos/seed/${seed}/200/200`,
         };
     }
     try {
-        // Extract base category from unique query
+        // Extract base category from unique query, but keep full uniqueness
         const baseCategory = query.split('-')[0];
         // Map categories to more specific Unsplash queries
         const categoryQueries = {
@@ -67,7 +69,9 @@ async function fetchUnsplashImage(query) {
         };
         const searchQuery = categoryQueries[baseCategory] ||
             baseCategory;
-        const response = await (0, node_fetch_1.default)(`https://api.unsplash.com/photos/random?query=${searchQuery}&client_id=${ACCESS_KEY}&count=1&w=800&h=800&fit=crop`);
+        // Use the full unique query to reduce duplicates across users
+        const fullQuery = `${searchQuery} ${query}`;
+        const response = await (0, node_fetch_1.default)(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(fullQuery)}&client_id=${ACCESS_KEY}&count=1&w=800&h=800&fit=crop`);
         if (!response.ok)
             throw new Error(`Unsplash API error: ${response.status}`);
         const data = await response.json();
@@ -108,9 +112,25 @@ async function postFactory(userId) {
     const uniqueQuery = `${randomCategory}-${userId}-${Math.random()
         .toString(36)
         .substr(2, 9)}`;
-    const image = await fetchUnsplashImage(uniqueQuery);
-    const blurDataURL = await getBlurDataURL(image.full);
-    const imageData = { full: image.full, blurDataURL };
+    let imageData;
+    try {
+        const image = await fetchUnsplashImage(uniqueQuery);
+        const blurDataURL = await getBlurDataURL(image.full);
+        imageData = { full: image.full, blurDataURL };
+    }
+    catch {
+        // Fallback to seeded placeholder to avoid aborting post creation
+        const seed = encodeURIComponent(uniqueQuery
+            .split('')
+            .reduce((a, b) => {
+            a = (a << 5) - a + b.charCodeAt(0);
+            return a & a;
+        }, 0)
+            .toString());
+        const full = `https://picsum.photos/seed/${seed}/800/800`;
+        const blurDataURL = await getBlurDataURL(full);
+        imageData = { full, blurDataURL };
+    }
     return {
         content: caption,
         image: imageData.full,
