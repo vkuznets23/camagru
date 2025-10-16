@@ -12,7 +12,6 @@ type FeedPosts = {
 export default function FeedPosts({ posts }: FeedPosts) {
   const { user, handleCommentAdded } = useUser()
 
-  if (!user) return null
   if (!posts || posts.length === 0) return <NoPosts />
 
   return (
@@ -29,8 +28,8 @@ export default function FeedPosts({ posts }: FeedPosts) {
               <PostCard
                 post={post}
                 onCommentAdded={handleCommentAdded}
-                currentUserId={user.id}
-                priority={index < 3}
+                currentUserId={user?.id || ''}
+                priority={index < 3 && user?.id ? true : false}
               />
             </article>
           ))}

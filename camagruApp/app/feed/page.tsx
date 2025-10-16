@@ -8,7 +8,7 @@ import FeedPosts from '@/components/posts/Feed'
 import { useUser } from '@/context/userContext'
 
 export default function FeedPage() {
-  const { user, posts, setPosts } = useUser()
+  const { posts, setPosts } = useUser()
   const [loading, setLoading] = useState(false)
   const loadingRef = useRef(loading)
   const [hasMore, setHasMore] = useState(true)
@@ -22,6 +22,8 @@ export default function FeedPage() {
   useEffect(() => {
     hasMoreRef.current = hasMore
   }, [hasMore])
+
+  console.log('user posts', posts)
 
   const fetchPosts = useCallback(async () => {
     if (loadingRef.current || !hasMoreRef.current) return
@@ -53,7 +55,7 @@ export default function FeedPage() {
 
   useEffect(() => {
     fetchPosts()
-  }, [fetchPosts])
+  }, [])
 
   useEffect(() => {
     function handleScroll() {
@@ -73,7 +75,7 @@ export default function FeedPage() {
 
   const initialLoading = posts.length === 0 && loading
 
-  if (!user) return null
+  // if (!user) return null
 
   return (
     <div>
