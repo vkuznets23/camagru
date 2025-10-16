@@ -159,26 +159,32 @@ describe('Feed', () => {
     expect(screen.queryByTestId(/post-card-/)).not.toBeInTheDocument()
   })
 
-  it('returns null when user is not authenticated', () => {
+  it('renders posts when user is not authenticated', () => {
     ;(useUser as jest.Mock).mockReturnValue({
       user: null,
       handleCommentAdded: mockHandleCommentAdded,
     })
 
-    const { container } = render(<Feed posts={mockPosts} />)
+    render(<Feed posts={mockPosts} />)
 
-    expect(container.firstChild).toBeNull()
+    expect(screen.getByTestId('post-card-post-4')).toBeInTheDocument()
+    expect(screen.getByTestId('post-card-post-3')).toBeInTheDocument()
+    expect(screen.getByTestId('post-card-post-2')).toBeInTheDocument()
+    expect(screen.getByTestId('post-card-post-1')).toBeInTheDocument()
   })
 
-  it('returns null when user is undefined', () => {
+  it('renders posts when user is undefined', () => {
     ;(useUser as jest.Mock).mockReturnValue({
       user: undefined,
       handleCommentAdded: mockHandleCommentAdded,
     })
 
-    const { container } = render(<Feed posts={mockPosts} />)
+    render(<Feed posts={mockPosts} />)
 
-    expect(container.firstChild).toBeNull()
+    expect(screen.getByTestId('post-card-post-4')).toBeInTheDocument()
+    expect(screen.getByTestId('post-card-post-3')).toBeInTheDocument()
+    expect(screen.getByTestId('post-card-post-2')).toBeInTheDocument()
+    expect(screen.getByTestId('post-card-post-1')).toBeInTheDocument()
   })
 
   it('sets priority to true for first 3 posts', () => {
