@@ -6,6 +6,8 @@ interface ButtonProps {
   testid: string
   text: string
   disabled?: boolean
+  'aria-label'?: string
+  'aria-disabled'?: boolean
 }
 
 export default function Button({
@@ -13,6 +15,8 @@ export default function Button({
   testid,
   text,
   disabled = false,
+  'aria-label': ariaLabel,
+  'aria-disabled': ariaDisabled,
 }: ButtonProps) {
   return (
     <button
@@ -21,6 +25,8 @@ export default function Button({
       type="submit"
       className={styles.button}
       disabled={disabled}
+      aria-label={ariaLabel || text}
+      aria-disabled={ariaDisabled}
     >
       {text}
     </button>

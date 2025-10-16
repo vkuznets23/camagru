@@ -7,7 +7,6 @@ import styles from '@/styles/MobileNavbar.module.css'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import DarkModeToggle from '../DarkModeToggle'
-// import { MdSearch } from 'react-icons/md'
 
 export default function MobileNavbar() {
   const { data: session } = useSession()
@@ -17,7 +16,6 @@ export default function MobileNavbar() {
 
   const isFeedActive = pathname === '/feed'
   const isUserActive = pathname === `/user/${id}`
-  // const isSearchActive = pathname === '/search'
 
   return (
     <div>
@@ -27,30 +25,25 @@ export default function MobileNavbar() {
         className={styles.mobileNavbar}
       >
         <div className={styles.navActions}>
-          <Link href="/feed" aria-current={isFeedActive ? 'page' : undefined}>
+          <Link
+            href="/feed"
+            aria-current={isFeedActive ? 'page' : undefined}
+            aria-label="Go to feed"
+          >
             {isFeedActive ? (
               <MdHomeFilled className={styles.feedBtn} />
             ) : (
               <GoHome className={styles.feedBtn} />
             )}
           </Link>
-          {/* <Link
-            href="/search"
-            aria-current={isSearchActive ? 'page' : undefined}
-          >
-            <MdSearch
-              className={
-                isSearchActive ? styles.searchBtnActive : styles.searchBtn
-              }
-            />
-          </Link> */}
-          <Link href="/post/create">
+          <Link href="/post/create" aria-label="Create new post">
             <GrFormAdd className={styles.addBtn} />
           </Link>
           <DarkModeToggle />
           <Link
             href={`/user/${id}`}
             aria-current={isUserActive ? 'page' : undefined}
+            aria-label="Go to profile"
           >
             <div className={isUserActive ? styles.avatarWrapper : ''}>
               <Image

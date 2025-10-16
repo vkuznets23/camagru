@@ -44,6 +44,8 @@ export default function CommentList({
                     alt="user avatar"
                     width={32}
                     height={32}
+                    placeholder={comment.user.avatarBlurDataURL ? 'blur' : undefined}
+                    blurDataURL={comment.user.avatarBlurDataURL ?? undefined}
                   />
                 </Link>
                 <div className={styles.commentMeta}>

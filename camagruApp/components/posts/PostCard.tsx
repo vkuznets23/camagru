@@ -64,7 +64,7 @@ export default function PostCard({
         />
         <div className={styles.overlay}>
           <span>❤️ {post.likesCount}</span>
-          <span>💬 {post.comments.length}</span>
+          <span>💬 {post.commentsCount ?? post.comments.length}</span>
         </div>
       </button>
       {open && (

@@ -17,6 +17,13 @@ describe('UserPosts', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     window.scrollTo = jest.fn()
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([]),
+      })
+    ) as jest.Mock
   })
 
   const mockUser: User = {
@@ -142,7 +149,9 @@ describe('UserPosts', () => {
     expect(screen.getByText(mockUser.posts[0].content)).toBeInTheDocument()
 
     if (mockUser.posts[0].comments.length === 0) {
-      expect(screen.getByText(/no comments/i)).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByText(/no comments/i)).toBeInTheDocument()
+      })
     }
 
     expect(
@@ -151,6 +160,8 @@ describe('UserPosts', () => {
     expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument()
     expect(screen.getByRole('textbox')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '×' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /close post modal/i })
+    ).toBeInTheDocument()
   })
 })

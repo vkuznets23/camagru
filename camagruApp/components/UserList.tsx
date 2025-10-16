@@ -12,6 +12,7 @@ export type FollowerPreview = {
   name?: string | null
   bio?: string | null
   image?: string | null
+  avatarBlurDataURL?: string | null
   isFollowing?: boolean
   followsYou?: boolean
 }
@@ -58,6 +59,8 @@ export default function UserList({
                     alt={`${user.username}'s avatar`}
                     width={40}
                     height={40}
+                    placeholder={user.avatarBlurDataURL ? 'blur' : undefined}
+                    blurDataURL={user.avatarBlurDataURL ?? undefined}
                     priority
                   />
                   <div className={styles.userInfo}>
@@ -71,15 +74,17 @@ export default function UserList({
                     )}
                   </div>
                 </Link>
-                {onToggleFollow && user.id !== currentUserId && (
-                  <button
-                    className={styles.unfollowBtn}
-                    onClick={() => onToggleFollow(user.id)}
-                  >
-                    {user.isFollowing ? 'Unfollow' : 'Follow'}
-                  </button>
-                )}
-                {renderExtra && renderExtra(user)}
+                <div className={styles.actions}>
+                  {onToggleFollow && user.id !== currentUserId && (
+                    <button
+                      className={styles.unfollowBtn}
+                      onClick={() => onToggleFollow(user.id)}
+                    >
+                      {user.isFollowing ? 'Unfollow' : 'Follow'}
+                    </button>
+                  )}
+                  {renderExtra && renderExtra(user)}
+                </div>
               </div>
             </li>
           ))}

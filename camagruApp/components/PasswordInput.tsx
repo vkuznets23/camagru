@@ -11,6 +11,7 @@ type PasswordInputProps = {
   error?: string
   className?: string
   autoComplete: string
+  'aria-label'?: string
 }
 
 export default function PasswordInput({
@@ -22,6 +23,7 @@ export default function PasswordInput({
   error,
   className = '',
   autoComplete,
+  'aria-label': ariaLabel,
 }: PasswordInputProps) {
   const [show, setShow] = useState(false)
 
@@ -39,6 +41,7 @@ export default function PasswordInput({
           className={`${className} ${error ? styles.inputError : ''}`}
           aria-invalid={!!error}
           aria-describedby={error ? `${id}-error` : undefined}
+          aria-label={ariaLabel || 'Password'}
         />
         <ShowHideToggle
           show={show}

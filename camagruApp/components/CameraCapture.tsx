@@ -119,7 +119,20 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState<FilterName>('none')
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 500)
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const initCamera = async () => {
@@ -153,6 +166,62 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       }
     }
   }, [])
+
+  // Focus trap for keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+        return
+      }
+
+      if (e.key === 'Tab') {
+        if (!modalRef.current) return
+
+        const focusableElements =
+          modalRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+        const focusable = Array.from(focusableElements).filter(
+          (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+        )
+        if (focusable.length === 0) return
+
+        const firstElement = focusable[0]
+        const lastElement = focusable[focusable.length - 1]
+        const isShift = e.shiftKey
+        const active = document.activeElement
+
+        if (isShift && active === firstElement) {
+          e.preventDefault()
+          lastElement.focus()
+        } else if (!isShift && active === lastElement) {
+          e.preventDefault()
+          firstElement.focus()
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    // Focus first element when modal opens
+    if (modalRef.current) {
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+      const focusable = Array.from(focusableElements).filter(
+        (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+      )
+      if (focusable.length > 0) {
+        focusable[0].focus()
+      }
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onClose])
 
   const handleCapture = () => {
     const video = videoRef.current
@@ -249,7 +318,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
   const filterData = filtersWithOverlay[filter]
 
   return (
-    <div>
+    <div ref={modalRef}>
       <div
         style={{
           position: 'relative',
@@ -260,6 +329,37 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           overflow: 'hidden',
         }}
       >
+        <button
+          type="button"
+          onClick={() => onClose && onClose()}
+          aria-label="Close camera"
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+            border: 'none',
+            background: 'rgba(0, 0, 0, 0.6)',
+            color: 'white',
+            fontSize: 20,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+            transition: 'background 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)'
+          }}
+        >
+          ✕
+        </button>
         <video
           ref={videoRef}
           autoPlay
@@ -277,9 +377,9 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       <div
         style={{
           marginTop: 10,
-          display: 'grid',
+          display: 'flex',
           gap: 10,
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          flexWrap: 'wrap',
         }}
       >
         {(Object.keys(filtersWithOverlay) as FilterName[]).map((f) => (
@@ -287,13 +387,24 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
             type="button"
             key={f}
             onClick={() => setFilter(f)}
+            aria-label={`Apply ${
+              f === 'none'
+                ? 'no filter'
+                : f === 'grayscale(100%)'
+                ? 'Paris filter'
+                : f === 'sanfrancisco'
+                ? 'San Francisco filter'
+                : f
+            } filter`}
+            aria-pressed={filter === f}
             style={{
               padding: '6px 12px',
               borderRadius: 4,
               border: filter === f ? '2px solid #007aff' : '1px solid #ccc',
               background: filter === f ? '#e6f0ff' : 'white',
               cursor: 'pointer',
-              minWidth: 90,
+              flex: isMobile ? '1 1 calc(50% - 5px)' : '1',
+              minWidth: isMobile ? 'calc(50% - 5px)' : 'auto',
               fontSize: 14,
             }}
           >
@@ -312,16 +423,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           type="button"
           onClick={handleCapture}
           className={styles.takePictureBtn}
-          style={{ marginTop: 12 }}
+          style={{ marginTop: 12, width: '100%' }}
+          aria-label="Take picture"
         >
-          📸 Capture
-        </button>
-        <button
-          type="button"
-          onClick={() => onClose && onClose()}
-          className={styles.closeBtn}
-        >
-          Close
+          Capture
         </button>
       </div>
     </div>
