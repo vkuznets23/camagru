@@ -11,6 +11,7 @@ permissions:
 env:
   NODE_VERSION: "20"
   WORKING_DIR: "camagruApp"
+  VERCEL_PROJECT_NAME: "camagru"
 
 jobs:
   build-test-deployment:
@@ -55,15 +56,15 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 🔄 Pull Vercel environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --project=${{ env.VERCEL_PROJECT_NAME }} --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 🏗️ Build project on Vercel
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --project=${{ env.VERCEL_PROJECT_NAME }} --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 🚀 Deploy to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --prod --project=${{ env.VERCEL_PROJECT_NAME }} --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: ${{ env.WORKING_DIR }}
 
   create-release:
@@ -99,7 +100,7 @@ jobs:
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          status: ${{ job.status }}
+          status: ${{ (needs.build-test-deployment.result == 'success' && (needs.create-release.result == 'success' || needs.create-release.result == 'skipped')) && 'success' || (needs.build-test-deployment.result == 'cancelled' || needs.create-release.result == 'cancelled') && 'cancelled' || 'failure' }}
           title: "🚀 Camagru Deployment"
           description: |
             **Repository:** ${{ github.repository }}
@@ -113,6 +114,6 @@ jobs:
 
             **🔗 Links:**
             [View Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          color: 0x00ff00
+          color: ${{ (needs.build-test-deployment.result == 'success' && (needs.create-release.result == 'success' || needs.create-release.result == 'skipped')) && 0x00ff00 || (needs.build-test-deployment.result == 'cancelled' || needs.create-release.result == 'cancelled') && 0xffcc00 || 0xff0000 }}
           username: GitHub Actions Bot
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
