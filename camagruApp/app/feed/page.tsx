@@ -38,7 +38,7 @@ export default function FeedPage() {
 
       setPosts((prev) => {
         const newPosts = data.filter(
-          (newPost) => !prev.some((post) => post.id === newPost.id)
+          (newPost) => !prev.some((post) => post.id === newPost.id),
         )
         postsCountRef.current = prev.length + newPosts.length
         return [...prev, ...newPosts]
@@ -55,7 +55,7 @@ export default function FeedPage() {
 
   useEffect(() => {
     fetchPosts()
-  }, [])
+  }, [fetchPosts])
 
   useEffect(() => {
     function handleScroll() {
