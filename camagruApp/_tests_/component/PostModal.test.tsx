@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import PostModal from '@/components/posts/PostModal'
 import { useUser } from '@/context/userContext'
@@ -10,10 +12,14 @@ jest.mock('next/image', () => {
   return function MockImage({
     src,
     alt,
+    fill,
+    blurDataURL,
     ...props
   }: {
     src: string
     alt: string
+    fill?: boolean
+    blurDataURL?: string
     [key: string]: unknown
   }) {
     return <img src={src} alt={alt} {...props} />
@@ -230,7 +236,7 @@ describe('PostModal', () => {
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve([]),
-      })
+      }),
     ) as jest.Mock
     ;(useUser as jest.Mock).mockReturnValue({
       editPost: mockEditPost,
@@ -249,7 +255,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     expect(screen.getByAltText('Post by johndoe')).toBeInTheDocument()
@@ -261,7 +267,7 @@ describe('PostModal', () => {
     })
     expect(screen.getByTestId('comment-form')).toBeInTheDocument()
     expect(
-      screen.getByText('This is a test post with some content')
+      screen.getByText('This is a test post with some content'),
     ).toBeInTheDocument()
   })
 
@@ -273,11 +279,11 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     expect(
-      screen.getByText('This is a test post with some content')
+      screen.getByText('This is a test post with some content'),
     ).toBeInTheDocument()
   })
 
@@ -289,7 +295,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1" // Same as post owner
-      />
+      />,
     )
 
     expect(screen.getByTestId('edit-button')).toBeInTheDocument()
@@ -304,7 +310,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-2" // Different from post owner
-      />
+      />,
     )
 
     expect(screen.queryByTestId('edit-button')).not.toBeInTheDocument()
@@ -319,7 +325,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const likeButton = screen.getByTestId('like-button')
@@ -336,7 +342,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const saveButton = screen.getByTestId('save-button')
@@ -353,7 +359,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const deleteButton = screen.getByTestId('delete-button')
@@ -370,7 +376,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const editButton = screen.getByTestId('edit-button')
@@ -391,7 +397,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     // Enter edit mode
@@ -419,7 +425,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     // Enter edit mode
@@ -434,7 +440,7 @@ describe('PostModal', () => {
 
     expect(screen.queryByTestId('edit-post')).not.toBeInTheDocument()
     expect(
-      screen.getByText('This is a test post with some content')
+      screen.getByText('This is a test post with some content'),
     ).toBeInTheDocument()
   })
 
@@ -448,7 +454,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     // Enter edit mode
@@ -473,7 +479,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     // Enter edit mode
@@ -495,7 +501,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const closeButton = screen.getByText('×')
@@ -512,7 +518,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const overlay = screen.getByText('×').closest('div')?.parentElement
@@ -530,7 +536,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const modalContent = screen.getByTestId('user-info')
@@ -547,7 +553,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     fireEvent.keyDown(document, { key: 'Escape' })
@@ -568,7 +574,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     expect(screen.getByText('...show all')).toBeInTheDocument()
@@ -587,7 +593,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const showAllButton = screen.getByText('...show all')
@@ -602,7 +608,7 @@ describe('PostModal', () => {
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve([mockComment]),
-      })
+      }),
     ) as jest.Mock
 
     render(
@@ -612,11 +618,11 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-2" // Same as comment author
-      />
+      />,
     )
 
     const deleteCommentButton = await screen.findByTestId(
-      'delete-comment-comment-1'
+      'delete-comment-comment-1',
     )
     fireEvent.click(deleteCommentButton)
 
@@ -631,7 +637,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     const postButton = screen.getByText('Post')
@@ -670,7 +676,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     expect(screen.getByText('Unlike (5)')).toBeInTheDocument()
@@ -690,7 +696,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     // Should not crash and should render the modal
@@ -711,7 +717,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     // Should not crash and should render the modal
@@ -721,7 +727,7 @@ describe('PostModal', () => {
 
   it('shows loading state when saving', async () => {
     mockEditPost.mockImplementation(
-      () => new Promise((resolve) => setTimeout(resolve, 100))
+      () => new Promise((resolve) => setTimeout(resolve, 100)),
     )
 
     render(
@@ -731,7 +737,7 @@ describe('PostModal', () => {
         onClose={mockOnClose}
         onCommentAdded={mockOnCommentAdded}
         currentUserId="user-1"
-      />
+      />,
     )
 
     // Enter edit mode

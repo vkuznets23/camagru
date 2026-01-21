@@ -19,8 +19,7 @@ export default function SignInForm() {
   const loginRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  const handleValidation = () => {
     const newErrors: { [key: string]: string } = {}
 
     if (!login) {
@@ -44,7 +43,10 @@ export default function SignInForm() {
     }
 
     setErrors({})
+    return true
+  }
 
+  const handleLogin = async () => {
     const res = await signIn('credentials', {
       redirect: false,
       login,
@@ -52,19 +54,22 @@ export default function SignInForm() {
     })
 
     if (res?.error) {
-      if (res.status === 401) {
-        setErrors({ auth: 'Invalid login or password' })
-      } else {
-        setErrors({ auth: res.error })
-      }
-    } else {
+      setErrors({
+        auth: res.status === 401 ? 'Invalid login or password' : res.error,
+      })
+      return false
+    }
+    return true
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!handleValidation()) return
+
+    if (await handleLogin()) {
       const session = await getSession()
       const userId = session?.user?.id
-      if (userId) {
-        window.location.assign(`/user/${userId}`)
-      } else {
-        window.location.assign('/')
-      }
+      window.location.assign(userId ? `/user/${userId}` : '/')
     }
   }
 
