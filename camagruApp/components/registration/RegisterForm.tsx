@@ -29,10 +29,11 @@ export default function RegisterForm() {
 
   const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null)
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(
-    null
+    null,
   )
 
   const router = useRouter()
+
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null)
   const usernameDebounceTimeout = useRef<NodeJS.Timeout | null>(null)
 
@@ -41,7 +42,7 @@ export default function RegisterForm() {
     const available = await checkAvailability(
       'check-email',
       'email',
-      emailToCheck
+      emailToCheck,
     )
     setEmailAvailable(available)
     setErrors((prev) =>
@@ -49,8 +50,8 @@ export default function RegisterForm() {
         prev,
         'email',
         available,
-        'Email is already taken'
-      )
+        'Email is already taken',
+      ),
     )
   }
 
@@ -59,7 +60,7 @@ export default function RegisterForm() {
     const available = await checkAvailability(
       'check-username',
       'username',
-      usernameToCheck
+      usernameToCheck,
     )
     setUsernameAvailable(available)
     setErrors((prev) =>
@@ -67,8 +68,8 @@ export default function RegisterForm() {
         prev,
         'username',
         available,
-        'Username is already taken'
-      )
+        'Username is already taken',
+      ),
     )
   }
 
@@ -77,7 +78,7 @@ export default function RegisterForm() {
     username: string,
     password: string,
     emailAvailable: boolean | null,
-    usernameAvailable: boolean | null
+    usernameAvailable: boolean | null,
   ) {
     const newErrors: { [key: string]: string } = {}
 
@@ -112,7 +113,7 @@ export default function RegisterForm() {
       trimmedUsername,
       password,
       emailAvailable,
-      usernameAvailable
+      usernameAvailable,
     )
     if (!isValid) return
 
