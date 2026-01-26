@@ -1,5 +1,13 @@
 import { FilterName } from './ApplyCanvasFilters'
 
+/*
+ * Defines visual filters for the live video preview.
+
+ * Each filter has:
+ *  - cssFilter: CSS filter applied directly to the <video> element for live preview.
+ *  - overlay (optional): a React node rendered on top of the video using mix-blend-mode
+ *    to simulate color grading, lighting, or vignette effects.
+ */
 export const filtersWithOverlay: Record<
   FilterName,
   { cssFilter: string; overlay?: React.ReactNode }

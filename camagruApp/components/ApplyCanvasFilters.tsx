@@ -6,12 +6,23 @@ export type FilterName =
   | 'london'
   | 'nyc'
 
+/**
+ * Apply a selected filter directly to a canvas.
+ *
+ * For simple filters like 'grayscale', we manipulate each pixel.
+ * For complex filters like 'tokyo', 'london', 'nyc', we draw overlays
+ * and gradients with specific blend modes to mimic the visual effect.
+ *
+ * This ensures the captured image exactly matches the preview,
+ * including on browsers like iOS Safari that ignore CSS overlays on <video>.
+ */
 export function applyCanvasFilter(
   ctx: CanvasRenderingContext2D,
   filter: FilterName,
   width: number,
   height: number,
 ) {
+  // Converts the image to black and white
   if (filter === 'grayscale(100%)') {
     const imgData = ctx.getImageData(0, 0, width, height)
     const data = imgData.data
@@ -22,13 +33,13 @@ export function applyCanvasFilter(
     ctx.putImageData(imgData, 0, 0)
   }
 
+  // Blue color overlay + subtle vignette
   if (filter === 'tokyo') {
-    // Blue overlay
     ctx.fillStyle = 'rgba(0, 80, 180, 0.2)'
     ctx.globalCompositeOperation = 'overlay'
     ctx.fillRect(0, 0, width, height)
 
-    // Vinietka
+    // radial vignette
     const gradient = ctx.createRadialGradient(
       width / 2,
       height / 2,
@@ -44,6 +55,7 @@ export function applyCanvasFilter(
     ctx.fillRect(0, 0, width, height)
   }
 
+  // Soft dark vignette for subtle contrast
   if (filter === 'london') {
     const gradient = ctx.createRadialGradient(
       width / 2,
@@ -60,6 +72,7 @@ export function applyCanvasFilter(
     ctx.fillRect(0, 0, width, height)
   }
 
+  // Strong dark vignette, dramatic effect
   if (filter === 'nyc') {
     const gradient = ctx.createRadialGradient(
       width / 2,
@@ -76,5 +89,6 @@ export function applyCanvasFilter(
     ctx.fillRect(0, 0, width, height)
   }
 
+  // Reset composite mode
   ctx.globalCompositeOperation = 'source-over'
 }

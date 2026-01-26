@@ -4,6 +4,18 @@ import { applyCanvasFilter, FilterName } from './ApplyCanvasFilters'
 import { filtersWithOverlay } from './Filters'
 import { FilterSelector } from './FilterSelector'
 
+/**
+ * CameraCapture component
+ *
+ * Shows live video from the device camera and allows the user to capture photos.
+ * Features:
+ *  - Live preview with selectable filters using CSS + optional overlay (mix-blend-mode)
+ *  - Captured photos use `applyCanvasFilter` to reproduce the same visual effects on the final image
+ *    (necessary for iOS Safari, where overlays on <video> are not captured by canvas)
+ *  - Responsive layout: adjusts filter buttons for mobile screens
+ *  - Accessibility: focus trap inside modal, Escape to close, keyboard navigation
+ */
+
 interface CameraCaptureProps {
   onCapture: (file: File) => void
   onClose: () => void
