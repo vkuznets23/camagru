@@ -1,18 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from '@/styles/AddPost.module.css'
+import { applyCanvasFilter, FilterName } from './ApplyCanvasFilters'
 
 interface CameraCaptureProps {
   onCapture: (file: File) => void
   onClose: () => void
 }
-
-type FilterName =
-  | 'none'
-  | 'grayscale(100%)'
-  | 'sanfrancisco'
-  | 'tokyo'
-  | 'london'
-  | 'nyc'
 
 const filtersWithOverlay: Record<
   FilterName,
@@ -142,11 +135,14 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       }
 
       try {
+        // get camera access
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
         })
+        // keep media stream in the ref
         streamRef.current = stream
         if (videoRef.current) {
+          // render stream to video
           videoRef.current.srcObject = stream
         }
       } catch (err) {
@@ -181,10 +177,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
 
         const focusableElements =
           modalRef.current.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
           )
         const focusable = Array.from(focusableElements).filter(
-          (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+          (el) => el.offsetWidth > 0 || el.offsetHeight > 0,
         )
         if (focusable.length === 0) return
 
@@ -208,10 +204,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
     // Focus first element when modal opens
     if (modalRef.current) {
       const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
       )
       const focusable = Array.from(focusableElements).filter(
-        (el) => el.offsetWidth > 0 || el.offsetHeight > 0
+        (el) => el.offsetWidth > 0 || el.offsetHeight > 0,
       )
       if (focusable.length > 0) {
         focusable[0].focus()
@@ -234,79 +230,11 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Базовый кадр
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
-    // === ФИЛЬТРЫ ===
-    if (filter === 'grayscale(100%)') {
-      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      const data = imgData.data
-      for (let i = 0; i < data.length; i += 4) {
-        const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
-        data[i] = data[i + 1] = data[i + 2] = avg
-      }
-      ctx.putImageData(imgData, 0, 0)
-    }
+    applyCanvasFilter(ctx, filter, canvas.width, canvas.height)
 
-    if (filter === 'tokyo') {
-      // Синий оверлей
-      ctx.fillStyle = 'rgba(0, 80, 180, 0.2)'
-      ctx.globalCompositeOperation = 'overlay'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      // Виньетка
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width * 0.3,
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width * 0.7
-      )
-      gradient.addColorStop(0, 'rgba(0,0,0,0)')
-      gradient.addColorStop(1, 'rgba(0,0,0,0.5)')
-      ctx.fillStyle = gradient
-      ctx.globalCompositeOperation = 'multiply'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-    }
-
-    if (filter === 'london') {
-      // Лёгкая виньетка
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width * 0.5,
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width * 0.8
-      )
-      gradient.addColorStop(0, 'rgba(0,0,0,0)')
-      gradient.addColorStop(1, 'rgba(0,0,0,0.25)')
-      ctx.fillStyle = gradient
-      ctx.globalCompositeOperation = 'multiply'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-    }
-
-    if (filter === 'nyc') {
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width * 0.4,
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width * 0.8
-      )
-      gradient.addColorStop(0, 'rgba(0,0,0,0)')
-      gradient.addColorStop(1, 'rgba(0,0,0,0.7)')
-      ctx.fillStyle = gradient
-      ctx.globalCompositeOperation = 'multiply'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-    }
-
-    // Сброс
-    ctx.globalCompositeOperation = 'source-over'
-
-    // Сохраняем
+    // Save
     canvas.toBlob((blob) => {
       if (blob) {
         const file = new File([blob], 'capture.jpg', { type: 'image/jpeg' })
@@ -391,10 +319,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
               f === 'none'
                 ? 'no filter'
                 : f === 'grayscale(100%)'
-                ? 'Paris filter'
-                : f === 'sanfrancisco'
-                ? 'San Francisco filter'
-                : f
+                  ? 'Paris filter'
+                  : f === 'sanfrancisco'
+                    ? 'San Francisco filter'
+                    : f
             } filter`}
             aria-pressed={filter === f}
             style={{
@@ -411,10 +339,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
             {f === 'none'
               ? 'None'
               : f === 'grayscale(100%)'
-              ? 'Paris'
-              : f === 'sanfrancisco'
-              ? 'SanFr'
-              : f.charAt(0).toUpperCase() + f.slice(1)}
+                ? 'Paris'
+                : f === 'sanfrancisco'
+                  ? 'SanFr'
+                  : f.charAt(0).toUpperCase() + f.slice(1)}
           </button>
         ))}
       </div>
