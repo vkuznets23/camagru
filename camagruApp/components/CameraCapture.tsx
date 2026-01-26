@@ -3,6 +3,7 @@ import styles from '@/styles/AddPost.module.css'
 import { applyCanvasFilter, FilterName } from './ApplyCanvasFilters'
 import { filtersWithOverlay } from './Filters'
 import { FilterSelector } from './FilterSelector'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 /**
  * CameraCapture component
@@ -50,14 +51,11 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       }
 
       try {
-        // get camera access
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
         })
-        // keep media stream in the ref
         streamRef.current = stream
         if (videoRef.current) {
-          // render stream to video
           videoRef.current.srcObject = stream
         }
       } catch (err) {
@@ -78,61 +76,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
     }
   }, [])
 
-  // Focus trap for keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        onClose()
-        return
-      }
-
-      if (e.key === 'Tab') {
-        if (!modalRef.current) return
-
-        const focusableElements =
-          modalRef.current.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
-          )
-        const focusable = Array.from(focusableElements).filter(
-          (el) => el.offsetWidth > 0 || el.offsetHeight > 0,
-        )
-        if (focusable.length === 0) return
-
-        const firstElement = focusable[0]
-        const lastElement = focusable[focusable.length - 1]
-        const isShift = e.shiftKey
-        const active = document.activeElement
-
-        if (isShift && active === firstElement) {
-          e.preventDefault()
-          lastElement.focus()
-        } else if (!isShift && active === lastElement) {
-          e.preventDefault()
-          firstElement.focus()
-        }
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-
-    // Focus first element when modal opens
-    if (modalRef.current) {
-      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      )
-      const focusable = Array.from(focusableElements).filter(
-        (el) => el.offsetWidth > 0 || el.offsetHeight > 0,
-      )
-      if (focusable.length > 0) {
-        focusable[0].focus()
-      }
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [onClose])
+  useFocusTrap(modalRef, onClose)
 
   const handleCapture = () => {
     const video = videoRef.current
