@@ -149,16 +149,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
 
   return (
     <div ref={modalRef}>
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: 640,
-          margin: 'auto',
-          borderRadius: 8,
-          overflow: 'hidden',
-        }}
-      >
+      <div className={styles.videoDiv}>
         <button
           type="button"
           onClick={() => onClose && onClose()}
@@ -204,14 +195,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
         />
         {filterData?.overlay}
       </div>
-      <div
-        style={{
-          marginTop: 10,
-          display: 'flex',
-          gap: 10,
-          flexWrap: 'wrap',
-        }}
-      >
+      <div className={styles.filterButtonsDiv}>
         {(Object.keys(filtersWithOverlay) as FilterName[]).map((f) => (
           <button
             type="button"
@@ -227,15 +211,12 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
                     : f
             } filter`}
             aria-pressed={filter === f}
+            className={styles.singleFilterBtn}
             style={{
-              padding: '6px 12px',
-              borderRadius: 4,
               border: filter === f ? '2px solid #007aff' : '1px solid #ccc',
               background: filter === f ? '#e6f0ff' : 'white',
-              cursor: 'pointer',
               flex: isMobile ? '1 1 calc(50% - 5px)' : '1',
               minWidth: isMobile ? 'calc(50% - 5px)' : 'auto',
-              fontSize: 14,
             }}
           >
             {f === 'none'

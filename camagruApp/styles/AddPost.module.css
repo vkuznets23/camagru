@@ -91,6 +91,28 @@
   color: var(--upload-hover-text);
 }
 
+.filterButtonsDiv {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: "wrap";
+}
+
+.singleFilterBtn {
+  padding: 6px 12px;
+  border-radius: 4;
+  background: #e6f0ff;
+  cursor: "pointer";
+  font-size: 14px;
+}
+.videoDiv {
+  position: relative;
+  width: 100%;
+  max-width: 640;
+  margin: auto;
+  border-radius: 8px;
+  overflow: hidden;
+}
 @media (max-width: 600px) {
   .imageContainer {
     max-width: 600px;
