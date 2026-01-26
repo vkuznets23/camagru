@@ -165,9 +165,8 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           onClick={handleCapture}
           className={styles.takePictureBtn}
           style={{ marginTop: 12, width: '100%' }}
-          aria-label="Take picture"
         >
-          Capture
+          Take photo
         </button>
       </div>
     </div>

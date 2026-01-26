@@ -13,15 +13,6 @@ export const FilterSelector: React.FC<{
         type="button"
         key={f}
         onClick={() => onSelect(f as FilterName)}
-        aria-label={`Apply ${
-          f === 'none'
-            ? 'no filter'
-            : f === 'grayscale(100%)'
-              ? 'Paris filter'
-              : f === 'sanfrancisco'
-                ? 'San Francisco filter'
-                : f
-        } filter`}
         aria-pressed={current === f}
         className={styles.singleFilterBtn}
         style={{
