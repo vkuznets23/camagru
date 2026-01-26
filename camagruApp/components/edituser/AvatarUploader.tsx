@@ -69,7 +69,7 @@ export default function AvatarUploader({
             role="menu"
             className={styles.editBtnsContainer}
           >
-            <label className={styles.option} role="menuitem">
+            <label className={styles.option}>
               Upload from gallery
               <input
                 aria-label="Upload new avatar"

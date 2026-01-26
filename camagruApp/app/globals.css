@@ -54,7 +54,7 @@
 }
 
 [data-theme="dark"] {
-  --accent: #339af0;
+  --accent: #2575b8;
   --accent-hover: #1c7ed6;
   --text-muted: #aaa;
   --input-bg: #2a2a2a;
@@ -86,7 +86,7 @@
   --error-color: red;
 
   /* ... */
-  --button-bg: #3390ff;
+  --button-bg: #2474d6;
   --button-bg-hover: #0070f3;
   --button-text: #fff;
 

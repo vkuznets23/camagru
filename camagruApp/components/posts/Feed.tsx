@@ -16,24 +16,24 @@ export default function FeedPosts({ posts }: FeedPosts) {
 
   return (
     <div className={styles.posts}>
-      <div className={styles.postsContainer} role="list">
+      <ul className={styles.postsContainer}>
         {posts
           .slice()
           .sort(
             (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           )
           .map((post, index) => (
-            <article key={post.id} role="listitem">
+            <li key={post.id}>
               <PostCard
                 post={post}
                 onCommentAdded={handleCommentAdded}
                 currentUserId={user?.id || ''}
                 priority={index < 3 && user?.id ? true : false}
               />
-            </article>
+            </li>
           ))}
-      </div>
+      </ul>
     </div>
   )
 }
