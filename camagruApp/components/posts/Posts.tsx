@@ -23,14 +23,10 @@ export default function UserPosts() {
           .slice()
           .sort(
             (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           )
           .map((post, index) => (
-            <article
-              key={post.id}
-              role="listitem"
-              className={styles.postCardСardWrapper}
-            >
+            <article key={post.id} className={styles.postCardСardWrapper}>
               <PostCard
                 post={post}
                 onCommentAdded={handleCommentAdded}

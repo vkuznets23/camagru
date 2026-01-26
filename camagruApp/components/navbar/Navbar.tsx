@@ -30,20 +30,48 @@ export default function Navbar() {
   const isCreatePostActive = pathname === '/post/create'
 
   // feed icons
-  const FeedActiveIcon = <GoHomeFill className={styles.activeIcon} role="img" />
+  const FeedActiveIcon = (
+    <GoHomeFill
+      role="img"
+      aria-label="Go feed page"
+      className={styles.activeIcon}
+    />
+  )
   const FeedInactiveIcons = (
     <>
-      <GoHomeFill className={styles.feedBtn} role="img" />
-      <GoHome className={styles.goFeedBtn} role="img" />
+      <GoHomeFill
+        role="img"
+        aria-label="Go feed page"
+        className={styles.feedBtn}
+      />
+      <GoHome
+        role="img"
+        aria-label="Go feed page"
+        className={styles.goFeedBtn}
+      />
     </>
   )
 
   // create post
-  const CreatePostActiveIcon = <GrFormAdd className={styles.activeAddIcon} />
+  const CreatePostActiveIcon = (
+    <GrFormAdd
+      role="img"
+      aria-label="Create post"
+      className={styles.activeAddIcon}
+    />
+  )
   const CreatePostInactiveIcons = (
     <>
-      <GrFormAdd className={styles.addBtn} role="img" />
-      <GrFormAdd className={styles.goAddBtn} role="img" />
+      <GrFormAdd
+        role="img"
+        aria-label="Create post"
+        className={styles.addBtn}
+      />
+      <GrFormAdd
+        role="img"
+        aria-label="Create post"
+        className={styles.goAddBtn}
+      />
     </>
   )
 
