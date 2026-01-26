@@ -18,7 +18,7 @@ export default function UserPosts() {
 
   return (
     <div className={styles.posts}>
-      <div className={styles.postsContainer} role="list">
+      <ul className={styles.postsContainer}>
         {user.posts
           .slice()
           .sort(
@@ -26,16 +26,16 @@ export default function UserPosts() {
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           )
           .map((post, index) => (
-            <article key={post.id} className={styles.postCardСardWrapper}>
+            <li key={post.id} className={styles.postCardСardWrapper}>
               <PostCard
                 post={post}
                 onCommentAdded={handleCommentAdded}
                 currentUserId={userID}
                 priority={index < 3}
               />
-            </article>
+            </li>
           ))}
-      </div>
+      </ul>
     </div>
   )
 }
