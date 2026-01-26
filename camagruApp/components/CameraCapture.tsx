@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from '@/styles/AddPost.module.css'
 import { applyCanvasFilter, FilterName } from './ApplyCanvasFilters'
 import { filtersWithOverlay } from './Filters'
+import { FilterSelector } from './FilterSelector'
 
 interface CameraCaptureProps {
   onCapture: (file: File) => void
@@ -136,7 +137,6 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
 
     applyCanvasFilter(ctx, filter, canvas.width, canvas.height)
 
-    // Save
     canvas.toBlob((blob) => {
       if (blob) {
         const file = new File([blob], 'capture.jpg', { type: 'image/jpeg' })
@@ -195,40 +195,14 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
         />
         {filterData?.overlay}
       </div>
-      <div className={styles.filterButtonsDiv}>
-        {(Object.keys(filtersWithOverlay) as FilterName[]).map((f) => (
-          <button
-            type="button"
-            key={f}
-            onClick={() => setFilter(f)}
-            aria-label={`Apply ${
-              f === 'none'
-                ? 'no filter'
-                : f === 'grayscale(100%)'
-                  ? 'Paris filter'
-                  : f === 'sanfrancisco'
-                    ? 'San Francisco filter'
-                    : f
-            } filter`}
-            aria-pressed={filter === f}
-            className={styles.singleFilterBtn}
-            style={{
-              border: filter === f ? '2px solid #007aff' : '1px solid #ccc',
-              background: filter === f ? '#e6f0ff' : 'white',
-              flex: isMobile ? '1 1 calc(50% - 5px)' : '1',
-              minWidth: isMobile ? 'calc(50% - 5px)' : 'auto',
-            }}
-          >
-            {f === 'none'
-              ? 'None'
-              : f === 'grayscale(100%)'
-                ? 'Paris'
-                : f === 'sanfrancisco'
-                  ? 'SanFr'
-                  : f.charAt(0).toUpperCase() + f.slice(1)}
-          </button>
-        ))}
-      </div>
+
+      <FilterSelector
+        filters={filtersWithOverlay}
+        current={filter}
+        onSelect={setFilter}
+        isMobile={isMobile}
+      />
+
       <div className={styles.Btns}>
         <button
           type="button"
