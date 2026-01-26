@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from '@/styles/CameraModal.module.css'
-import CameraCapture from '@/components/CameraCapture'
+import CameraCapture from '../camera/CameraCapture'
 
 interface CameraModalProps {
   onClose: () => void
