@@ -546,6 +546,12 @@ body.modal-open .postCardWrapper:hover .overlay {
   animation: spin 1s linear infinite;
 }
 
+.nameBio {
+  margin: 20px 0px -5px 0px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

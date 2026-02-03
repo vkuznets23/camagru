@@ -8,7 +8,7 @@ interface Props {
 export default function UserBio({ name, bio }: Props) {
   return (
     <>
-      <h2>{name}</h2>
+      <h2 className={styles.nameBio}>{name}</h2>
       <p className={styles.bio}>{bio}</p>
     </>
   )
