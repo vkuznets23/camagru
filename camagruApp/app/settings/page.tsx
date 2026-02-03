@@ -117,7 +117,17 @@ export default function SettingsPage() {
         setFieldErrors({ username: 'An unexpected error occurred' })
       }
     }
+    
   }
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [message])
 
   const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -174,8 +184,8 @@ export default function SettingsPage() {
           <QRCodeCanvas value={profileUrl} size={150} bgColor="transparent" />
         </div>
       </div>
+        
       <div className={styles.formContainer}>
-        {message && <p className={styles.message}>{message}</p>}
         <div className={styles.formBox}>
           <p className={styles.infoText}>
             Here you can&nbsp;change your&nbsp;username. Must be&nbsp;unique,
@@ -183,6 +193,7 @@ export default function SettingsPage() {
             or&nbsp;underscores.
           </p>
           {/* Username Form */}
+          
           <form onSubmit={handleUsernameUpdate} className={styles.form}>
             <TextInput
               id="login"
@@ -275,6 +286,9 @@ export default function SettingsPage() {
             </button>
           </form>
         </div>
+        {message && <div style={{ position: 'relative', marginBottom: '1rem', border: '1px solid var(--accent)', padding: '10px', borderRadius: '10px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0070f3' }}>
+        <p className={styles.message} >{message}!</p>
+        </div>}
         <div className={styles.formBox}>
           <p className={styles.infoText}>
             Delete your account. This action is permanent and cannot be undone.
