@@ -5,7 +5,6 @@ import { SessionProvider, useSession } from 'next-auth/react'
 import { ThemeProvider } from '@/context/DarkModeContext'
 import { User } from '@/types/user'
 import { UserProvider } from '@/context/userContext'
-import { Post } from '@/types/post'
 import { useRouter, usePathname } from 'next/navigation'
 
 export default function Providers({ children }: { children: ReactNode }) {
@@ -13,7 +12,6 @@ export default function Providers({ children }: { children: ReactNode }) {
     <SessionProvider>
       <ThemeProvider>
         <ClientSessionHandler>{children}</ClientSessionHandler>
-        {/* {children} */}
       </ThemeProvider>
     </SessionProvider>
   )
@@ -21,7 +19,6 @@ export default function Providers({ children }: { children: ReactNode }) {
 
 function ClientSessionHandler({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [posts, setPosts] = useState<Post[]>([])
   const { data: session, status } = useSession()
   const router = useRouter()
   const pathname = usePathname()
@@ -45,40 +42,30 @@ function ClientSessionHandler({ children }: { children: ReactNode }) {
       return
     }
 
-    const fetchUserAndPosts = async () => {
+    const fetchUser = async () => {
       try {
-        const [userRes, postsRes] = await Promise.all([
-          fetch(`/api/user/${session.user.id}`, { credentials: 'include' }),
-          fetch(`/api/feed?skip=0&limit=12`, { credentials: 'include' }),
-        ])
+        const userRes = await fetch(`/api/user/${session.user.id}`, {
+          credentials: 'include',
+        })
         if (!userRes.ok) {
           const text = await userRes.text()
           console.error('User fetch failed:', userRes.status, text)
           throw new Error('Failed to fetch user data')
         }
-
-        if (!postsRes.ok) {
-          const text = await postsRes.text()
-          console.error('Posts fetch failed:', postsRes.status, text)
-          throw new Error('Failed to fetch posts data')
-        }
         const userData = await userRes.json()
-        const postsData: Post[] = await postsRes.json()
         setUser(userData)
-        setPosts(postsData || [])
       } catch (err) {
         console.error(err)
         setUser(null)
-        setPosts([])
         router.push('/')
       }
     }
 
-    fetchUserAndPosts()
+    fetchUser()
   }, [session, status, router, pathname])
 
   return (
-    <UserProvider initialUser={user} initialPosts={posts}>
+    <UserProvider initialUser={user} initialPosts={[]}>
       {children}
     </UserProvider>
   )
