@@ -8,6 +8,7 @@ import TextInput from '@/components/TextInput'
 import PasswordInput from '@/components/PasswordInput'
 import RegisterLogo from '../RegisterLogo'
 import { useTheme } from '@/context/DarkModeContext'
+import { validateSignInForm } from '@/utils/formValidations'
 
 export default function SignInForm() {
   const { theme } = useTheme()
@@ -20,15 +21,7 @@ export default function SignInForm() {
   const passwordRef = useRef<HTMLInputElement>(null)
 
   const handleValidation = () => {
-    const newErrors: { [key: string]: string } = {}
-
-    if (!login) {
-      newErrors.login = 'Please enter your email or username'
-    }
-
-    if (!password) {
-      newErrors.password = 'Please enter your password'
-    }
+    const newErrors = validateSignInForm(login, password)
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)

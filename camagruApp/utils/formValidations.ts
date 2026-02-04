@@ -40,3 +40,20 @@ export function validatePassword(password: string): string | null {
 export function checkPasswordStrength(pw: string) {
   return zxcvbn(pw).score
 }
+
+export function validateSignInForm(
+  login: string,
+  password: string
+): { [key: string]: string } {
+  const errors: { [key: string]: string } = {}
+
+  if (!login) {
+    errors.login = 'Please enter your email or username'
+  }
+
+  if (!password) {
+    errors.password = 'Please enter your password'
+  }
+
+  return errors
+}
