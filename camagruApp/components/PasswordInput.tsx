@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, forwardRef } from 'react'
 import ShowHideToggle from '@/components/ShowHideToggle'
 import styles from '@/styles/Register.module.css'
 
@@ -14,23 +14,27 @@ type PasswordInputProps = {
   'aria-label'?: string
 }
 
-export default function PasswordInput({
-  id,
-  'data-testid': testdataid,
-  placeholder,
-  value,
-  onChange,
-  error,
-  className = '',
-  autoComplete,
-  'aria-label': ariaLabel,
-}: PasswordInputProps) {
+const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(function PasswordInput(
+  {
+    id,
+    'data-testid': testdataid,
+    placeholder,
+    value,
+    onChange,
+    error,
+    className = '',
+    autoComplete,
+    'aria-label': ariaLabel,
+  },
+  ref,
+) {
   const [show, setShow] = useState(false)
 
   return (
     <label htmlFor={id} className={styles.label}>
       <div className={styles.passwordWrapper}>
         <input
+          ref={ref}
           id={id}
           data-testid={testdataid}
           type={show ? 'text' : 'password'}
@@ -56,4 +60,6 @@ export default function PasswordInput({
       )}
     </label>
   )
-}
+})
+
+export default PasswordInput

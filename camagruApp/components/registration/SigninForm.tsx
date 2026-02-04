@@ -57,6 +57,7 @@ export default function SignInForm() {
       setErrors({
         auth: res.status === 401 ? 'Invalid login or password' : res.error,
       })
+      loginRef.current?.focus()
       return false
     }
     return true
@@ -87,6 +88,7 @@ export default function SignInForm() {
         </div>
 
         <TextInput
+          ref={loginRef}
           id="login"
           data-testid="login-signin"
           placeholder="Email or Username"
@@ -100,6 +102,7 @@ export default function SignInForm() {
 
         <div className={styles.passwordWrapper}>
           <PasswordInput
+            ref={passwordRef}
             id="password"
             data-testid="password-signin"
             className={styles.input}

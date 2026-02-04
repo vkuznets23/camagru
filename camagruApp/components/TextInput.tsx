@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import styles from '@/styles/Register.module.css'
 
 type TextInputProps = {
@@ -18,26 +19,30 @@ type TextInputProps = {
   'aria-describedby'?: string
 }
 
-export default function TextInput({
-  id,
-  'data-testid': testdataid,
-  type = 'text',
-  placeholder,
-  value,
-  onChange,
-  error,
-  className = '',
-  autoComplete,
-  onKeyDown,
-  onFocus,
-  onBlur,
-  onClick,
-  'aria-label': ariaLabel,
-  'aria-describedby': ariaDescribedBy,
-}: TextInputProps) {
+const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function TextInput(
+  {
+    id,
+    'data-testid': testdataid,
+    type = 'text',
+    placeholder,
+    value,
+    onChange,
+    error,
+    className = '',
+    autoComplete,
+    onKeyDown,
+    onFocus,
+    onBlur,
+    onClick,
+    'aria-label': ariaLabel,
+    'aria-describedby': ariaDescribedBy,
+  },
+  ref,
+) {
   return (
     <label htmlFor={id}>
       <input
+        ref={ref}
         id={id}
         data-testid={testdataid}
         type={type}
@@ -63,4 +68,6 @@ export default function TextInput({
       )}
     </label>
   )
-}
+})
+
+export default TextInput
