@@ -5,7 +5,7 @@ import { authOptions } from '../auth/[...nextauth]'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method !== 'PATCH') {
     res.setHeader('Allow', ['PATCH'])
@@ -63,14 +63,48 @@ export default async function handler(
       ...updatedPost,
       likesCount: updatedPost.likedBy.length,
       likedByCurrentUser: updatedPost.likedBy.some(
-        (like) => like.userId === user.id
+        (like) => like.userId === user.id,
       ),
       savedByCurrentUser: updatedPost.savedBy.some((u) => u.id === user.id),
     }
 
     return res.status(200).json(formattedPost)
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Internal server error' })
+  } catch (err: unknown) {
+    const prismaError = err as { code?: string }
+
+    if (prismaError.code === 'P2002' && postId && userId) {
+      try {
+        const updatedPost = await prisma.post.findUnique({
+          where: { id: postId },
+          include: {
+            user: true,
+            comments: { include: { user: true } },
+            likedBy: true,
+            savedBy: true,
+          },
+        })
+
+        if (!updatedPost) {
+          return res.status(404).json({ error: 'Post not found' })
+        }
+
+        const formattedPost = {
+          ...updatedPost,
+          likesCount: updatedPost.likedBy.length,
+          likedByCurrentUser: updatedPost.likedBy.some(
+            (like) => like.userId === userId,
+          ),
+          savedByCurrentUser: updatedPost.savedBy.some((u) => u.id === userId),
+        }
+
+        return res.status(200).json(formattedPost)
+      } catch (reloadError) {
+        console.error('Error reloading post after race condition:', reloadError)
+        return res.status(500).json({ error: 'Internal server error' })
+      }
+    }
+
+    console.error('Save error:', err)
+    return res.status(500).json({ error: 'Internal server error' })
   }
 }
