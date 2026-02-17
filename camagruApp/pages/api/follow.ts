@@ -43,14 +43,14 @@ function handlePrismaError(err: unknown, res: NextApiResponse): boolean {
   }
 
   switch (prismaError.code) {
+    // Unique constraint violation -> (followerId, followingId) pair is already exists
+    // race condition protection
     case 'P2002':
-      // Unique constraint violation
-      // race condition protection
       res.status(200).json({ success: true, message: 'Already following' })
       return true
 
+    // Foreign key constraint violation -> user not found
     case 'P2003': {
-      // Foreign key constraint violation - user not found
       const meta = prismaError.meta as { field_name?: string } | undefined
       if (meta?.field_name?.includes('followingId')) {
         res.status(404).json({ error: 'User not found' })
