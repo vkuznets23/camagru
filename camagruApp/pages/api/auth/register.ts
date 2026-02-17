@@ -11,7 +11,7 @@ import { prisma } from '@/utils/prisma'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -52,7 +52,7 @@ export default async function handler(
       const suggestions = []
       for (let i = 0; i < 5; i++) {
         const suggested = `${trimmedUsername}${Math.floor(
-          Math.random() * 1000
+          Math.random() * 1000,
         )}`
         const userExists = await prisma.user.findUnique({
           where: { username: suggested },
@@ -119,7 +119,23 @@ export default async function handler(
       message: 'User created, verification email sent',
       userId: user.id,
     })
-  } catch (error) {
+  } catch (error: unknown) {
+    const prismaError = error as { code?: string; meta?: unknown }
+
+    if (prismaError.code === 'P2002') {
+      const meta = prismaError.meta as { target?: string[] } | undefined
+      const target = meta?.target || []
+
+      if (target.includes('email')) {
+        return res.status(409).json({ error: 'Email already taken' })
+      }
+      if (target.includes('username')) {
+        return res.status(409).json({ error: 'Username already taken' })
+      }
+
+      return res.status(409).json({ error: 'Email or username already taken' })
+    }
+
     console.error('Registration error:', error)
     return res.status(500).json({ error: 'Internal server error' })
   }
