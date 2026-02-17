@@ -70,7 +70,7 @@ export default function SearchForm() {
       if (search.trim().length > 1) {
         try {
           const res = await fetch(
-            `/api/search-users?query=${encodeURIComponent(search)}`
+            `/api/search-users?query=${encodeURIComponent(search)}`,
           )
           const data = await res.json()
           setResults(data.users || [])
@@ -92,11 +92,8 @@ export default function SearchForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (search.trim()) {
-      const query = encodeURIComponent(search)
-      setShowDropdown(false)
-      router.push(`/search?query=${query}`)
-    }
+    // Предотвращаем переход на страницу поиска
+    // Логика обработки Enter теперь в handleKeyDown
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -136,7 +133,7 @@ export default function SearchForm() {
           if (active?.blur) active.blur()
         } else {
           setHistory(
-            [...history.filter((h) => h.id !== user.id), user].slice(-10)
+            [...history.filter((h) => h.id !== user.id), user].slice(-10),
           )
           setShowDropdown(false)
           setShowHistory(false)
@@ -146,9 +143,21 @@ export default function SearchForm() {
           if (active?.blur) active.blur()
         }
         router.push(`/user/${user.id}`)
-      } else {
-        handleSubmit(e)
+      } else if (results.length > 0) {
+        // Если есть результаты, выбираем первый
+        const user = results[0]
+        setHistory(
+          [...history.filter((h) => h.id !== user.id), user].slice(-10),
+        )
+        setShowDropdown(false)
+        setShowHistory(false)
+        setIsExpanded(false)
+        setSearch('')
+        const active = document.activeElement as HTMLElement | null
+        if (active?.blur) active.blur()
+        router.push(`/user/${user.id}`)
       }
+      // Если нет результатов - ничего не делаем
     }
   }
 
@@ -291,8 +300,8 @@ export default function SearchForm() {
                   onClick={() => {
                     setHistory(
                       [...history.filter((h) => h.id !== user.id), user].slice(
-                        -10
-                      )
+                        -10,
+                      ),
                     )
                     setShowDropdown(false)
                     setShowHistory(false)

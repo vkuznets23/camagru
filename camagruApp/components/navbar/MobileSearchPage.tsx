@@ -82,7 +82,7 @@ export default function MobileSearchPage() {
 
     const updated = [newItem, ...history.filter((h) => h.id !== user.id)].slice(
       0,
-      10
+      10,
     )
     setHistory(updated)
     localStorage.setItem('searchHistory', JSON.stringify(updated))
@@ -99,8 +99,15 @@ export default function MobileSearchPage() {
     const query = search.trim()
     if (!query) return
 
+    // Если есть результаты, выбираем первого пользователя
+    if (results.length > 0) {
+      const user = results[0]
+      handleUserClick(user)
+      return
+    }
+
+    // Если результатов нет - ничего не делаем, не переходим на страницу поиска
     setShowDropdown(false)
-    router.push(`/search?query=${encodeURIComponent(query)}`)
   }
 
   const removeFromHistory = (id: string) => {
