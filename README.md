@@ -3,26 +3,16 @@
 # Camagru
 Camagru is a modern social media web application that allows users to share, interact, and engage with photos in a secure and fun way. It’s designed to provide a smooth and responsive user experience across all devices. Users can easily capture moments using their webcam or upload images, interact with others via likes and comments, and manage their own profiles.
 
-[live demo](https://camagru-tau.vercel.app/)
+[deployed website](https://camagru-tau.vercel.app/)
 
-## 🚀 Description
-Key highlights include:
-
-* **User-friendly interface:** Intuitive design for quick navigation and interaction.
-* **Interactive social features:** Like, comment, and bookmark posts seamlessly.
-* **Profile and content management:** Users can upload photos or take webcam shots, use simple photot filters, edit posts, update profiles, and share content via QR codes.
-* **Real-time user search:** Quickly find and follow other users.
-* **Customizable experience:** Dark mode for comfortable browsing at any time.
-* **Secure and reliable:** Email-verified authentication ensures user safety.
-
+[live demo video](https://github.com/user-attachments/assets/f1107567-b6fc-494c-9c03-4073f10b18a9)
 
 ## 🛠 Technologies
 
-**Backend and frontend:** Next.js + TypeScript
+1. **Backend and frontend:** Next.js + TypeScript
+2. **Database:** Prisma + MySQL via supabase
+3. **Tests:** Jest + Playwright
 
-**Database:** Prisma + MySQL via supabase
-
-**Tests:** Jest + Playwright
 
 ## 🚀 Key Features
 ### 🔐 Authentication
@@ -35,7 +25,8 @@ The application implements a secure and production-style authentication system:
 <img width="1437" height="747" alt="image" src="https://github.com/user-attachments/assets/2c4a4340-e029-48eb-845b-0222dd924ecc" />
 
 ### 👤 User Profile
-<img width="1437" height="752" alt="image" src="https://github.com/user-attachments/assets/8a54a59b-27b1-4130-9d60-e9d2c7ff9beb" />
+![Screen Recording 2026-02-18 at 18 41 48](https://github.com/user-attachments/assets/b32494ef-f441-4e95-991d-20ef54429923)
+
 
 ### 📷 Post Modal
 Provides advanced post management and social interactions:
@@ -43,7 +34,8 @@ Provides advanced post management and social interactions:
 - Like, unlike, and bookmark posts with optimistic UI updates
 - Inline caption editing (available only to post owner) with smart truncation and validation
 - Secure post deletion with cascade removal of all associated likes and comments
-<img width="1439" height="753" alt="image" src="https://github.com/user-attachments/assets/9149879f-eb4c-4080-8ba9-9c037ef029d9" />
+![Screen Recording 2026-02-18 at 18 40 27](https://github.com/user-attachments/assets/522b832b-8474-430f-944d-80a8a93f90d0)
+
 
 ### Post Creation System
 Users can create and publish posts with built-in validation, media processing, and interactive UI enhancements.
@@ -61,18 +53,17 @@ Users can create and publish posts with built-in validation, media processing, a
   </td>
 
 <td width="50%" align="center">
-<img width="1440" height="686" alt="image" src="https://github.com/user-attachments/assets/4658e8d6-33e6-4452-8bdd-0574e75c94fa" />
+<img src="https://github.com/user-attachments/assets/15ab7bd7-4569-445e-8abd-4ba9658befca" width="100%" />
   </td>
 </tr>
 </table>
 
 ### 🔎 Search bar with search history
-<img width="960" height="316" alt="image" src="https://github.com/user-attachments/assets/170ef07e-11ca-4ec6-aed9-bc24d5ad3254" />
+![Screen Recording 2026-02-18 at 18 48 13](https://github.com/user-attachments/assets/a9bbc50c-864e-46e0-925b-02c45f22bd36)
 
 
-
-Live demo video: https://github.com/user-attachments/assets/f1107567-b6fc-494c-9c03-4073f10b18a9
-
+### 🌛 Dark mode
+![Screen Recording 2026-02-18 at 18 38 07](https://github.com/user-attachments/assets/5b18de41-bcc9-4d47-beaf-28be8f0af592)
 
 
 
