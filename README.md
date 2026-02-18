@@ -3,6 +3,8 @@
 # Camagru
 Camagru is a modern social media web application that allows users to share, interact, and engage with photos in a secure and fun way. It’s designed to provide a smooth and responsive user experience across all devices. Users can easily capture moments using their webcam or upload images, interact with others via likes and comments, and manage their own profiles.
 
+[live demo](https://camagru-tau.vercel.app/)
+
 ## 🚀 Description
 Key highlights include:
 
